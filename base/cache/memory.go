@@ -42,8 +42,8 @@ func (c *MemoryCache) IsExist(key string) bool {
 	c.RLock()
 	defer c.RUnlock()
 
-	if item, ok := c.items[key]; ok {
-		return !item.isExpire()
+	if i, ok := c.items[key]; ok {
+		return !i.isExpire()
 	}
 
 	return false
@@ -54,12 +54,12 @@ func (c *MemoryCache) Get(key string) (interface{}, error) {
 	c.RLock()
 	defer c.RUnlock()
 
-	if item, ok := c.items[key]; ok {
-		if !item.isExpire() {
+	if i, ok := c.items[key]; ok {
+		if !i.isExpire() {
 			return nil, ErrKeyExpired
 		}
 
-		return item.value, nil
+		return i.value, nil
 	}
 
 	return nil, ErrKeyNotExist
@@ -127,8 +127,8 @@ func (c *MemoryCache) gc() {
 func (c *MemoryCache) expiredKeys() (keys []string) {
 	c.RLock()
 	defer c.RUnlock()
-	for key, item := range c.items {
-		if item.isExpire() {
+	for key, i := range c.items {
+		if i.isExpire() {
 			keys = append(keys, key)
 		}
 	}

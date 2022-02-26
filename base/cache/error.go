@@ -3,6 +3,6 @@ package cache
 import "errors"
 
 var (
-	ErrKeyExpired  = errors.New("")
-	ErrKeyNotExist = errors.New("")
+	ErrKeyExpired  = errors.New("key expired")
+	ErrKeyNotExist = errors.New("key not exist")
 )

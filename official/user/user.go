@@ -1,6 +1,6 @@
 package user
 
-import "github.com/dyaodeng/wx/base"
+import "github.com/dysodeng/wx/base"
 
 // User 用户管理
 type User struct {

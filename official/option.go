@@ -1,8 +1,8 @@
 package official
 
 import (
-	"github.com/dyaodeng/wx/base"
-	"github.com/dyaodeng/wx/base/cache"
+	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/base/cache"
 )
 
 type config struct {

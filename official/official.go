@@ -1,9 +1,9 @@
 package official
 
 import (
-	"github.com/dyaodeng/wx/base/cache"
-	"github.com/dyaodeng/wx/official/article"
-	"github.com/dyaodeng/wx/official/user"
+	"github.com/dysodeng/wx/base/cache"
+	"github.com/dysodeng/wx/official/article"
+	"github.com/dysodeng/wx/official/user"
 )
 
 // Official 公众号

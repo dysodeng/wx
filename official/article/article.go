@@ -1,6 +1,6 @@
 package article
 
-import "github.com/dyaodeng/wx/base"
+import "github.com/dysodeng/wx/base"
 
 // Article 公众号文章管理
 type Article struct {

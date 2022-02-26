@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/dyaodeng/wx/base"
-	baseError "github.com/dyaodeng/wx/base/error"
-	"github.com/dyaodeng/wx/base/http"
+	"github.com/dysodeng/wx/base"
+	baseError "github.com/dysodeng/wx/base/error"
+	"github.com/dysodeng/wx/base/http"
 )
 
 // TagItem 用户标签

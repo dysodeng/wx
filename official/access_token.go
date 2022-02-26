@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/dysodeng/wx/base"
 	baseError "github.com/dysodeng/wx/base/error"
 	"github.com/dysodeng/wx/base/http"
-	"time"
 )
 
 // AccessToken 获取/刷新token

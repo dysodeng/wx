@@ -11,6 +11,20 @@ type Replier interface {
 	ContentType() string
 }
 
+// Reply 消息回复体
+type Reply struct {
+	replier Replier
+}
+
+func NewMessageReply(replier Replier) *Reply {
+	return &Reply{
+		replier: replier,
+	}
+}
+func (reply *Reply) Replier() Replier {
+	return reply.replier
+}
+
 // Message 消息体
 type Message struct {
 	XMLName      xml.Name `xml:"xml"`
@@ -32,8 +46,8 @@ type Message struct {
 	Precision string
 }
 
-// Reply 回复消息体
-type Reply struct {
+// ReplyBody 回复消息体
+type ReplyBody struct {
 	XMLName      xml.Name  `xml:"xml"`
 	ToUserName   CDATAText `xml:"ToUserName"`
 	FromUserName CDATAText `xml:"FromUserName"`
@@ -52,7 +66,7 @@ type Reply struct {
 	Music *Music `xml:"Music,omitempty"`
 }
 
-func (reply *Reply) BuildXml(fromUserName, toUserName string) []byte {
+func (reply *ReplyBody) BuildXml(fromUserName, toUserName string) []byte {
 	reply.FromUserName = value2CDATA(fromUserName)
 	reply.ToUserName = value2CDATA(toUserName)
 	reply.CreateTime = strconv.FormatInt(time.Now().Unix(), 10)
@@ -60,7 +74,7 @@ func (reply *Reply) BuildXml(fromUserName, toUserName string) []byte {
 	return b
 }
 
-func (reply *Reply) ContentType() string {
+func (reply *ReplyBody) ContentType() string {
 	return "text/xml"
 }
 
@@ -84,24 +98,24 @@ func ptrValue2CDATA(value string) *CDATAText {
 }
 
 // NewText 文本消息
-func NewText(content string) *Reply {
-	return &Reply{
+func NewText(content string) *ReplyBody {
+	return &ReplyBody{
 		MsgType: value2CDATA("text"),
 		Content: ptrValue2CDATA(content),
 	}
 }
 
 // NewImage 图片消息
-func NewImage(mediaId string) *Reply {
-	return &Reply{
+func NewImage(mediaId string) *ReplyBody {
+	return &ReplyBody{
 		MsgType: value2CDATA("image"),
 		Image:   &Media{MediaId: value2CDATA(mediaId)},
 	}
 }
 
 // NewVoice 音频消息
-func NewVoice(mediaId string) *Reply {
-	return &Reply{
+func NewVoice(mediaId string) *ReplyBody {
+	return &ReplyBody{
 		MsgType: value2CDATA("voice"),
 		Voice:   &Media{MediaId: value2CDATA(mediaId)},
 	}
@@ -114,8 +128,8 @@ type Video struct {
 }
 
 // NewVideo 视频消息
-func NewVideo(mediaId, title, description string) *Reply {
-	return &Reply{
+func NewVideo(mediaId, title, description string) *ReplyBody {
+	return &ReplyBody{
 		MsgType: value2CDATA("video"),
 		Video: &Video{
 			MediaId:     value2CDATA(mediaId),
@@ -134,8 +148,8 @@ type Music struct {
 }
 
 // NewMusic 音乐消息
-func NewMusic(title, description, musicUrl, HQMusicUrl, thumbMediaId string) *Reply {
-	return &Reply{
+func NewMusic(title, description, musicUrl, HQMusicUrl, thumbMediaId string) *ReplyBody {
+	return &ReplyBody{
 		MsgType: value2CDATA("music"),
 		Music: &Music{
 			Title:        value2CDATA(title),

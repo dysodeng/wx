@@ -43,10 +43,10 @@ func main() {
 	
 	// 服务端
 	appServer := officialSdk.Server()
-	appServer.Push(func(messageBody *message.Message) *base.MessageReply {
+	appServer.Push(func(messageBody *message.Message) *message.Reply {
 		log.Println("这里是用户自定义的消息处理器")
 		log.Println(messageBody)
-		return base.NewMessageReply(message.NewText("你好呀"))
+		return message.NewMessageReply(message.NewText("你好呀"))
 	}, base.GuardAll)
 	
 	h := http.DefaultServeMux

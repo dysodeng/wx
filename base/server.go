@@ -22,19 +22,8 @@ const (
 	GuardEchoStr = "echostr"
 )
 
-// MessageReply 消息回复
-type MessageReply struct {
-	replier message.Replier
-}
-
-func NewMessageReply(replier message.Replier) *MessageReply {
-	return &MessageReply{
-		replier: replier,
-	}
-}
-
 // GuardHandler 服务端消息处理器
-type GuardHandler func(messageBody *message.Message) *MessageReply
+type GuardHandler func(messageBody *message.Message) *message.Reply
 
 // Server 公众账号服务端
 type Server struct {
@@ -128,10 +117,12 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 					reply := handler(messageBody)
 					if reply != nil {
 
-						xmlBody := reply.replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
+						replier := reply.Replier()
+
+						xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
 						replyBody, _ := encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
 
-						writer.Header().Set("Content-Type", reply.replier.ContentType())
+						writer.Header().Set("Content-Type", replier.ContentType())
 						_, _ = writer.Write(replyBody)
 
 						return

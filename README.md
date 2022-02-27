@@ -42,18 +42,16 @@ func main() {
 	log.Println(userTag.List())
 	
 	// 服务端
+	appServer := officialSdk.Server()
+	appServer.Push(func(messageBody *message.Message) *base.MessageReply {
+		log.Println("这里是用户自定义的消息处理器")
+		log.Println(messageBody)
+		return base.NewMessageReply(message.NewText("你好呀"))
+	}, base.GuardAll)
+	
 	h := http.DefaultServeMux
 	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		appServer := officialSdk.Server(r, w)
-
-		appServer.Push(func(messageBody *message.Message) *base.MessageReply {
-			log.Println("这里是用户自定义的消息处理器")
-			log.Println(messageBody)
-			return base.NewMessageReply(message.NewText("你好呀"))
-		}, base.GuardAll)
-
-		appServer.Serve()
+		appServer.Serve(r, w)
 	})
 	server := http.Server{
 		Addr:    ":80",

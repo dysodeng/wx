@@ -40,16 +40,12 @@ type GuardHandler func(messageBody *message.Message) *MessageReply
 type Server struct {
 	lock    sync.RWMutex
 	account AccountInterface
-	request *http.Request
-	writer  http.ResponseWriter
 	handler map[Guard]GuardHandler
 }
 
-func NewServer(account AccountInterface, req *http.Request, writer http.ResponseWriter) *Server {
+func NewServer(account AccountInterface) *Server {
 	return &Server{
 		account: account,
-		request: req,
-		writer:  writer,
 		handler: make(map[Guard]GuardHandler),
 	}
 }
@@ -63,14 +59,14 @@ func (sg *Server) Push(handler GuardHandler, guard Guard) {
 }
 
 // Serve Handle and return response.
-func (sg *Server) Serve() {
-	_ = sg.request.ParseForm()
+func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
+	_ = request.ParseForm()
 
-	timestamp := strings.Join(sg.request.Form["timestamp"], "")
-	nonce := strings.Join(sg.request.Form["nonce"], "")
-	signature := strings.Join(sg.request.Form["signature"], "")
-	encryptType := strings.Join(sg.request.Form["encrypt_type"], "")
-	msgSignature := strings.Join(sg.request.Form["msg_signature"], "")
+	timestamp := strings.Join(request.Form["timestamp"], "")
+	nonce := strings.Join(request.Form["nonce"], "")
+	signature := strings.Join(request.Form["signature"], "")
+	encryptType := strings.Join(request.Form["encrypt_type"], "")
+	msgSignature := strings.Join(request.Form["msg_signature"], "")
 
 	encrypt := encryptor.NewEncryptor(sg.account.AccountAppId(), sg.account.AccountToken(), sg.account.AccountAesKey())
 	if !encrypt.ValidSignature(timestamp, nonce, signature) {
@@ -78,15 +74,15 @@ func (sg *Server) Serve() {
 		return
 	}
 
-	if e := sg.request.FormValue("echostr"); e != "" {
-		_, _ = sg.writer.Write([]byte(e))
+	if e := request.FormValue("echostr"); e != "" {
+		_, _ = writer.Write([]byte(e))
 		return
 	}
 
-	if sg.request.Method == "POST" {
+	if request.Method == "POST" {
 		if encryptType == "aes" {
 
-			encryptRequestBody, err := encrypt.ParseEncryptBody(sg.request)
+			encryptRequestBody, err := encrypt.ParseEncryptBody(request)
 
 			if err == nil {
 				// Validate msg signature
@@ -135,8 +131,8 @@ func (sg *Server) Serve() {
 						xmlBody := reply.replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
 						replyBody, _ := encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
 
-						sg.writer.Header().Set("Content-Type", reply.replier.ContentType())
-						_, _ = sg.writer.Write(replyBody)
+						writer.Header().Set("Content-Type", reply.replier.ContentType())
+						_, _ = writer.Write(replyBody)
 
 						return
 					}
@@ -145,5 +141,5 @@ func (sg *Server) Serve() {
 		}
 	}
 
-	_, _ = sg.writer.Write([]byte(SuccessEmptyResponse))
+	_, _ = writer.Write([]byte(SuccessEmptyResponse))
 }

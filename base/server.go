@@ -65,12 +65,6 @@ func (sg *Server) Serve() {
 	encryptType := strings.Join(sg.request.Form["encrypt_type"], "")
 	msgSignature := strings.Join(sg.request.Form["msg_signature"], "")
 
-	fmt.Println("timestamp =", timestamp)
-	fmt.Println("nonce =", nonce)
-	fmt.Println("signature =", signature)
-	fmt.Println("encryptType =", encryptType)
-	fmt.Println("msgSignature =", msgSignature)
-
 	encrypt := encryptor.NewEncryptor(sg.account.AccountAppId(), sg.account.AccountToken(), sg.account.AccountAesKey())
 	if !encrypt.ValidSignature(timestamp, nonce, signature) {
 		log.Println("Wechat Service: signature is invalid")

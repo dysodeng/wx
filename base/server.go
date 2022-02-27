@@ -38,15 +38,22 @@ type GuardHandler func(messageBody *message.Message) *MessageReply
 
 // Server 公众账号服务端
 type Server struct {
-	lock    sync.RWMutex
-	account AccountInterface
-	request *http.Request
-	writer  http.ResponseWriter
-	handler map[Guard]GuardHandler
+	lock         sync.RWMutex
+	account      AccountInterface
+	request      *http.Request
+	writer       http.ResponseWriter
+	handler      map[Guard]GuardHandler
+	eventHandler map[Guard]GuardHandler
 }
 
 func NewServer(account AccountInterface, req *http.Request, writer http.ResponseWriter) *Server {
-	return &Server{account: account, request: req, writer: writer, handler: make(map[Guard]GuardHandler)}
+	return &Server{
+		account:      account,
+		request:      req,
+		writer:       writer,
+		handler:      make(map[Guard]GuardHandler),
+		eventHandler: make(map[Guard]GuardHandler),
+	}
 }
 
 // Push 添加消息处理器
@@ -56,6 +63,7 @@ func (sg *Server) Push(handler GuardHandler, guard Guard) {
 	sg.handler[guard] = handler
 }
 
+// Serve Handle and return response.
 func (sg *Server) Serve() {
 	_ = sg.request.ParseForm()
 
@@ -108,12 +116,21 @@ func (sg *Server) Serve() {
 				var handler GuardHandler
 				var ok bool
 
-				sg.lock.RLock()
-				if handler, ok = sg.handler[Guard(messageBody.MsgType)]; !ok {
-					if handler, ok = sg.handler[GuardAll]; ok {
+				if messageBody.MsgType == "event" {
+					sg.lock.RLock()
+					if handler, ok = sg.eventHandler[Guard(strings.ToLower(messageBody.Event))]; !ok {
+						if handler, ok = sg.handler[GuardAll]; ok {
+						}
 					}
+					sg.lock.RUnlock()
+				} else {
+					sg.lock.RLock()
+					if handler, ok = sg.handler[Guard(messageBody.MsgType)]; !ok {
+						if handler, ok = sg.handler[GuardAll]; ok {
+						}
+					}
+					sg.lock.RUnlock()
 				}
-				sg.lock.RUnlock()
 
 				if handler != nil {
 					reply := handler(messageBody)

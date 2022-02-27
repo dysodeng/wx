@@ -20,6 +20,16 @@ type Message struct {
 	MsgType      string
 	Content      string
 	MsgId        int
+
+	// 事件消息
+	Event    string // 事件类型
+	EventKey string
+	// 扫描带参数二维码
+	Ticket string
+	// 位置上报事件
+	Latitude  string
+	Longitude string
+	Precision string
 }
 
 // Reply 回复消息体
@@ -42,20 +52,6 @@ type Reply struct {
 	Music *Music `xml:"Music,omitempty"`
 }
 
-type Media struct {
-	MediaId CDATAText `xml:"MediaId,omitempty"`
-}
-
-// value2CDATA 值转换为CDATA
-func value2CDATA(value string) CDATAText {
-	return CDATAText{"<![CDATA[" + value + "]]>"}
-}
-
-// ptrValue2CDATA 值转换为指针型CDATA
-func ptrValue2CDATA(value string) *CDATAText {
-	return &CDATAText{"<![CDATA[" + value + "]]>"}
-}
-
 func (reply *Reply) BuildXml(fromUserName, toUserName string) []byte {
 	reply.FromUserName = value2CDATA(fromUserName)
 	reply.ToUserName = value2CDATA(toUserName)
@@ -68,9 +64,23 @@ func (reply *Reply) ContentType() string {
 	return "text/xml"
 }
 
+type Media struct {
+	MediaId CDATAText `xml:"MediaId,omitempty"`
+}
+
 // CDATAText 文本域
 type CDATAText struct {
 	Text string `xml:",innerxml"`
+}
+
+// value2CDATA 值转换为CDATA
+func value2CDATA(value string) CDATAText {
+	return CDATAText{"<![CDATA[" + value + "]]>"}
+}
+
+// ptrValue2CDATA 值转换为指针型CDATA
+func ptrValue2CDATA(value string) *CDATAText {
+	return &CDATAText{"<![CDATA[" + value + "]]>"}
 }
 
 // NewText 文本消息
@@ -89,6 +99,7 @@ func NewImage(mediaId string) *Reply {
 	}
 }
 
+// NewVoice 音频消息
 func NewVoice(mediaId string) *Reply {
 	return &Reply{
 		MsgType: value2CDATA("voice"),
@@ -96,13 +107,13 @@ func NewVoice(mediaId string) *Reply {
 	}
 }
 
-// Video 视频消息
 type Video struct {
 	MediaId     CDATAText `xml:"MediaId"`
 	Title       CDATAText `xml:"Title"`
 	Description CDATAText `xml:"Description"`
 }
 
+// NewVideo 视频消息
 func NewVideo(mediaId, title, description string) *Reply {
 	return &Reply{
 		MsgType: value2CDATA("video"),
@@ -114,7 +125,6 @@ func NewVideo(mediaId, title, description string) *Reply {
 	}
 }
 
-// Music 音乐消息
 type Music struct {
 	Title        CDATAText `xml:"Title"`
 	Description  CDATAText `xml:"Description"`
@@ -123,6 +133,7 @@ type Music struct {
 	ThumbMediaId CDATAText `xml:"ThumbMediaId"`
 }
 
+// NewMusic 音乐消息
 func NewMusic(title, description, musicUrl, HQMusicUrl, thumbMediaId string) *Reply {
 	return &Reply{
 		MsgType: value2CDATA("music"),
@@ -157,6 +168,7 @@ type NewsArticle struct {
 	} `xml:"item"`
 }
 
+// NewNews 图文消息
 func NewNews(articles []map[string]string) *News {
 	var list []NewsArticle
 	for _, article := range articles {

@@ -121,7 +121,7 @@ func (sg *Server) Serve() {
 				}
 				sg.lock.RUnlock()
 
-				if handler == nil {
+				if handler != nil {
 					reply := handler(messageBody)
 					if reply != nil {
 

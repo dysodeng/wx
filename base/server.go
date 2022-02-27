@@ -46,7 +46,7 @@ type Server struct {
 }
 
 func NewServer(account AccountInterface, req *http.Request, writer http.ResponseWriter) *Server {
-	return &Server{account: account, request: req, writer: writer}
+	return &Server{account: account, request: req, writer: writer, handler: make(map[Guard]GuardHandler)}
 }
 
 // Push 添加消息处理器

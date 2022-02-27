@@ -1,6 +1,9 @@
 package official
 
 import (
+	"net/http"
+
+	"github.com/dysodeng/wx/base"
 	"github.com/dysodeng/wx/base/cache"
 	"github.com/dysodeng/wx/official/article"
 	"github.com/dysodeng/wx/official/user"
@@ -28,6 +31,11 @@ func NewOfficial(cfg Config, opts ...Option) (*Official, error) {
 		config: c,
 		option: o,
 	}, nil
+}
+
+// Server 服务端
+func (official *Official) Server(req *http.Request, writer http.ResponseWriter) *base.Server {
+	return base.NewServer(official, req, writer)
 }
 
 // User 用户管理

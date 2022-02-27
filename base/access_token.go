@@ -14,6 +14,6 @@ type AccessTokenInterface interface {
 
 // AuthorizerAccessTokenInterface 开放平台第三方授权公众账号获取token接口
 type AuthorizerAccessTokenInterface interface {
-	AccessToken(appId, authorizerRefreshToken string, refresh bool) (AccessToken, error)
-	AccessTokenKey() string
+	AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (AccessToken, error)
+	AuthorizerAccessTokenKey() string
 }

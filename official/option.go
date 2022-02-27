@@ -12,7 +12,7 @@ type config struct {
 	token                  string
 	aesKey                 string
 	authorizerRefreshToken string
-	authorizerAccessToken  base.AuthorizerAccessTokenInterface
+	authorizerAccount      base.AuthorizerAccountInterface
 }
 
 type Config func(*config)
@@ -29,12 +29,12 @@ func WithOfficial(appId, appSecret, token, aesKey string) Config {
 }
 
 // WithOpenPlatform 开放平台代公众号调用接口
-func WithOpenPlatform(appId, authorizerRefreshToken string, authorizerAccessToken base.AuthorizerAccessTokenInterface) Config {
+func WithOpenPlatform(appId, authorizerRefreshToken string, authorizerAccount base.AuthorizerAccountInterface) Config {
 	return func(cfg *config) {
 		cfg.isOpenPlatform = true
 		cfg.appId = appId
 		cfg.authorizerRefreshToken = authorizerRefreshToken
-		cfg.authorizerAccessToken = authorizerAccessToken
+		cfg.authorizerAccount = authorizerAccount
 	}
 }
 

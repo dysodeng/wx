@@ -14,7 +14,7 @@ import (
 // AccessToken 获取/刷新token
 func (official *Official) AccessToken(refresh bool) (base.AccessToken, error) {
 	if official.config.isOpenPlatform {
-		return official.config.authorizerAccessToken.AccessToken(
+		return official.config.authorizerAccount.AuthorizerAccessToken(
 			official.config.appId,
 			official.config.authorizerRefreshToken,
 			refresh,
@@ -40,7 +40,7 @@ func (official *Official) AccessToken(refresh bool) (base.AccessToken, error) {
 
 // AccessTokenKey 获取access_token缓存key
 func (official *Official) AccessTokenKey() string {
-	return fmt.Sprintf("%s%s", official.option.cacheKeyPrefix, "access_token")
+	return fmt.Sprintf("%s%s:%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
 }
 
 // refreshAccessToken 刷新access_token

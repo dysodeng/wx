@@ -17,8 +17,11 @@ Usage
 package main
 
 import (
+	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/base/message"
 	"github.com/dysodeng/wx/official"
 	"log"
+	"net/http"
 )
 
 var (
@@ -34,7 +37,31 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// 公众号接口调用
 	userTag := officialSdk.UserTag()
 	log.Println(userTag.List())
+	
+	// 服务端
+	h := http.DefaultServeMux
+	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+		appServer := officialSdk.Server(r, w)
+
+		appServer.Push(func(messageBody *message.Message) *base.MessageReply {
+			log.Println("这里是用户自定义的消息处理器")
+			log.Println(messageBody)
+			return base.NewMessageReply(message.NewText("你好呀"))
+		}, base.GuardAll)
+
+		appServer.Serve()
+	})
+	server := http.Server{
+		Addr:    ":80",
+		Handler: h,
+	}
+
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("%+v\n", err)
+	}
 }
 ```

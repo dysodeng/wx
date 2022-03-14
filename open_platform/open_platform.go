@@ -1,8 +1,6 @@
 package open_platform
 
 import (
-	"net/http"
-
 	"github.com/dysodeng/wx/base"
 )
 
@@ -17,6 +15,6 @@ func NewOpenPlatform() *OpenPlatform {
 }
 
 // Server 服务端
-func (open *OpenPlatform) Server(req *http.Request, writer http.ResponseWriter) *base.Server {
-	return base.NewServer(open, req, writer)
+func (open *OpenPlatform) Server() *base.Server {
+	return base.NewServer(open)
 }

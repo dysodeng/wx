@@ -32,7 +32,7 @@ var (
 )
 
 func main() {
-	officialSdk, err := official.NewOfficial(official.WithOfficial(appId, appSecret, token, aesKey))
+	officialSdk, err := official.NewOfficial(official.WithAccount(appId, appSecret, token, aesKey))
 	if err != nil {
 		log.Fatal(err)
 	}

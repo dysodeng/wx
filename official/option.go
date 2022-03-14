@@ -5,6 +5,7 @@ import (
 	"github.com/dysodeng/wx/base/cache"
 )
 
+// config 公众号配置
 type config struct {
 	isOpenPlatform         bool
 	appId                  string
@@ -15,29 +16,7 @@ type config struct {
 	authorizerAccount      base.AuthorizerAccountInterface
 }
 
-type Config func(*config)
-
-// WithOfficial 公众号
-func WithOfficial(appId, appSecret, token, aesKey string) Config {
-	return func(cfg *config) {
-		cfg.isOpenPlatform = false
-		cfg.appId = appId
-		cfg.appSecret = appSecret
-		cfg.token = token
-		cfg.aesKey = aesKey
-	}
-}
-
-// WithOpenPlatform 开放平台代公众号调用接口
-func WithOpenPlatform(appId, authorizerRefreshToken string, authorizerAccount base.AuthorizerAccountInterface) Config {
-	return func(cfg *config) {
-		cfg.isOpenPlatform = true
-		cfg.appId = appId
-		cfg.authorizerRefreshToken = authorizerRefreshToken
-		cfg.authorizerAccount = authorizerAccount
-	}
-}
-
+// option 公众号选项
 type option struct {
 	cache          cache.Cache
 	cacheKeyPrefix string

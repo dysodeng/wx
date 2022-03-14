@@ -13,16 +13,53 @@ type Official struct {
 	option *option
 }
 
-func NewOfficial(cfg Config, opts ...Option) (*Official, error) {
-	c := &config{}
-	cfg(c)
+func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Official, error) {
+	c := &config{
+		isOpenPlatform: false,
+		appId:          appId,
+		appSecret:      appSecret,
+		token:          token,
+		aesKey:         aesKey,
+	}
 
 	o := &option{
-		cache:          cache.NewMemoryCache(),
 		cacheKeyPrefix: DefaultCacheKeyPrefix,
 	}
 	for _, opt := range opts {
 		opt(o)
+	}
+	if o.cache == nil {
+		o.cache = cache.NewMemoryCache()
+	}
+
+	return &Official{
+		config: c,
+		option: o,
+	}, nil
+}
+
+// NewOfficialWithOpenPlatform 开放平台代公众号调用接口
+func NewOfficialWithOpenPlatform(
+	appId,
+	authorizerRefreshToken string,
+	authorizerAccount base.AuthorizerAccountInterface,
+	opts ...Option,
+) (*Official, error) {
+	c := &config{
+		isOpenPlatform:         true,
+		appId:                  appId,
+		authorizerRefreshToken: authorizerRefreshToken,
+		authorizerAccount:      authorizerAccount,
+	}
+
+	o := &option{
+		cacheKeyPrefix: DefaultCacheKeyPrefix,
+	}
+	for _, opt := range opts {
+		opt(o)
+	}
+	if o.cache == nil {
+		o.cache = cache.NewMemoryCache()
 	}
 
 	return &Official{

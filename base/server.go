@@ -14,14 +14,6 @@ import (
 
 const SuccessEmptyResponse = "success"
 
-// Guard 服务类型
-type Guard string
-
-const (
-	GuardAll     = "*"
-	GuardEchoStr = "echostr"
-)
-
 // GuardHandler 服务端消息处理器
 type GuardHandler func(messageBody *message.Message) *message.Reply
 
@@ -59,7 +51,7 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 
 	encrypt := encryptor.NewEncryptor(sg.account.AccountAppId(), sg.account.AccountToken(), sg.account.AccountAesKey())
 	if !encrypt.ValidSignature(timestamp, nonce, signature) {
-		log.Println("Wechat Service: signature is invalid")
+		log.Println("signature is invalid")
 		return
 	}
 
@@ -72,61 +64,61 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 		if encryptType == "aes" {
 
 			encryptRequestBody, err := encrypt.ParseEncryptBody(request)
+			if err != nil {
+				log.Printf("parse encrypt error: %+v", err)
+				return
+			}
 
-			if err == nil {
-				// Validate msg signature
-				if !encrypt.ValidMsgSignature(timestamp, nonce, encryptRequestBody.Encrypt, msgSignature) {
-					log.Println("Wechat Service: msg_signature is invalid")
-					return
+			// Validate msg signature
+			if !encrypt.ValidMsgSignature(timestamp, nonce, encryptRequestBody.Encrypt, msgSignature) {
+				log.Println("msg_signature is invalid")
+				return
+			}
+
+			// Decode base64
+			cipherData, err := base64.StdEncoding.DecodeString(encryptRequestBody.Encrypt)
+			if err != nil {
+				log.Println("Decode base64 error:", err)
+				return
+			}
+
+			// AES Decrypt
+			plainData, err := encrypt.AesDecrypt(cipherData)
+			if err != nil {
+				fmt.Println("Aes decrypt error:", err)
+				return
+			}
+
+			messageBody, _ := encrypt.ParseEncryptTextBody(plainData)
+			log.Println(messageBody)
+
+			var handler GuardHandler
+			var ok bool
+
+			sg.lock.RLock()
+			if messageBody.MsgType == "event" {
+				if handler, ok = sg.handler[GuardEvent]; !ok {
+					if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; ok {
+						handler, _ = sg.handler[GuardAll]
+					}
 				}
-
-				// Decode base64
-				cipherData, err := base64.StdEncoding.DecodeString(encryptRequestBody.Encrypt)
-				if err != nil {
-					log.Println("Wechat Service: Decode base64 error:", err)
-					return
-				}
-
-				// AES Decrypt
-				plainData, err := encrypt.AesDecrypt(cipherData)
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-
-				messageBody, _ := encrypt.ParseEncryptTextBody(plainData)
-				log.Println(messageBody)
-
-				var handler GuardHandler
-				var ok bool
-
-				handlerName := ""
-				if messageBody.MsgType == "event" {
-					handlerName = strings.ToLower(messageBody.Event)
-				} else {
-					handlerName = messageBody.MsgType
-				}
-
-				sg.lock.RLock()
-				if handler, ok = sg.handler[Guard(handlerName)]; !ok {
+			} else {
+				if handler, ok = sg.handler[Guard(messageBody.MsgType)]; !ok {
 					handler, _ = sg.handler[GuardAll]
 				}
-				sg.lock.RUnlock()
+			}
+			sg.lock.RUnlock()
 
-				if handler != nil {
-					reply := handler(messageBody)
-					if reply != nil {
+			if handler != nil {
+				reply := handler(messageBody)
+				if reply != nil {
+					replier := reply.Replier()
+					xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
+					replyBody, _ := encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
 
-						replier := reply.Replier()
-
-						xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
-						replyBody, _ := encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
-
-						writer.Header().Set("Content-Type", replier.ContentType())
-						_, _ = writer.Write(replyBody)
-
-						return
-					}
+					writer.Header().Set("Content-Type", replier.ContentType())
+					_, _ = writer.Write(replyBody)
+					return
 				}
 			}
 		}

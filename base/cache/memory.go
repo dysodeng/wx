@@ -32,7 +32,7 @@ type MemoryCache struct {
 }
 
 func NewMemoryCache() *MemoryCache {
-	m := &MemoryCache{items: make(map[string]*item), gcTime: defaultGcTime}
+	m := &MemoryCache{items: make(map[string]*item), gcTime: defaultGcTime, duration: time.Second * defaultGcTime}
 	go m.gc()
 	return m
 }

@@ -3,7 +3,6 @@ package oauth
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -13,6 +12,8 @@ import (
 	"github.com/dysodeng/wx/base/user"
 	"github.com/pkg/errors"
 )
+
+const oauthBaseUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
 
 // OAuth 公众号用户授权
 type OAuth struct {
@@ -25,8 +26,6 @@ type OAuth struct {
 func NewOAuth(accessToken base.AccountInterface) *OAuth {
 	return &OAuth{accessToken: accessToken, state: "state"}
 }
-
-const oauthBaseUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
 
 func (auth *OAuth) WithScope(scope string) *OAuth {
 	auth.scope = scope
@@ -44,9 +43,8 @@ func (auth *OAuth) WithState(state string) *OAuth {
 }
 
 func (auth *OAuth) buildAuthUrl() string {
-	var authUrl string
 	if auth.accessToken.IsOpenPlatform() {
-		authUrl = fmt.Sprintf(
+		return fmt.Sprintf(
 			"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&component_appid=%s#wechat_redirect",
 			oauthBaseUrl,
 			auth.accessToken.AccountAppId(),
@@ -55,18 +53,16 @@ func (auth *OAuth) buildAuthUrl() string {
 			auth.state,
 			auth.accessToken.ComponentAppId(),
 		)
-	} else {
-		authUrl = fmt.Sprintf(
-			"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect",
-			oauthBaseUrl,
-			auth.accessToken.AccountAppId(),
-			url.QueryEscape(auth.redirectUrl),
-			auth.scope,
-			auth.state,
-		)
 	}
-	log.Println(authUrl)
-	return authUrl
+
+	return fmt.Sprintf(
+		"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect",
+		oauthBaseUrl,
+		auth.accessToken.AccountAppId(),
+		url.QueryEscape(auth.redirectUrl),
+		auth.scope,
+		auth.state,
+	)
 }
 
 func (auth *OAuth) AuthUrl() string {
@@ -128,25 +124,22 @@ func (auth *OAuth) TokenFromCode(code string) (*AccessTokenResponse, error) {
 }
 
 func (auth *OAuth) getTokenUrl(code string) string {
-	var apiUrl string
 	if auth.accessToken.IsOpenPlatform() {
-		apiUrl = fmt.Sprintf(
+		return fmt.Sprintf(
 			"sns/oauth2/component/access_token?appid=%s&code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s",
 			auth.accessToken.AccountAppId(),
 			code,
 			auth.accessToken.ComponentAppId(),
 			auth.accessToken.ComponentAccessToken(),
 		)
-	} else {
-		apiUrl = fmt.Sprintf(
-			"sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
-			auth.accessToken.AccountAppId(),
-			auth.accessToken.AccountAppSecret(),
-			code,
-		)
 	}
 
-	return apiUrl
+	return fmt.Sprintf(
+		"sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
+		auth.accessToken.AccountAppId(),
+		auth.accessToken.AccountAppSecret(),
+		code,
+	)
 }
 
 type AccessTokenResponse struct {

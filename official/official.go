@@ -4,6 +4,7 @@ import (
 	"github.com/dysodeng/wx/base"
 	"github.com/dysodeng/wx/base/cache"
 	"github.com/dysodeng/wx/official/article"
+	"github.com/dysodeng/wx/official/oauth"
 	"github.com/dysodeng/wx/official/user"
 )
 
@@ -44,7 +45,7 @@ func NewOfficialWithOpenPlatform(
 	authorizerRefreshToken string,
 	authorizerAccount base.AuthorizerAccountInterface,
 	opts ...Option,
-) (*Official, error) {
+) *Official {
 	c := &config{
 		isOpenPlatform:         true,
 		appId:                  appId,
@@ -65,12 +66,17 @@ func NewOfficialWithOpenPlatform(
 	return &Official{
 		config: c,
 		option: o,
-	}, nil
+	}
 }
 
 // Server 服务端
 func (official *Official) Server() *base.Server {
 	return base.NewServer(official)
+}
+
+// OAuth 用户授权
+func (official *Official) OAuth() *oauth.OAuth {
+	return oauth.NewOAuth(official)
 }
 
 // User 用户管理

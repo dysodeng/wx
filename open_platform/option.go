@@ -1,7 +1,8 @@
 package open_platform
 
 type config struct {
-	appId string
+	appId     string
+	appSecret string
 }
 
 type Config func(*config)

@@ -3,6 +3,7 @@ package oauth
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -64,11 +65,16 @@ func (auth *OAuth) buildAuthUrl() string {
 			auth.state,
 		)
 	}
+	log.Println(authUrl)
 	return authUrl
 }
 
-func (auth *OAuth) Redirect() {
-	http.RedirectHandler(auth.buildAuthUrl(), 302)
+func (auth *OAuth) AuthUrl() string {
+	return auth.buildAuthUrl()
+}
+
+func (auth *OAuth) Redirect(writer http.ResponseWriter, request *http.Request) {
+	http.Redirect(writer, request, auth.buildAuthUrl(), http.StatusFound)
 }
 
 func (auth *OAuth) UserFromCode(code string) (*user.User, error) {

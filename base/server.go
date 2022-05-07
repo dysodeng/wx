@@ -12,7 +12,10 @@ import (
 	"github.com/dysodeng/wx/base/message"
 )
 
-const SuccessEmptyResponse = "success"
+const (
+	SuccessEmptyResponse = "success"
+	EchoStr              = "echostr"
+)
 
 // GuardHandler 服务端消息处理器
 type GuardHandler func(messageBody *message.Message) *message.Reply
@@ -55,7 +58,7 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 		return
 	}
 
-	if e := request.FormValue("echostr"); e != "" {
+	if e := request.FormValue(EchoStr); e != "" {
 		_, _ = writer.Write([]byte(e))
 		return
 	}
@@ -65,7 +68,6 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 		var messageBody *message.Message
 
 		if encryptType == "aes" {
-
 			encryptRequestBody, err := encrypt.ParseEncryptBody(request)
 			if err != nil {
 				log.Printf("parse encrypt error: %+v", err)
@@ -97,12 +99,9 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 			messageBody, _ = encrypt.ParseTextBody(request)
 		}
 
-		log.Println(messageBody)
-
 		var handler GuardHandler
 		var ok bool
 
-		sg.lock.RLock()
 		if messageBody.MsgType == "event" {
 			if handler, ok = sg.handler[GuardEvent]; !ok {
 				if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; ok {
@@ -114,7 +113,6 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 				handler, _ = sg.handler[GuardAll]
 			}
 		}
-		sg.lock.RUnlock()
 
 		if handler != nil {
 			reply := handler(messageBody)

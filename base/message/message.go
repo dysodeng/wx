@@ -32,14 +32,42 @@ type Message struct {
 	FromUserName string
 	CreateTime   time.Duration
 	MsgType      string
-	Content      string
 	MsgId        int
+
+	// 文本消息
+	Content string
+
+	// 媒体消息通用字段
+	MediaId string
+
+	// 图片消息
+	PicUrl string
+
+	// 语音消息
+	Format      string
+	Recognition string
+
+	// 视频消息
+	ThumbMediaId string
+
+	// 地理位置消息
+	LocationX string `xml:"Location_X"`
+	LocationY string `xml:"Location_Y"`
+	Scale     string
+	Label     string
+
+	// 链接消息
+	Title       string
+	Description string
+	Url         string
 
 	// 事件消息
 	Event    string // 事件类型
 	EventKey string
+
 	// 扫描带参数二维码
 	Ticket string
+
 	// 位置上报事件
 	Latitude  string
 	Longitude string

@@ -104,7 +104,7 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 
 		if messageBody.MsgType == "event" {
 			if handler, ok = sg.handler[GuardEvent]; !ok {
-				if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; ok {
+				if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; !ok {
 					handler, _ = sg.handler[GuardAll]
 				}
 			}

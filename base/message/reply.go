@@ -16,7 +16,7 @@ type Reply struct {
 	replier Replier
 }
 
-func NewMessageReply(replier Replier) *Reply {
+func NewReply(replier Replier) *Reply {
 	return &Reply{
 		replier: replier,
 	}

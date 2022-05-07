@@ -61,6 +61,9 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 	}
 
 	if request.Method == "POST" {
+
+		var messageBody *message.Message
+
 		if encryptType == "aes" {
 
 			encryptRequestBody, err := encrypt.ParseEncryptBody(request)
@@ -89,37 +92,46 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 				return
 			}
 
-			messageBody, _ := encrypt.ParseEncryptTextBody(plainData)
-			log.Println(messageBody)
+			messageBody, _ = encrypt.ParseEncryptTextBody(plainData)
+		} else {
+			messageBody, _ = encrypt.ParseTextBody(request)
+		}
 
-			var handler GuardHandler
-			var ok bool
+		log.Println(messageBody)
 
-			sg.lock.RLock()
-			if messageBody.MsgType == "event" {
-				if handler, ok = sg.handler[GuardEvent]; !ok {
-					if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; ok {
-						handler, _ = sg.handler[GuardAll]
-					}
-				}
-			} else {
-				if handler, ok = sg.handler[Guard(messageBody.MsgType)]; !ok {
+		var handler GuardHandler
+		var ok bool
+
+		sg.lock.RLock()
+		if messageBody.MsgType == "event" {
+			if handler, ok = sg.handler[GuardEvent]; !ok {
+				if handler, ok = sg.handler[Guard(strings.ToLower(messageBody.Event))]; ok {
 					handler, _ = sg.handler[GuardAll]
 				}
 			}
-			sg.lock.RUnlock()
+		} else {
+			if handler, ok = sg.handler[Guard(messageBody.MsgType)]; !ok {
+				handler, _ = sg.handler[GuardAll]
+			}
+		}
+		sg.lock.RUnlock()
 
-			if handler != nil {
-				reply := handler(messageBody)
-				if reply != nil {
-					replier := reply.Replier()
-					xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
-					replyBody, _ := encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
+		if handler != nil {
+			reply := handler(messageBody)
+			if reply != nil {
+				replier := reply.Replier()
+				xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
 
-					writer.Header().Set("Content-Type", replier.ContentType())
-					_, _ = writer.Write(replyBody)
-					return
+				var replyBody []byte
+				if encryptType == "aes" {
+					replyBody, _ = encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
+				} else {
+					replyBody = xmlBody
 				}
+
+				writer.Header().Set("Content-Type", replier.ContentType())
+				_, _ = writer.Write(replyBody)
+				return
 			}
 		}
 	}

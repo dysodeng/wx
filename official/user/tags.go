@@ -5,9 +5,10 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/dysodeng/wx/support/http"
+
 	"github.com/dysodeng/wx/base"
 	baseError "github.com/dysodeng/wx/base/error"
-	"github.com/dysodeng/wx/base/http"
 )
 
 // TagItem 用户标签

@@ -8,7 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dysodeng/wx/base/encryptor"
+	"github.com/dysodeng/wx/support/encryptor"
+
 	"github.com/dysodeng/wx/base/message"
 )
 

@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"net/url"
 
+	baseHttp "github.com/dysodeng/wx/support/http"
+
 	"github.com/dysodeng/wx/base"
 	baseError "github.com/dysodeng/wx/base/error"
-	baseHttp "github.com/dysodeng/wx/base/http"
 	"github.com/dysodeng/wx/base/user"
 	"github.com/pkg/errors"
 )

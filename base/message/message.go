@@ -46,6 +46,10 @@ type Message struct {
 	EventKey string // 事件key
 	Ticket   string // 二维码ticket
 
+	// 模板消息发送事件
+	MsgID  string // 模板消息ID
+	Status int    // 模板消息发送状态
+
 	// 位置上报事件
 	Latitude  string
 	Longitude string

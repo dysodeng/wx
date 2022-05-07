@@ -2,10 +2,12 @@ package official
 
 import (
 	"github.com/dysodeng/wx/base"
-	"github.com/dysodeng/wx/base/cache"
+	"github.com/dysodeng/wx/base/jssdk"
 	"github.com/dysodeng/wx/official/article"
 	"github.com/dysodeng/wx/official/oauth"
+	"github.com/dysodeng/wx/official/template_message"
 	"github.com/dysodeng/wx/official/user"
+	"github.com/dysodeng/wx/support/cache"
 )
 
 // Official 公众号
@@ -92,4 +94,14 @@ func (official *Official) UserTag() *user.Tag {
 // Article 文章管理
 func (official *Official) Article() *article.Article {
 	return article.NewArticle(official)
+}
+
+// TemplateMessage 模板消息
+func (official *Official) TemplateMessage() *template_message.TemplateMessage {
+	return template_message.NewTemplateMessage(official)
+}
+
+// Jssdk 微信JSSDK
+func (official *Official) Jssdk() *jssdk.Jssdk {
+	return jssdk.NewJssdk(official)
 }

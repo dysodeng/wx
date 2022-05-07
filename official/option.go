@@ -2,7 +2,7 @@ package official
 
 import (
 	"github.com/dysodeng/wx/base"
-	"github.com/dysodeng/wx/base/cache"
+	"github.com/dysodeng/wx/support/cache"
 )
 
 // config 公众号配置

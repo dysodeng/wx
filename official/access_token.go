@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/http"
+
 	"github.com/dysodeng/wx/base"
 	baseError "github.com/dysodeng/wx/base/error"
-	"github.com/dysodeng/wx/base/http"
 )
 
 // AccessToken 获取/刷新token
@@ -41,6 +43,11 @@ func (official *Official) AccessToken(refresh bool) (base.AccessToken, error) {
 // AccessTokenKey 获取access_token缓存key
 func (official *Official) AccessTokenKey() string {
 	return fmt.Sprintf("%s%s:%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
+}
+
+// Cache 获取缓存实例
+func (official *Official) Cache() (cache.Cache, string) {
+	return official.option.cache, official.option.cacheKeyPrefix
 }
 
 // refreshAccessToken 刷新access_token

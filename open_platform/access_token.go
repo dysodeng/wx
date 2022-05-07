@@ -1,6 +1,9 @@
 package open_platform
 
-import "github.com/dysodeng/wx/base"
+import (
+	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/support/cache"
+)
 
 // AccessToken 获取开放平台access_token
 func (open *OpenPlatform) AccessToken(refresh bool) (base.AccessToken, error) {
@@ -21,4 +24,8 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 // AuthorizerAccessTokenKey 第三方平台access_token缓存key
 func (open *OpenPlatform) AuthorizerAccessTokenKey() string {
 	return ""
+}
+
+func (open *OpenPlatform) Cache() (cache.Cache, string) {
+	return nil, ""
 }

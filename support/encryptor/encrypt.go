@@ -231,13 +231,10 @@ func (e *Encryptor) ValidAppId(id []byte) bool {
 }
 
 func (e *Encryptor) ParseEncryptTextBody(plainText []byte) (*message.Message, error) {
-	fmt.Println(string(plainText))
-
 	// Read length
 	buf := bytes.NewBuffer(plainText[16:20])
 	var length int32
 	_ = binary.Read(buf, binary.BigEndian, &length)
-	fmt.Println(string(plainText[20 : 20+length]))
 
 	// appId validation
 	appIdStart := 20 + length
@@ -246,7 +243,6 @@ func (e *Encryptor) ParseEncryptTextBody(plainText []byte) (*message.Message, er
 		log.Println("Wechat Service: appid is invalid!")
 		return nil, errors.New("AppId is invalid")
 	}
-	log.Println("Wechat Service: appid validation is ok!")
 
 	messageBody := &message.Message{}
 	_ = xml.Unmarshal(plainText[20:20+length], messageBody)

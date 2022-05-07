@@ -26,7 +26,7 @@ func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Offic
 	}
 
 	o := &option{
-		cacheKeyPrefix: DefaultCacheKeyPrefix,
+		cacheKeyPrefix: cache.DefaultCacheKeyPrefix,
 	}
 	for _, opt := range opts {
 		opt(o)
@@ -56,7 +56,7 @@ func NewOfficialWithOpenPlatform(
 	}
 
 	o := &option{
-		cacheKeyPrefix: DefaultCacheKeyPrefix,
+		cacheKeyPrefix: cache.DefaultCacheKeyPrefix,
 	}
 	for _, opt := range opts {
 		opt(o)

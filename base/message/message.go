@@ -54,4 +54,9 @@ type Message struct {
 	Latitude  string
 	Longitude string
 	Precision string
+
+	// 开放平台
+	AppId                 string
+	InfoType              string
+	ComponentVerifyTicket string
 }

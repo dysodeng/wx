@@ -22,8 +22,6 @@ type option struct {
 	cacheKeyPrefix string
 }
 
-const DefaultCacheKeyPrefix = "dy.wx.official.cache."
-
 type Option func(*option)
 
 // WithCache 设置缓存

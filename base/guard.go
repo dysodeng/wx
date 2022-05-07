@@ -1,5 +1,7 @@
 package base
 
+import "github.com/dysodeng/wx/base/message"
+
 // Guard 服务类型
 type Guard string
 
@@ -54,4 +56,16 @@ const (
 	GuardEventCardSkuRemind            Guard = "card_sku_remind"
 	GuardEventCardPayOrder             Guard = "card_pay_order"
 	GuardEventSubmitMemberCardUserInfo Guard = "submit_membercard_user_info"
+
+	/* 开放平台事件 */
+	GuardEventAuthorized               Guard = "authorized"
+	GuardEventUnauthorized             Guard = "unauthorized"
+	GuardEventUpdateAuthorized         Guard = "updateauthorized"
+	GuardEventComponentVerifyTicket    Guard = "component_verify_ticket"
+	GuardEventNotifyThirdFasteRegister Guard = "notify_third_fasteregister"
 )
+
+// GuardHandler 服务端消息处理器接口
+type GuardHandler interface {
+	Handle(account AccountInterface, messageBody *message.Message) *message.Reply
+}

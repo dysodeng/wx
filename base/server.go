@@ -18,9 +18,6 @@ const (
 	EchoStr              = "echostr"
 )
 
-// GuardHandler 服务端消息处理器
-type GuardHandler func(messageBody *message.Message) *message.Reply
-
 // Server 公众账号服务端
 type Server struct {
 	lock    sync.RWMutex
@@ -100,6 +97,10 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 			messageBody, _ = encrypt.ParseTextBody(request)
 		}
 
+		if messageBody.MsgType == "" && messageBody.InfoType != "" {
+			messageBody.MsgType = messageBody.InfoType
+		}
+
 		var handler GuardHandler
 		var ok bool
 
@@ -116,7 +117,7 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 		}
 
 		if handler != nil {
-			reply := handler(messageBody)
+			reply := handler.Handle(sg.account, messageBody)
 			if reply != nil {
 				replier := reply.Replier()
 				xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)

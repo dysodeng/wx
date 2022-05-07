@@ -1,22 +1,19 @@
 package open_platform
 
 func (open *OpenPlatform) AccountToken() string {
-	// TODO
-	return ""
+	return open.config.token
 }
 
 func (open *OpenPlatform) AccountAesKey() string {
-	// TODO
-	return ""
+	return open.config.aesKey
 }
 
 func (open *OpenPlatform) AccountAppId() string {
-	// TODO
-	return ""
+	return open.config.appId
 }
 
 func (open *OpenPlatform) AccountAppSecret() string {
-	return open.config.appSecret
+	return open.config.secret
 }
 
 func (open *OpenPlatform) ComponentAppId() string {

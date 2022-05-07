@@ -13,12 +13,13 @@ go get github.com/dysodeng/wx
 Usage
 -----
 非开放平台下微信公众号调用sdk
+
 ```golang
 package main
 
 import (
 	"github.com/dysodeng/wx/base"
-	"github.com/dysodeng/wx/base/message"
+	"github.com/dysodeng/wx/kernel/message"
 	"github.com/dysodeng/wx/official"
 	"log"
 	"net/http"
@@ -40,7 +41,7 @@ func main() {
 	// 公众号接口调用
 	userTag := officialSdk.UserTag()
 	log.Println(userTag.List())
-	
+
 	// 服务端
 	appServer := officialSdk.Server()
 	appServer.Push(func(messageBody *message.Message) *message.Reply {
@@ -48,7 +49,7 @@ func main() {
 		log.Println(messageBody)
 		return message.NewMessageReply(message.NewText("你好呀"))
 	}, base.GuardAll)
-	
+
 	h := http.DefaultServeMux
 	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		appServer.Serve(r, w)

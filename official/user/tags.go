@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/dysodeng/wx/support/http"
+	"github.com/dysodeng/wx/kernel/contracts"
+	baseError "github.com/dysodeng/wx/kernel/error"
 
-	"github.com/dysodeng/wx/base"
-	baseError "github.com/dysodeng/wx/base/error"
+	"github.com/dysodeng/wx/support/http"
 )
 
 // TagItem 用户标签
@@ -28,10 +28,10 @@ type TagUser struct {
 
 // Tag 用户标签管理
 type Tag struct {
-	accessToken base.AccessTokenInterface
+	accessToken contracts.AccessTokenInterface
 }
 
-func NewUserTag(accessToken base.AccessTokenInterface) *Tag {
+func NewUserTag(accessToken contracts.AccessTokenInterface) *Tag {
 	return &Tag{accessToken: accessToken}
 }
 

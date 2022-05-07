@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dysodeng/wx/base/message"
+	"github.com/dysodeng/wx/kernel/message"
 )
 
 const (

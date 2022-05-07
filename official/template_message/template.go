@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dysodeng/wx/base"
-	baseError "github.com/dysodeng/wx/base/error"
+	"github.com/dysodeng/wx/kernel/contracts"
+	baseError "github.com/dysodeng/wx/kernel/error"
+
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -14,10 +15,10 @@ const defaultColor = "#000000"
 
 // TemplateMessage 模板消息
 type TemplateMessage struct {
-	accessToken base.AccessTokenInterface
+	accessToken contracts.AccessTokenInterface
 }
 
-func NewTemplateMessage(accessToken base.AccessTokenInterface) *TemplateMessage {
+func NewTemplateMessage(accessToken contracts.AccessTokenInterface) *TemplateMessage {
 	return &TemplateMessage{accessToken: accessToken}
 }
 

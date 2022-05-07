@@ -1,4 +1,4 @@
-package base
+package contracts
 
 // AccountInterface 公众账号接口
 type AccountInterface interface {
@@ -13,7 +13,9 @@ type AccountInterface interface {
 	AccountAppId() string
 	// AccountAppSecret 公众账号app_secret
 	AccountAppSecret() string
+	// ComponentAppId 开放平台appID
 	ComponentAppId() string
+	// ComponentAccessToken 开放平台access_token
 	ComponentAccessToken() string
 }
 
@@ -24,6 +26,8 @@ type AuthorizerAccountInterface interface {
 	AuthorizerAccountToken() string
 	// AuthorizerAccountAesKey 已授权公众号aes_key
 	AuthorizerAccountAesKey() string
+	// ComponentAppId 开放平台appID
 	ComponentAppId() string
+	// ComponentAccessToken 开放平台access_token
 	ComponentAccessToken() string
 }

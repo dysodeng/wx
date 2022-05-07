@@ -1,7 +1,7 @@
 package official
 
 import (
-	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/support/cache"
 )
 
@@ -13,7 +13,7 @@ type config struct {
 	token                  string
 	aesKey                 string
 	authorizerRefreshToken string
-	authorizerAccount      base.AuthorizerAccountInterface
+	authorizerAccount      contracts.AuthorizerAccountInterface
 }
 
 // option 公众号选项

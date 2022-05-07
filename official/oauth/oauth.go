@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/dysodeng/wx/kernel/contracts"
+	baseError "github.com/dysodeng/wx/kernel/error"
+	"github.com/dysodeng/wx/kernel/user"
+
 	baseHttp "github.com/dysodeng/wx/support/http"
 
-	"github.com/dysodeng/wx/base"
-	baseError "github.com/dysodeng/wx/base/error"
-	"github.com/dysodeng/wx/base/user"
 	"github.com/pkg/errors"
 )
 
@@ -18,13 +19,13 @@ const oauthBaseUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
 
 // OAuth 公众号用户授权
 type OAuth struct {
-	accessToken base.AccountInterface
+	accessToken contracts.AccountInterface
 	scope       string
 	redirectUrl string
 	state       string
 }
 
-func NewOAuth(accessToken base.AccountInterface) *OAuth {
+func NewOAuth(accessToken contracts.AccountInterface) *OAuth {
 	return &OAuth{accessToken: accessToken, state: "state"}
 }
 

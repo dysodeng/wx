@@ -1,6 +1,8 @@
 package user
 
-import baseError "github.com/dysodeng/wx/base/error"
+import (
+	baseError "github.com/dysodeng/wx/kernel/error"
+)
 
 type User struct {
 	baseError.WxApiError

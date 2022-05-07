@@ -1,12 +1,14 @@
 package article
 
-import "github.com/dysodeng/wx/base"
+import (
+	"github.com/dysodeng/wx/kernel/contracts"
+)
 
 // Article 公众号文章管理
 type Article struct {
-	accessToken base.AccessTokenInterface
+	accessToken contracts.AccessTokenInterface
 }
 
-func NewArticle(accessToken base.AccessTokenInterface) *Article {
+func NewArticle(accessToken contracts.AccessTokenInterface) *Article {
 	return &Article{accessToken: accessToken}
 }

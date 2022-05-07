@@ -3,6 +3,7 @@ package official
 import (
 	"github.com/dysodeng/wx/base"
 	"github.com/dysodeng/wx/base/jssdk"
+	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/official/article"
 	"github.com/dysodeng/wx/official/oauth"
 	"github.com/dysodeng/wx/official/template_message"
@@ -45,7 +46,7 @@ func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Offic
 func NewOfficialWithOpenPlatform(
 	appId,
 	authorizerRefreshToken string,
-	authorizerAccount base.AuthorizerAccountInterface,
+	authorizerAccount contracts.AuthorizerAccountInterface,
 	opts ...Option,
 ) *Official {
 	c := &config{

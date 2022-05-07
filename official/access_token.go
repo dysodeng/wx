@@ -6,15 +6,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dysodeng/wx/kernel"
+	baseError "github.com/dysodeng/wx/kernel/error"
+
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/http"
-
-	"github.com/dysodeng/wx/base"
-	baseError "github.com/dysodeng/wx/base/error"
 )
 
 // AccessToken 获取/刷新token
-func (official *Official) AccessToken(refresh bool) (base.AccessToken, error) {
+func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccessToken(
 			official.config.appId,
@@ -26,7 +26,7 @@ func (official *Official) AccessToken(refresh bool) (base.AccessToken, error) {
 			tokenString, err := official.option.cache.Get(official.AccessTokenKey())
 			if err == nil {
 				if t, ok := tokenString.(string); ok {
-					var accessToken base.AccessToken
+					var accessToken kernel.AccessToken
 					err = json.Unmarshal([]byte(t), &accessToken)
 					if err == nil {
 						return accessToken, nil
@@ -51,7 +51,7 @@ func (official *Official) Cache() (cache.Cache, string) {
 }
 
 // refreshAccessToken 刷新access_token
-func (official *Official) refreshAccessToken() (base.AccessToken, error) {
+func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		official.config.appId,
@@ -59,21 +59,21 @@ func (official *Official) refreshAccessToken() (base.AccessToken, error) {
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return base.AccessToken{}, baseError.New(0, err)
+		return kernel.AccessToken{}, baseError.New(0, err)
 	}
 
 	// 返回错误信息
 	type accessToken struct {
 		baseError.WxApiError
-		base.AccessToken
+		kernel.AccessToken
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return base.AccessToken{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernel.AccessToken{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	tokenByte, _ := json.Marshal(base.AccessToken{
+	tokenByte, _ := json.Marshal(kernel.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	})
@@ -84,10 +84,10 @@ func (official *Official) refreshAccessToken() (base.AccessToken, error) {
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600), // 提前过期
 	)
 	if err != nil {
-		return base.AccessToken{}, baseError.New(0, err)
+		return kernel.AccessToken{}, baseError.New(0, err)
 	}
 
-	return base.AccessToken{
+	return kernel.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	}, nil

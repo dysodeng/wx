@@ -7,8 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dysodeng/wx/base"
-	baseError "github.com/dysodeng/wx/base/error"
+	"github.com/dysodeng/wx/kernel/contracts"
+	baseError "github.com/dysodeng/wx/kernel/error"
+
 	"github.com/dysodeng/wx/support/http"
 	"github.com/dysodeng/wx/support/str"
 )
@@ -17,7 +18,7 @@ const cacheKeyTemplate = "jssdk.ticket.%s.%s"
 
 // Jssdk 微信JSSDK
 type Jssdk struct {
-	accessToken base.AccountInterface
+	accessToken contracts.AccountInterface
 	url         string
 }
 
@@ -33,7 +34,7 @@ type Ticket struct {
 	ExpiresIn int    `json:"expires_in"`
 }
 
-func NewJssdk(accessToken base.AccountInterface) *Jssdk {
+func NewJssdk(accessToken contracts.AccountInterface) *Jssdk {
 	return &Jssdk{accessToken: accessToken}
 }
 

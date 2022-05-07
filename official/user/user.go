@@ -1,12 +1,14 @@
 package user
 
-import "github.com/dysodeng/wx/base"
+import (
+	"github.com/dysodeng/wx/kernel/contracts"
+)
 
 // User 用户管理
 type User struct {
-	accessToken base.AccessTokenInterface
+	accessToken contracts.AccessTokenInterface
 }
 
-func NewUser(accessToken base.AccessTokenInterface) *User {
+func NewUser(accessToken contracts.AccessTokenInterface) *User {
 	return &User{accessToken: accessToken}
 }

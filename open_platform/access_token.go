@@ -96,7 +96,7 @@ func (open *OpenPlatform) getTicket() string {
 
 // AccessTokenCacheKey 获取开放平台access_token缓存key
 func (open *OpenPlatform) AccessTokenCacheKey() string {
-	return fmt.Sprintf("%s%s:%s", open.option.cacheKeyPrefix, "component_access_token", open.config.appId)
+	return fmt.Sprintf("%s%s.%s", open.option.cacheKeyPrefix, "component_access_token", open.config.appId)
 }
 
 // AuthorizerAccessToken 代公众账号获取access_token
@@ -169,7 +169,7 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 
 // AuthorizerAccessTokenCacheKey 公众账号access_token缓存key
 func (open *OpenPlatform) AuthorizerAccessTokenCacheKey(appId string) string {
-	return fmt.Sprintf("%s%s:%s:%s", open.option.cacheKeyPrefix, "authorizer_access_token", open.config.appId, appId)
+	return fmt.Sprintf("%s%s.%s.%s", open.option.cacheKeyPrefix, "authorizer_access_token", open.config.appId, appId)
 }
 
 func (open *OpenPlatform) Cache() (cache.Cache, string) {

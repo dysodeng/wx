@@ -43,7 +43,7 @@ func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) 
 
 // AccessTokenCacheKey 获取access_token缓存key
 func (official *Official) AccessTokenCacheKey() string {
-	return fmt.Sprintf("%s%s:%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
+	return fmt.Sprintf("%s%s.%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
 }
 
 // Cache 获取缓存实例

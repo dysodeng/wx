@@ -62,7 +62,7 @@ func (js *Jssdk) BuildConfig(jsApiList []string, debug, beta bool) map[string]in
 // getTicket 获取ticket ticketType:ticket类型 jsapi与wx_card
 func (js *Jssdk) getTicket(ticketType string) Ticket {
 	cache, cacheKeyPrefix := js.accessToken.Cache()
-	cacheKey := cacheKeyPrefix + fmt.Sprintf(cacheKeyTemplate, ticketType, js.accessToken.AccountAppId())
+	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
 	if cache.IsExist(cacheKey) {
 		ticketString, err := cache.Get(cacheKey)
@@ -117,7 +117,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 
 	// 缓存
 	cache, cacheKeyPrefix := js.accessToken.Cache()
-	cacheKey := cacheKeyPrefix + fmt.Sprintf(cacheKeyTemplate, ticketType, js.accessToken.AccountAppId())
+	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
 	_ = cache.Put(
 		cacheKey,
@@ -126,6 +126,14 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	)
 
 	return result.Ticket
+}
+
+func (js *Jssdk) getTicketCacheKey(ticketType string) string {
+	appId := js.accessToken.AccountAppId()
+	if js.accessToken.IsOpenPlatform() {
+		appId = js.accessToken.ComponentAppId() + "." + appId
+	}
+	return fmt.Sprintf(cacheKeyTemplate, ticketType, appId)
 }
 
 // configSignature jssdk 配置签名

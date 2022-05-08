@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sort"
 	"strconv"
@@ -139,20 +138,15 @@ func (e *Encryptor) ParseTextBody(r *http.Request) (*message.Message, error) {
 	return messageBody, nil
 }
 
-// value2CDATA 值转换为CDATA
-func (e *Encryptor) value2CDATA(value string) CDATAText {
-	return CDATAText{"<![CDATA[" + value + "]]>"}
-}
-
 // MakeEncryptBody 构建加密消息体
 func (e *Encryptor) MakeEncryptBody(xmlBody []byte, timestamp, nonce string) ([]byte, error) {
 	encryptBody := &EncryptResponseBody{}
 
 	encryptXmlData, _ := e.makeEncryptXmlData(xmlBody)
-	encryptBody.Encrypt = e.value2CDATA(encryptXmlData)
-	encryptBody.MsgSignature = e.value2CDATA(e.makeMsgSignature(timestamp, nonce, encryptXmlData))
+	encryptBody.Encrypt = value2CDATA(encryptXmlData)
+	encryptBody.MsgSignature = value2CDATA(e.makeMsgSignature(timestamp, nonce, encryptXmlData))
 	encryptBody.TimeStamp = strconv.FormatInt(time.Now().Unix(), 10)
-	encryptBody.Nonce = e.value2CDATA(nonce)
+	encryptBody.Nonce = value2CDATA(nonce)
 
 	return xml.MarshalIndent(encryptBody, "", "")
 }
@@ -241,8 +235,7 @@ func (e *Encryptor) ParseEncryptTextBody(plainText []byte) (*message.Message, er
 	appIdStart := 20 + length
 	id := plainText[appIdStart : int(appIdStart)+len(e.appId)]
 	if !e.ValidAppId(id) {
-		log.Println("Wechat Service: appid is invalid!")
-		return nil, errors.New("AppId is invalid")
+		return nil, errors.New("appid is invalid")
 	}
 
 	messageBody := &message.Message{}

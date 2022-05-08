@@ -31,3 +31,8 @@ func PKCS7Pad(message []byte, blockSize int) (padded []byte) {
 	// block size bigger or equal 256 is not currently supported
 	panic("unsupported block size")
 }
+
+// value2CDATA 值转换为CDATA
+func value2CDATA(value string) CDATAText {
+	return CDATAText{"<![CDATA[" + value + "]]>"}
+}

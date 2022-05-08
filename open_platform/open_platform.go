@@ -2,7 +2,7 @@ package open_platform
 
 import (
 	"github.com/dysodeng/wx/base"
-	"github.com/dysodeng/wx/kernel"
+	"github.com/dysodeng/wx/kernel/event"
 	"github.com/dysodeng/wx/official"
 	"github.com/dysodeng/wx/support/cache"
 )
@@ -40,7 +40,7 @@ func NewOpenPlatform(appId, secret, token, aesKey string, opts ...Option) *OpenP
 // Server 服务端
 func (open *OpenPlatform) Server() *base.Server {
 	server := base.NewServer(open)
-	server.Push(&ComponentVerifyTicket{}, kernel.GuardEventComponentVerifyTicket)
+	server.Push(&ComponentVerifyTicket{}, event.ComponentVerifyTicket)
 	return server
 }
 

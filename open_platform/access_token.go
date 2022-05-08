@@ -10,8 +10,8 @@ import (
 
 // AccessToken 获取开放平台access_token
 func (open *OpenPlatform) AccessToken(refresh bool) (kernel.AccessToken, error) {
-	if !refresh && open.option.cache.IsExist(open.AccessTokenKey()) {
-		tokenString, err := open.option.cache.Get(open.AccessTokenKey())
+	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
+		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())
 		if err == nil {
 			if t, ok := tokenString.(string); ok {
 				var accessToken kernel.AccessToken
@@ -32,8 +32,8 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	return kernel.AccessToken{}, nil
 }
 
-// AccessTokenKey 获取开放平台access_token缓存key
-func (open *OpenPlatform) AccessTokenKey() string {
+// AccessTokenCacheKey 获取开放平台access_token缓存key
+func (open *OpenPlatform) AccessTokenCacheKey() string {
 	return fmt.Sprintf("%s%s:%s", open.option.cacheKeyPrefix, "component_access_token", open.config.appId)
 }
 
@@ -43,8 +43,8 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 	return kernel.AccessToken{}, nil
 }
 
-// AuthorizerAccessTokenKey 第三方平台access_token缓存key
-func (open *OpenPlatform) AuthorizerAccessTokenKey() string {
+// AuthorizerAccessTokenCacheKey 第三方平台access_token缓存key
+func (open *OpenPlatform) AuthorizerAccessTokenCacheKey() string {
 	return ""
 }
 

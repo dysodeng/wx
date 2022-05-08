@@ -8,7 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dysodeng/wx/kernel"
+	"github.com/dysodeng/wx/kernel/event"
+
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/kernel/message"
 
@@ -24,18 +25,18 @@ const (
 type Server struct {
 	lock    sync.RWMutex
 	account contracts.AccountInterface
-	handler map[kernel.EventGuard]contracts.EventHandlerInterface
+	handler map[event.Guard]contracts.EventHandlerInterface
 }
 
 func NewServer(account contracts.AccountInterface) *Server {
 	return &Server{
 		account: account,
-		handler: make(map[kernel.EventGuard]contracts.EventHandlerInterface),
+		handler: make(map[event.Guard]contracts.EventHandlerInterface),
 	}
 }
 
 // Push 添加消息处理器
-func (sg *Server) Push(handler contracts.EventHandlerInterface, guard kernel.EventGuard) {
+func (sg *Server) Push(handler contracts.EventHandlerInterface, guard event.Guard) {
 	sg.lock.Lock()
 	defer sg.lock.Unlock()
 
@@ -107,14 +108,14 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 		var ok bool
 
 		if messageBody.MsgType == "event" {
-			if handler, ok = sg.handler[kernel.GuardEvent]; !ok {
-				if handler, ok = sg.handler[kernel.EventGuard(strings.ToLower(messageBody.Event))]; !ok {
-					handler, _ = sg.handler[kernel.GuardAll]
+			if handler, ok = sg.handler[event.Event]; !ok {
+				if handler, ok = sg.handler[event.Guard(strings.ToLower(messageBody.Event))]; !ok {
+					handler, _ = sg.handler[event.All]
 				}
 			}
 		} else {
-			if handler, ok = sg.handler[kernel.EventGuard(messageBody.MsgType)]; !ok {
-				handler, _ = sg.handler[kernel.GuardAll]
+			if handler, ok = sg.handler[event.Guard(messageBody.MsgType)]; !ok {
+				handler, _ = sg.handler[event.All]
 			}
 		}
 

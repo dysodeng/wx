@@ -22,8 +22,8 @@ func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) 
 			refresh,
 		)
 	} else {
-		if !refresh && official.option.cache.IsExist(official.AccessTokenKey()) {
-			tokenString, err := official.option.cache.Get(official.AccessTokenKey())
+		if !refresh && official.option.cache.IsExist(official.AccessTokenCacheKey()) {
+			tokenString, err := official.option.cache.Get(official.AccessTokenCacheKey())
 			if err == nil {
 				if t, ok := tokenString.(string); ok {
 					var accessToken kernel.AccessToken
@@ -40,8 +40,8 @@ func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) 
 	return official.refreshAccessToken()
 }
 
-// AccessTokenKey 获取access_token缓存key
-func (official *Official) AccessTokenKey() string {
+// AccessTokenCacheKey 获取access_token缓存key
+func (official *Official) AccessTokenCacheKey() string {
 	return fmt.Sprintf("%s%s:%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
 }
 
@@ -79,7 +79,7 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 	})
 
 	err = official.option.cache.Put(
-		official.AccessTokenKey(),
+		official.AccessTokenCacheKey(),
 		string(tokenByte),
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600), // 提前过期
 	)

@@ -9,8 +9,8 @@ import (
 type AccessTokenInterface interface {
 	// AccessToken 获取公众账号access_token
 	AccessToken(refresh bool) (kernel.AccessToken, error)
-	// AccessTokenKey 获取公众账号access_token缓存key
-	AccessTokenKey() string
+	// AccessTokenCacheKey 获取公众账号access_token缓存key
+	AccessTokenCacheKey() string
 	// Cache 获取缓存实例
 	Cache() (cache.Cache, string)
 }
@@ -19,8 +19,8 @@ type AccessTokenInterface interface {
 type AuthorizerAccessTokenInterface interface {
 	// AuthorizerAccessToken 获取授权到开放平台的公众账号access_token
 	AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (kernel.AccessToken, error)
-	// AuthorizerAccessTokenKey 获取授权到开放平台的公众账号access_token缓存key
-	AuthorizerAccessTokenKey() string
+	// AuthorizerAccessTokenCacheKey 获取授权到开放平台的公众账号access_token缓存key
+	AuthorizerAccessTokenCacheKey() string
 	// Cache 获取缓存实例
 	Cache() (cache.Cache, string)
 }

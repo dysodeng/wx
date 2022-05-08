@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dysodeng/wx/support"
+
 	"github.com/dysodeng/wx/kernel/contracts"
 	baseError "github.com/dysodeng/wx/kernel/error"
 
 	"github.com/dysodeng/wx/support/http"
-	"github.com/dysodeng/wx/support/str"
 )
 
 const cacheKeyTemplate = "jssdk.ticket.%s.%s"
@@ -129,7 +130,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 
 // configSignature jssdk 配置签名
 func (js *Jssdk) configSignature() signatureConfig {
-	nonce := str.RandString(10)
+	nonce := support.RandString(10)
 	timestamp := time.Now().Unix()
 	ticket := js.getTicket("jsapi")
 	return signatureConfig{

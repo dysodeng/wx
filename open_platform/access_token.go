@@ -43,7 +43,7 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	res, err := http.PostJson("cgi-bin/component/api_component_token", map[string]interface{}{
 		"component_appid":         open.config.appId,
 		"component_appsecret":     open.config.secret,
-		"component_verify_ticket": verifyTicket.Ticket,
+		"component_verify_ticket": verifyTicket,
 	})
 	if err != nil {
 		return kernel.AccessToken{}, baseError.New(0, err)
@@ -81,20 +81,17 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	}, nil
 }
 
-func (open *OpenPlatform) getTicket() ticket {
+func (open *OpenPlatform) getTicket() string {
 	cacheKey := open.option.cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, open.config.appId)
 	if open.option.cache.IsExist(cacheKey) {
 		ticketString, err := open.option.cache.Get(cacheKey)
 		if err == nil {
 			if t, ok := ticketString.(string); ok {
-				return ticket{
-					Ticket: t,
-				}
+				return t
 			}
-
 		}
 	}
-	return ticket{}
+	return ""
 }
 
 // AccessTokenCacheKey 获取开放平台access_token缓存key

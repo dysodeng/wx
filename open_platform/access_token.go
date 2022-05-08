@@ -3,6 +3,7 @@ package open_platform
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/dysodeng/wx/kernel"
@@ -40,6 +41,7 @@ func (open *OpenPlatform) AccessToken(refresh bool) (kernel.AccessToken, error) 
 
 func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	verifyTicket := open.getTicket()
+	log.Printf("access_token ticket: %s", verifyTicket.Ticket)
 	res, err := http.PostJson("cgi-bin/component/api_component_token", map[string]interface{}{
 		"component_appid":         open.config.appId,
 		"component_appsecret":     open.config.secret,
@@ -87,10 +89,8 @@ func (open *OpenPlatform) getTicket() ticket {
 		ticketString, err := open.option.cache.Get(cacheKey)
 		if err == nil {
 			if t, ok := ticketString.(string); ok {
-				var ticketBody ticket
-				err = json.Unmarshal([]byte(t), &ticketBody)
-				if err == nil {
-					return ticketBody
+				return ticket{
+					Ticket: t,
 				}
 			}
 

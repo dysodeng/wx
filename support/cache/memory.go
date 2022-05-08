@@ -55,7 +55,7 @@ func (c *MemoryCache) Get(key string) (interface{}, error) {
 	defer c.RUnlock()
 
 	if i, ok := c.items[key]; ok {
-		if !i.isExpire() {
+		if i.isExpire() {
 			return nil, ErrKeyExpired
 		}
 

@@ -2,8 +2,9 @@ package user
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+
+	"github.com/pkg/errors"
 
 	"github.com/dysodeng/wx/kernel/contracts"
 	baseError "github.com/dysodeng/wx/kernel/error"

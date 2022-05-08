@@ -45,7 +45,9 @@ func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Offic
 // NewOfficialWithOpenPlatform 开放平台代公众号调用接口
 func NewOfficialWithOpenPlatform(
 	appId,
-	authorizerRefreshToken string,
+	authorizerRefreshToken,
+	token,
+	aesKey string,
 	authorizerAccount contracts.AuthorizerAccountInterface,
 	opts ...Option,
 ) *Official {
@@ -53,6 +55,8 @@ func NewOfficialWithOpenPlatform(
 		isOpenPlatform:         true,
 		appId:                  appId,
 		authorizerRefreshToken: authorizerRefreshToken,
+		token:                  token,
+		aesKey:                 aesKey,
 		authorizerAccount:      authorizerAccount,
 	}
 

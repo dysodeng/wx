@@ -51,6 +51,8 @@ func (open *OpenPlatform) Official(appId, authorizerRefreshToken string) *offici
 	return official.NewOfficialWithOpenPlatform(
 		appId,
 		authorizerRefreshToken,
+		open.config.token,
+		open.config.aesKey,
 		open,
 		official.WithCache(open.option.cache),
 		official.WithCacheKeyPrefix(open.option.cacheKeyPrefix),

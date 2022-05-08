@@ -2,9 +2,10 @@ package official
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/dysodeng/wx/kernel"
 	baseError "github.com/dysodeng/wx/kernel/error"

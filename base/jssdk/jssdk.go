@@ -19,8 +19,8 @@ const cacheKeyTemplate = "jssdk.ticket.%s.%s"
 
 // Jssdk 微信JSSDK
 type Jssdk struct {
-	accessToken contracts.AccountInterface
-	url         string
+	account contracts.AccountInterface
+	url     string
 }
 
 type signatureConfig struct {
@@ -35,8 +35,8 @@ type Ticket struct {
 	ExpiresIn int    `json:"expires_in"`
 }
 
-func NewJssdk(accessToken contracts.AccountInterface) *Jssdk {
-	return &Jssdk{accessToken: accessToken}
+func NewJssdk(account contracts.AccountInterface) *Jssdk {
+	return &Jssdk{account: account}
 }
 
 func (js *Jssdk) SetUrl(url string) *Jssdk {
@@ -51,7 +51,7 @@ func (js *Jssdk) BuildConfig(jsApiList []string, debug, beta bool) map[string]in
 		"debug":     debug,
 		"beta":      beta,
 		"jsApiList": jsApiList,
-		"appId":     js.accessToken.AccountAppId(),
+		"appId":     js.account.AppId(),
 		"nonceStr":  config.nonce,
 		"timestamp": config.timestamp,
 		"url":       config.url,
@@ -61,7 +61,7 @@ func (js *Jssdk) BuildConfig(jsApiList []string, debug, beta bool) map[string]in
 
 // getTicket 获取ticket ticketType:ticket类型 jsapi与wx_card
 func (js *Jssdk) getTicket(ticketType string) Ticket {
-	cache, cacheKeyPrefix := js.accessToken.Cache()
+	cache, cacheKeyPrefix := js.account.Cache()
 	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
 	if cache.IsExist(cacheKey) {
@@ -82,7 +82,7 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 
 // refreshTicket 刷新ticket
 func (js *Jssdk) refreshTicket(ticketType string) Ticket {
-	accessToken, _ := js.accessToken.AccessToken(false)
+	accessToken, _ := js.account.AccessToken(false)
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/ticket/getticket?access_token=%s&type=%s",
 		accessToken.AccessToken,
@@ -114,7 +114,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	})
 
 	// 缓存
-	cache, cacheKeyPrefix := js.accessToken.Cache()
+	cache, cacheKeyPrefix := js.account.Cache()
 	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
 	_ = cache.Put(
@@ -127,9 +127,9 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 }
 
 func (js *Jssdk) getTicketCacheKey(ticketType string) string {
-	appId := js.accessToken.AccountAppId()
-	if js.accessToken.IsOpenPlatform() {
-		appId = js.accessToken.ComponentAppId() + "." + appId
+	appId := js.account.AppId()
+	if js.account.IsOpenPlatform() {
+		appId = js.account.ComponentAppId() + "." + appId
 	}
 	return fmt.Sprintf(cacheKeyTemplate, ticketType, appId)
 }

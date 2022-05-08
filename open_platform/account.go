@@ -1,18 +1,18 @@
 package open_platform
 
-func (open *OpenPlatform) AccountToken() string {
+func (open *OpenPlatform) Token() string {
 	return open.config.token
 }
 
-func (open *OpenPlatform) AccountAesKey() string {
+func (open *OpenPlatform) AesKey() string {
 	return open.config.aesKey
 }
 
-func (open *OpenPlatform) AccountAppId() string {
+func (open *OpenPlatform) AppId() string {
 	return open.config.appId
 }
 
-func (open *OpenPlatform) AccountAppSecret() string {
+func (open *OpenPlatform) AppSecret() string {
 	return open.config.appSecret
 }
 
@@ -33,11 +33,9 @@ func (open *OpenPlatform) IsOpenPlatform() bool {
 }
 
 func (open *OpenPlatform) AuthorizerAccountToken() string {
-	// TODO
-	return ""
+	return open.Token()
 }
 
 func (open *OpenPlatform) AuthorizerAccountAesKey() string {
-	// TODO
-	return ""
+	return open.AesKey()
 }

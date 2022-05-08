@@ -14,11 +14,6 @@ import (
 
 const componentVerifyTicketCacheKey = "component_verify_ticket.%s"
 
-type ticket struct {
-	Ticket    string `json:"ticket"`
-	ExpiresIn int    `json:"expires_in"`
-}
-
 // AccessToken 获取开放平台access_token
 func (open *OpenPlatform) AccessToken(refresh bool) (kernel.AccessToken, error) {
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {

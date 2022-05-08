@@ -19,14 +19,14 @@ const oauthBaseUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
 
 // OAuth 公众号用户授权
 type OAuth struct {
-	accessToken contracts.AccountInterface
+	account     contracts.AccountInterface
 	scope       string
 	redirectUrl string
 	state       string
 }
 
-func NewOAuth(accessToken contracts.AccountInterface) *OAuth {
-	return &OAuth{accessToken: accessToken, state: "state"}
+func NewOAuth(account contracts.AccountInterface) *OAuth {
+	return &OAuth{account: account, state: "state"}
 }
 
 func (auth *OAuth) WithScope(scope string) *OAuth {
@@ -45,22 +45,22 @@ func (auth *OAuth) WithState(state string) *OAuth {
 }
 
 func (auth *OAuth) buildAuthUrl() string {
-	if auth.accessToken.IsOpenPlatform() {
+	if auth.account.IsOpenPlatform() {
 		return fmt.Sprintf(
 			"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&component_appid=%s#wechat_redirect",
 			oauthBaseUrl,
-			auth.accessToken.AccountAppId(),
+			auth.account.AppId(),
 			url.QueryEscape(auth.redirectUrl),
 			auth.scope,
 			auth.state,
-			auth.accessToken.ComponentAppId(),
+			auth.account.ComponentAppId(),
 		)
 	}
 
 	return fmt.Sprintf(
 		"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect",
 		oauthBaseUrl,
-		auth.accessToken.AccountAppId(),
+		auth.account.AppId(),
 		url.QueryEscape(auth.redirectUrl),
 		auth.scope,
 		auth.state,
@@ -126,20 +126,20 @@ func (auth *OAuth) TokenFromCode(code string) (*AccessTokenResponse, error) {
 }
 
 func (auth *OAuth) getTokenUrl(code string) string {
-	if auth.accessToken.IsOpenPlatform() {
+	if auth.account.IsOpenPlatform() {
 		return fmt.Sprintf(
 			"sns/oauth2/component/access_token?appid=%s&code=%s&grant_type=authorization_code&component_appid=%s&component_access_token=%s",
-			auth.accessToken.AccountAppId(),
+			auth.account.AppId(),
 			code,
-			auth.accessToken.ComponentAppId(),
-			auth.accessToken.ComponentAccessToken(),
+			auth.account.ComponentAppId(),
+			auth.account.ComponentAccessToken(),
 		)
 	}
 
 	return fmt.Sprintf(
 		"sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
-		auth.accessToken.AccountAppId(),
-		auth.accessToken.AccountAppSecret(),
+		auth.account.AppId(),
+		auth.account.AppSecret(),
 		code,
 	)
 }

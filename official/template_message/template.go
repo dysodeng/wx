@@ -15,11 +15,11 @@ const defaultColor = "#000000"
 
 // TemplateMessage 模板消息
 type TemplateMessage struct {
-	accessToken contracts.AccessTokenInterface
+	account contracts.AccountInterface
 }
 
-func NewTemplateMessage(accessToken contracts.AccessTokenInterface) *TemplateMessage {
-	return &TemplateMessage{accessToken: accessToken}
+func NewTemplateMessage(account contracts.AccountInterface) *TemplateMessage {
+	return &TemplateMessage{account: account}
 }
 
 // Industry 所属行业
@@ -70,7 +70,7 @@ type MessageDataValue struct {
 
 // SetIndustry 设置所属行业
 func (tm *TemplateMessage) SetIndustry(industryOne, industryTwo string) error {
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/template/api_set_industry?access_token=%s",
 		accessToken.AccessToken,
@@ -99,7 +99,7 @@ func (tm *TemplateMessage) SetIndustry(industryOne, industryTwo string) error {
 
 // GetIndustry 获取设置的行业信息
 func (tm *TemplateMessage) GetIndustry() (*Industry, error) {
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/template/get_industry?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.Get(apiUrl)
@@ -126,7 +126,7 @@ func (tm *TemplateMessage) GetIndustry() (*Industry, error) {
 
 // AddTemplate 添加模板
 func (tm *TemplateMessage) AddTemplate(templateIdShort string) (string, error) {
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/template/api_add_template?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"template_id_short": templateIdShort})
@@ -154,7 +154,7 @@ func (tm *TemplateMessage) AddTemplate(templateIdShort string) (string, error) {
 
 // GetPrivateTemplates 获取所有模板列表
 func (tm *TemplateMessage) GetPrivateTemplates() (*TemplateList, error) {
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/template/get_all_private_template?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.Get(apiUrl)
@@ -181,7 +181,7 @@ func (tm *TemplateMessage) GetPrivateTemplates() (*TemplateList, error) {
 
 // DeletePrivateTemplate 删除模板
 func (tm *TemplateMessage) DeletePrivateTemplate(templateId string) error {
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/template/del_private_template?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"template_id": templateId})
@@ -220,7 +220,7 @@ func (tm *TemplateMessage) Send(message Message) (int, error) {
 		}
 	}
 
-	accessToken, _ := tm.accessToken.AccessToken(false)
+	accessToken, _ := tm.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/message/template/send?access_token=%s", accessToken.AccessToken)
 
 	body, _ := json.Marshal(message)

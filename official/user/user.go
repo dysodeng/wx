@@ -6,9 +6,9 @@ import (
 
 // User 用户管理
 type User struct {
-	accessToken contracts.AccessTokenInterface
+	account contracts.AccountInterface
 }
 
-func NewUser(accessToken contracts.AccessTokenInterface) *User {
-	return &User{accessToken: accessToken}
+func NewUser(account contracts.AccountInterface) *User {
+	return &User{account: account}
 }

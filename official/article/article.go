@@ -6,9 +6,9 @@ import (
 
 // Article 公众号文章管理
 type Article struct {
-	accessToken contracts.AccessTokenInterface
+	account contracts.AccountInterface
 }
 
-func NewArticle(accessToken contracts.AccessTokenInterface) *Article {
-	return &Article{accessToken: accessToken}
+func NewArticle(account contracts.AccountInterface) *Article {
+	return &Article{account: account}
 }

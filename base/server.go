@@ -53,7 +53,7 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 	encryptType := strings.Join(request.Form["encrypt_type"], "")
 	msgSignature := strings.Join(request.Form["msg_signature"], "")
 
-	encrypt := encryptor.NewEncryptor(sg.account.AccountAppId(), sg.account.AccountToken(), sg.account.AccountAesKey())
+	encrypt := encryptor.NewEncryptor(sg.account.AppId(), sg.account.Token(), sg.account.AesKey())
 	if !encrypt.ValidSignature(timestamp, nonce, signature) {
 		log.Println("signature is invalid")
 		return

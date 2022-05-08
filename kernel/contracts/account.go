@@ -5,14 +5,14 @@ type AccountInterface interface {
 	AccessTokenInterface
 	// IsOpenPlatform 是否为开放平台下的公众账号
 	IsOpenPlatform() bool
-	// AccountToken 公众账号token
-	AccountToken() string
-	// AccountAesKey 公众账号aes_key
-	AccountAesKey() string
-	// AccountAppId 公众账号appID
-	AccountAppId() string
-	// AccountAppSecret 公众账号app_secret
-	AccountAppSecret() string
+	// Token 公众账号token
+	Token() string
+	// AesKey 公众账号aes_key
+	AesKey() string
+	// AppId 公众账号appID
+	AppId() string
+	// AppSecret 公众账号app_secret
+	AppSecret() string
 	// ComponentAppId 开放平台appID
 	ComponentAppId() string
 	// ComponentAccessToken 开放平台access_token

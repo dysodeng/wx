@@ -80,7 +80,7 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 	err = official.option.cache.Put(
 		official.AccessTokenCacheKey(),
 		string(tokenByte),
-		time.Second*time.Duration(result.AccessToken.ExpiresIn-600), // 提前过期
+		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
 	)
 	if err != nil {
 		return kernel.AccessToken{}, baseError.New(0, err)

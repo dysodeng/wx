@@ -29,16 +29,16 @@ type TagUser struct {
 
 // Tag 用户标签管理
 type Tag struct {
-	accessToken contracts.AccessTokenInterface
+	account contracts.AccountInterface
 }
 
-func NewUserTag(accessToken contracts.AccessTokenInterface) *Tag {
-	return &Tag{accessToken: accessToken}
+func NewUserTag(account contracts.AccountInterface) *Tag {
+	return &Tag{account: account}
 }
 
 // Create 创建标签
 func (tag *Tag) Create(name string) (TagItem, error) {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/create?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]string{"name": name}})
@@ -65,7 +65,7 @@ func (tag *Tag) Create(name string) (TagItem, error) {
 
 // List 获取公众号已创建的标签
 func (tag *Tag) List() ([]TagItem, error) {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/get?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.Get(apiUrl)
@@ -92,7 +92,7 @@ func (tag *Tag) List() ([]TagItem, error) {
 
 // Update 编辑标签
 func (tag *Tag) Update(tagId int, name string) error {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/update?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId, "name": name}})
@@ -115,7 +115,7 @@ func (tag *Tag) Update(tagId int, name string) error {
 
 // Delete 删除标签
 func (tag *Tag) Delete(tagId int) error {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/delete?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId}})
@@ -138,7 +138,7 @@ func (tag *Tag) Delete(tagId int) error {
 
 // UsersOfTag 获取标签下粉丝列表
 func (tag *Tag) UsersOfTag(tagId int, nextOpenid string) (TagUser, error) {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/user/tag/get?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"tagid": tagId, "next_openid": nextOpenid})
@@ -165,7 +165,7 @@ func (tag *Tag) UsersOfTag(tagId int, nextOpenid string) (TagUser, error) {
 
 // TagUsers 批量为用户打标签
 func (tag *Tag) TagUsers(openidList []string, tagId int) error {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/members/batchtagging?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
@@ -188,7 +188,7 @@ func (tag *Tag) TagUsers(openidList []string, tagId int) error {
 
 // UntagUsers 批量为用户取消标签
 func (tag *Tag) UntagUsers(openidList []string, tagId int) error {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/members/batchuntagging?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
@@ -211,7 +211,7 @@ func (tag *Tag) UntagUsers(openidList []string, tagId int) error {
 
 // UserTags 获取用户身上的标签列表
 func (tag *Tag) UserTags(openid string) ([]int, error) {
-	accessToken, _ := tag.accessToken.AccessToken(false)
+	accessToken, _ := tag.account.AccessToken(false)
 	apiUrl := fmt.Sprintf("cgi-bin/tags/getidlist?access_token=%s", accessToken.AccessToken)
 
 	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid": openid})

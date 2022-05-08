@@ -1,24 +1,24 @@
 package official
 
-func (official *Official) AccountToken() string {
+func (official *Official) Token() string {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccountToken()
 	}
 	return official.config.token
 }
 
-func (official *Official) AccountAesKey() string {
+func (official *Official) AesKey() string {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccountAesKey()
 	}
 	return official.config.aesKey
 }
 
-func (official *Official) AccountAppId() string {
+func (official *Official) AppId() string {
 	return official.config.appId
 }
 
-func (official *Official) AccountAppSecret() string {
+func (official *Official) AppSecret() string {
 	return official.config.appSecret
 }
 

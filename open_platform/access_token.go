@@ -123,7 +123,7 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 	return open.refreshAuthorizerAccessToken(appId, authorizerRefreshToken)
 }
 
-func (open OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshToken string) (kernel.AccessToken, error) {
+func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshToken string) (kernel.AccessToken, error) {
 	componentAccessToken, err := open.AccessToken(false)
 	if err != nil {
 		return kernel.AccessToken{}, err

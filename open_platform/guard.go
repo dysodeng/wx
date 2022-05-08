@@ -14,7 +14,6 @@ type ComponentVerifyTicket struct{}
 
 func (ComponentVerifyTicket) Handle(account contracts.AccountInterface, messageBody *message.Message) *message.Reply {
 	log.Printf("appId:%s, component_verify_ticket:%s", messageBody.AppId, messageBody.ComponentVerifyTicket)
-	log.Println("current server appId:%", account.AccountAppId())
 	if messageBody.ComponentVerifyTicket != "" {
 		cache, cacheKeyPrefix := account.Cache()
 		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, messageBody.AppId)

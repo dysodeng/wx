@@ -26,12 +26,10 @@ func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) 
 		if !refresh && official.option.cache.IsExist(official.AccessTokenCacheKey()) {
 			tokenString, err := official.option.cache.Get(official.AccessTokenCacheKey())
 			if err == nil {
-				if t, ok := tokenString.(string); ok {
-					var accessToken kernel.AccessToken
-					err = json.Unmarshal([]byte(t), &accessToken)
-					if err == nil {
-						return accessToken, nil
-					}
+				var accessToken kernel.AccessToken
+				err = json.Unmarshal([]byte(tokenString), &accessToken)
+				if err == nil {
+					return accessToken, nil
 				}
 			}
 		}

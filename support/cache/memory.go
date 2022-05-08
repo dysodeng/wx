@@ -7,7 +7,7 @@ import (
 
 // Item 缓存项
 type item struct {
-	value    interface{}
+	value    string
 	created  time.Time
 	lifetime time.Duration
 }
@@ -50,23 +50,23 @@ func (c *MemoryCache) IsExist(key string) bool {
 }
 
 // Get 获取缓存项
-func (c *MemoryCache) Get(key string) (interface{}, error) {
+func (c *MemoryCache) Get(key string) (string, error) {
 	c.RLock()
 	defer c.RUnlock()
 
 	if i, ok := c.items[key]; ok {
 		if i.isExpire() {
-			return nil, ErrKeyExpired
+			return "", ErrKeyExpired
 		}
 
 		return i.value, nil
 	}
 
-	return nil, ErrKeyNotExist
+	return "", ErrKeyNotExist
 }
 
 // Put 设置缓存项
-func (c *MemoryCache) Put(key string, value interface{}, expiration time.Duration) error {
+func (c *MemoryCache) Put(key string, value string, expiration time.Duration) error {
 	c.Lock()
 	defer c.Unlock()
 

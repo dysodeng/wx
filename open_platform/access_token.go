@@ -24,12 +24,10 @@ func (open *OpenPlatform) AccessToken(refresh bool) (kernel.AccessToken, error) 
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
 		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())
 		if err == nil {
-			if t, ok := tokenString.(string); ok {
-				var accessToken kernel.AccessToken
-				err = json.Unmarshal([]byte(t), &accessToken)
-				if err == nil {
-					return accessToken, nil
-				}
+			var accessToken kernel.AccessToken
+			err = json.Unmarshal([]byte(tokenString), &accessToken)
+			if err == nil {
+				return accessToken, nil
 			}
 		}
 	}
@@ -86,9 +84,7 @@ func (open *OpenPlatform) getTicket() string {
 	if open.option.cache.IsExist(cacheKey) {
 		ticketString, err := open.option.cache.Get(cacheKey)
 		if err == nil {
-			if t, ok := ticketString.(string); ok {
-				return t
-			}
+			return ticketString
 		}
 	}
 	return ""
@@ -104,12 +100,10 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 	if !refresh && open.option.cache.IsExist(open.AuthorizerAccessTokenCacheKey(appId)) {
 		tokenString, err := open.option.cache.Get(open.AuthorizerAccessTokenCacheKey(appId))
 		if err == nil {
-			if t, ok := tokenString.(string); ok {
-				var accessToken kernel.AccessToken
-				err = json.Unmarshal([]byte(t), &accessToken)
-				if err == nil {
-					return accessToken, nil
-				}
+			var accessToken kernel.AccessToken
+			err = json.Unmarshal([]byte(tokenString), &accessToken)
+			if err == nil {
+				return accessToken, nil
 			}
 		}
 	}

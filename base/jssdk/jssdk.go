@@ -67,12 +67,10 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 	if cache.IsExist(cacheKey) {
 		ticketString, err := cache.Get(cacheKey)
 		if err == nil {
-			if t, ok := ticketString.(string); ok {
-				var ticketBody Ticket
-				err = json.Unmarshal([]byte(t), &ticketBody)
-				if err == nil {
-					return ticketBody
-				}
+			var ticketBody Ticket
+			err = json.Unmarshal([]byte(ticketString), &ticketBody)
+			if err == nil {
+				return ticketBody
 			}
 
 		}

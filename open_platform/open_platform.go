@@ -13,12 +13,12 @@ type OpenPlatform struct {
 	option *option
 }
 
-func NewOpenPlatform(appId, secret, token, aesKey string, opts ...Option) *OpenPlatform {
+func NewOpenPlatform(appId, appSecret, token, aesKey string, opts ...Option) *OpenPlatform {
 	cfg := &config{
-		appId:  appId,
-		secret: secret,
-		token:  token,
-		aesKey: aesKey,
+		appId:     appId,
+		appSecret: appSecret,
+		token:     token,
+		aesKey:    aesKey,
 	}
 
 	o := &option{

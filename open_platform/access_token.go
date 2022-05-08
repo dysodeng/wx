@@ -42,7 +42,7 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	verifyTicket := open.getTicket()
 	res, err := http.PostJson("cgi-bin/component/api_component_token", map[string]interface{}{
 		"component_appid":         open.config.appId,
-		"component_appsecret":     open.config.secret,
+		"component_appsecret":     open.config.appSecret,
 		"component_verify_ticket": verifyTicket,
 	})
 	if err != nil {

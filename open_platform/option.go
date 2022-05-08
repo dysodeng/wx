@@ -4,10 +4,10 @@ import "github.com/dysodeng/wx/support/cache"
 
 // config 开放平台配置
 type config struct {
-	appId  string
-	secret string
-	token  string
-	aesKey string
+	appId     string
+	appSecret string
+	token     string
+	aesKey    string
 }
 
 type option struct {

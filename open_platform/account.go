@@ -13,7 +13,7 @@ func (open *OpenPlatform) AccountAppId() string {
 }
 
 func (open *OpenPlatform) AccountAppSecret() string {
-	return open.config.secret
+	return open.config.appSecret
 }
 
 func (open *OpenPlatform) ComponentAppId() string {

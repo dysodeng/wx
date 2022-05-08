@@ -15,12 +15,12 @@ type AccessTokenInterface interface {
 	Cache() (cache.Cache, string)
 }
 
-// AuthorizerAccessTokenInterface 开放平台第三方授权公众账号获取token接口
+// AuthorizerAccessTokenInterface 开放平台代公众账号获取token接口
 type AuthorizerAccessTokenInterface interface {
-	// AuthorizerAccessToken 获取授权到开放平台的公众账号access_token
+	// AuthorizerAccessToken 代公众账号获取access_token
 	AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (kernel.AccessToken, error)
-	// AuthorizerAccessTokenCacheKey 获取授权到开放平台的公众账号access_token缓存key
-	AuthorizerAccessTokenCacheKey() string
+	// AuthorizerAccessTokenCacheKey 公众账号access_token缓存key
+	AuthorizerAccessTokenCacheKey(appId string) string
 	// Cache 获取缓存实例
 	Cache() (cache.Cache, string)
 }

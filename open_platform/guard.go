@@ -9,8 +9,6 @@ import (
 	"github.com/dysodeng/wx/kernel/message"
 )
 
-const componentVerifyTicketCacheKey = "component_verify_ticket.%s"
-
 // ComponentVerifyTicket verify_ticket推送事件
 type ComponentVerifyTicket struct{}
 

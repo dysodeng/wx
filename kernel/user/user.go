@@ -1,11 +1,7 @@
 package user
 
-import (
-	baseError "github.com/dysodeng/wx/kernel/error"
-)
-
+// User 微信用户
 type User struct {
-	baseError.WxApiError
 	Openid     string   `json:"openid"`
 	Nickname   string   `json:"nickname"`
 	Sex        uint8    `json:"sex"`

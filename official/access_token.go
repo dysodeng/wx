@@ -15,7 +15,12 @@ import (
 )
 
 // AccessToken 获取/刷新token
-func (official *Official) AccessToken(refresh bool) (kernel.AccessToken, error) {
+func (official *Official) AccessToken() (kernel.AccessToken, error) {
+	return official.accessToken(false)
+}
+
+// accessToken 获取/刷新token
+func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccessToken(
 			official.config.appId,

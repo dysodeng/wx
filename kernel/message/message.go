@@ -59,4 +59,10 @@ type Message struct {
 	AppId                 string
 	InfoType              string
 	ComponentVerifyTicket string
+
+	// 开放平台授权事件
+	AuthorizerAppid              string
+	AuthorizationCode            string
+	AuthorizationCodeExpiredTime int64
+	PreAuthCode                  string
 }

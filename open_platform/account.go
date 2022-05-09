@@ -21,7 +21,7 @@ func (open *OpenPlatform) ComponentAppId() string {
 }
 
 func (open *OpenPlatform) ComponentAccessToken() string {
-	token, err := open.AccessToken(false)
+	token, err := open.AccessToken()
 	if err != nil {
 		return ""
 	}

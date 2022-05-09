@@ -43,6 +43,100 @@ func (sg *Server) Push(handler contracts.EventHandlerInterface, guard event.Guar
 	sg.handler[guard] = handler
 }
 
+// Dispatch 直接调度事件处理
+func (sg *Server) Dispatch(
+	request *http.Request,
+	writer http.ResponseWriter,
+	handler contracts.EventHandlerInterface,
+) {
+	_ = request.ParseForm()
+
+	timestamp := strings.Join(request.Form["timestamp"], "")
+	nonce := strings.Join(request.Form["nonce"], "")
+	signature := strings.Join(request.Form["signature"], "")
+	encryptType := strings.Join(request.Form["encrypt_type"], "")
+	msgSignature := strings.Join(request.Form["msg_signature"], "")
+
+	var appId = sg.account.AppId()
+	if sg.account.IsOpenPlatform() {
+		appId = sg.account.ComponentAppId()
+	}
+
+	encrypt := encryptor.NewEncryptor(appId, sg.account.Token(), sg.account.AesKey())
+	if !encrypt.ValidSignature(timestamp, nonce, signature) {
+		log.Println("signature is invalid")
+		return
+	}
+
+	if e := request.FormValue(EchoStr); e != "" {
+		_, _ = writer.Write([]byte(e))
+		return
+	}
+
+	if request.Method == "POST" {
+
+		var messageBody *message.Message
+
+		if encryptType == "aes" {
+			encryptRequestBody, err := encrypt.ParseEncryptBody(request)
+			if err != nil {
+				log.Printf("parse encrypt error: %+v", err)
+				return
+			}
+
+			// Validate msg signature
+			if !encrypt.ValidMsgSignature(timestamp, nonce, encryptRequestBody.Encrypt, msgSignature) {
+				log.Println("msg_signature is invalid")
+				return
+			}
+
+			// Decode base64
+			cipherData, err := base64.StdEncoding.DecodeString(encryptRequestBody.Encrypt)
+			if err != nil {
+				log.Println("Decode base64 error:", err)
+				return
+			}
+
+			// AES Decrypt
+			plainData, err := encrypt.AesDecrypt(cipherData)
+			if err != nil {
+				fmt.Println("Aes decrypt error:", err)
+				return
+			}
+
+			messageBody, err = encrypt.ParseEncryptTextBody(plainData)
+			log.Printf("%+v", err)
+		} else {
+			messageBody, _ = encrypt.ParseTextBody(request)
+		}
+
+		if messageBody.MsgType == "" && messageBody.InfoType != "" {
+			messageBody.MsgType = messageBody.InfoType
+		}
+
+		if handler != nil {
+			reply := handler.Handle(sg.account, messageBody)
+			if reply != nil {
+				replier := reply.Replier()
+				xmlBody := replier.BuildXml(messageBody.ToUserName, messageBody.FromUserName)
+
+				var replyBody []byte
+				if encryptType == "aes" {
+					replyBody, _ = encrypt.MakeEncryptBody(xmlBody, timestamp, nonce)
+				} else {
+					replyBody = xmlBody
+				}
+
+				writer.Header().Set("Content-Type", replier.ContentType())
+				_, _ = writer.Write(replyBody)
+				return
+			}
+		}
+	}
+
+	_, _ = writer.Write([]byte(SuccessEmptyResponse))
+}
+
 // Serve Handle and return response.
 func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 	_ = request.ParseForm()
@@ -53,7 +147,12 @@ func (sg *Server) Serve(request *http.Request, writer http.ResponseWriter) {
 	encryptType := strings.Join(request.Form["encrypt_type"], "")
 	msgSignature := strings.Join(request.Form["msg_signature"], "")
 
-	encrypt := encryptor.NewEncryptor(sg.account.AppId(), sg.account.Token(), sg.account.AesKey())
+	var appId = sg.account.AppId()
+	if sg.account.IsOpenPlatform() {
+		appId = sg.account.ComponentAppId()
+	}
+
+	encrypt := encryptor.NewEncryptor(appId, sg.account.Token(), sg.account.AesKey())
 	if !encrypt.ValidSignature(timestamp, nonce, signature) {
 		log.Println("signature is invalid")
 		return

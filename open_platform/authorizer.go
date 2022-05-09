@@ -71,19 +71,22 @@ type AuthorizerInfo struct {
 		Alias         string         `json:"alias"`
 		QrcodeUrl     string         `json:"qrcode_url"`
 		AccountStatus int            `json:"account_status"`
+		Idc           int            `json:"idc"`
+		Signature     string         `json:"signature"`
 
 		// 小程序独有字段
-		Idc             int             `json:"idc"`
-		Signature       string          `json:"signature"`
-		RegisterType    int             `json:"register_type"`
-		BasicConfig     map[string]bool `json:"basic_config"`
-		MiniProgramInfo struct {
-			Network     map[string][]string `json:"network"`
-			Categories  []Categories        `json:"categories"`
-			VisitStatus int                 `json:"visit_status"`
-		} `json:"MiniProgramInfo"`
+		RegisterType    int              `json:"register_type"`
+		BasicConfig     map[string]bool  `json:"basic_config"`
+		MiniProgramInfo *MiniProgramInfo `json:"MiniProgramInfo"`
 	} `json:"authorizer_info"`
 }
+
+type MiniProgramInfo struct {
+	Network     map[string][]string `json:"network"`
+	Categories  []Categories        `json:"categories"`
+	VisitStatus int                 `json:"visit_status"`
+}
+
 type Categories struct {
 	First  string `json:"first"`
 	Second string `json:"second"`
@@ -124,7 +127,7 @@ func (open *OpenPlatform) MobilePreAuthorizationUrl(callbackUrl string, authType
 
 // getPreAuthCode 获取预授权码
 func (open *OpenPlatform) getPreAuthCode() (PreAuthCode, error) {
-	accessToken, err := open.AccessToken(false)
+	accessToken, err := open.AccessToken()
 	if err != nil {
 		return PreAuthCode{}, err
 	}
@@ -153,7 +156,7 @@ func (open *OpenPlatform) getPreAuthCode() (PreAuthCode, error) {
 
 // AuthorizationInfo 使用授权码获取授权信息
 func (open *OpenPlatform) AuthorizationInfo(authCode string) (AuthorizationInfo, error) {
-	accessToken, err := open.AccessToken(false)
+	accessToken, err := open.AccessToken()
 	if err != nil {
 		return AuthorizationInfo{}, err
 	}
@@ -183,12 +186,12 @@ func (open *OpenPlatform) AuthorizationInfo(authCode string) (AuthorizationInfo,
 
 // AuthorizerInfo 获取授权帐号详情
 func (open *OpenPlatform) AuthorizerInfo(appId string) (AuthorizerInfo, error) {
-	accessToken, err := open.AccessToken(false)
+	accessToken, err := open.AccessToken()
 	if err != nil {
 		return AuthorizerInfo{}, err
 	}
 
-	apiUrl := fmt.Sprintf("cgi-bin/component/api_get_authorizer_info?component_access_token==%s", accessToken.AccessToken)
+	apiUrl := fmt.Sprintf("cgi-bin/component/api_get_authorizer_info?component_access_token=%s", accessToken.AccessToken)
 	res, err := http.PostJson(apiUrl, map[string]interface{}{
 		"component_appid":  open.config.appId,
 		"authorizer_appid": appId,

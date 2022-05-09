@@ -72,7 +72,6 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 			if err == nil {
 				return ticketBody
 			}
-
 		}
 	}
 
@@ -82,10 +81,20 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 
 // refreshTicket 刷新ticket
 func (js *Jssdk) refreshTicket(ticketType string) Ticket {
-	accessToken, _ := js.account.AccessToken(false)
+	var accessToken string
+	if js.account.IsOpenPlatform() {
+		accessToken = js.account.ComponentAccessToken()
+	} else {
+		accountAccessToken, err := js.account.AccessToken()
+		if err != nil {
+			return Ticket{}
+		}
+		accessToken = accountAccessToken.AccessToken
+	}
+
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/ticket/getticket?access_token=%s&type=%s",
-		accessToken.AccessToken,
+		accessToken,
 		ticketType,
 	)
 	res, err := http.Get(apiUrl)

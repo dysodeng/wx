@@ -15,7 +15,12 @@ import (
 const componentVerifyTicketCacheKey = "component_verify_ticket.%s"
 
 // AccessToken 获取开放平台access_token
-func (open *OpenPlatform) AccessToken(refresh bool) (kernel.AccessToken, error) {
+func (open *OpenPlatform) AccessToken() (kernel.AccessToken, error) {
+	return open.accessToken(false)
+}
+
+// AccessToken 获取开放平台access_token
+func (open *OpenPlatform) accessToken(refresh bool) (kernel.AccessToken, error) {
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
 		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())
 		if err == nil {
@@ -108,7 +113,7 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 }
 
 func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshToken string) (kernel.AccessToken, error) {
-	componentAccessToken, err := open.AccessToken(false)
+	componentAccessToken, err := open.AccessToken()
 	if err != nil {
 		return kernel.AccessToken{}, err
 	}

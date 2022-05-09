@@ -25,17 +25,15 @@ func (official *Official) AppSecret() string {
 func (official *Official) ComponentAppId() string {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.ComponentAppId()
-	} else {
-		return ""
 	}
+	return ""
 }
 
 func (official *Official) ComponentAccessToken() string {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.ComponentAccessToken()
-	} else {
-		return ""
 	}
+	return ""
 }
 
 // IsOpenPlatform 是否为开放平台下的公众账号

@@ -1,35 +1,32 @@
-package official
+package mini_program
 
 import (
 	"encoding/json"
 	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/dysodeng/wx/kernel"
 	baseError "github.com/dysodeng/wx/kernel/error"
-
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/http"
+	"github.com/pkg/errors"
 )
 
-// AccessToken 获取/刷新token
-func (official *Official) AccessToken() (kernel.AccessToken, error) {
-	return official.accessToken(false)
+func (mp *MiniProgram) AccessToken() (kernel.AccessToken, error) {
+	return mp.accessToken(false)
 }
 
 // accessToken 获取/刷新token
-func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) {
-	if official.config.isOpenPlatform {
-		return official.config.authorizerAccount.AuthorizerAccessToken(
-			official.config.appId,
-			official.config.authorizerRefreshToken,
+func (mp *MiniProgram) accessToken(refresh bool) (kernel.AccessToken, error) {
+	if mp.config.isOpenPlatform {
+		return mp.config.authorizerAccount.AuthorizerAccessToken(
+			mp.config.appId,
+			mp.config.authorizerRefreshToken,
 			refresh,
 		)
 	} else {
-		if !refresh && official.option.cache.IsExist(official.AccessTokenCacheKey()) {
-			tokenString, err := official.option.cache.Get(official.AccessTokenCacheKey())
+		if !refresh && mp.option.cache.IsExist(mp.AccessTokenCacheKey()) {
+			tokenString, err := mp.option.cache.Get(mp.AccessTokenCacheKey())
 			if err == nil {
 				var accessToken kernel.AccessToken
 				err = json.Unmarshal([]byte(tokenString), &accessToken)
@@ -41,15 +38,14 @@ func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) 
 	}
 
 	// 刷新access_token
-	return official.refreshAccessToken()
+	return mp.refreshAccessToken()
 }
 
-// refreshAccessToken 刷新access_token
-func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
+func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
-		official.config.appId,
-		official.config.appSecret,
+		mp.config.appId,
+		mp.config.appSecret,
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
@@ -71,8 +67,8 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	})
 
-	err = official.option.cache.Put(
-		official.AccessTokenCacheKey(),
+	err = mp.option.cache.Put(
+		mp.AccessTokenCacheKey(),
 		string(tokenByte),
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
 	)
@@ -86,12 +82,10 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 	}, nil
 }
 
-// AccessTokenCacheKey 获取access_token缓存key
-func (official *Official) AccessTokenCacheKey() string {
-	return fmt.Sprintf("%s%s.%s", official.option.cacheKeyPrefix, "access_token", official.config.appId)
+func (mp *MiniProgram) AccessTokenCacheKey() string {
+	return fmt.Sprintf("%s%s.%s", mp.option.cacheKeyPrefix, "access_token", mp.config.appId)
 }
 
-// Cache 获取缓存实例
-func (official *Official) Cache() (cache.Cache, string) {
-	return official.option.cache, official.option.cacheKeyPrefix
+func (mp *MiniProgram) Cache() (cache.Cache, string) {
+	return mp.option.cache, mp.option.cacheKeyPrefix
 }

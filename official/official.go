@@ -17,7 +17,7 @@ type Official struct {
 	option *option
 }
 
-func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Official, error) {
+func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) *Official {
 	c := &config{
 		isOpenPlatform: false,
 		appId:          appId,
@@ -39,7 +39,7 @@ func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) (*Offic
 	return &Official{
 		config: c,
 		option: o,
-	}, nil
+	}
 }
 
 // NewOfficialWithOpenPlatform 开放平台代公众号调用接口

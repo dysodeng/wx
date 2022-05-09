@@ -12,7 +12,7 @@ go get github.com/dysodeng/wx
 
 Usage
 -----
-非开放平台下微信公众号调用sdk
+微信公众号调用接口
 
 ```golang
 package main

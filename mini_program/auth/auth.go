@@ -11,6 +11,7 @@ import (
 )
 
 // Auth 用户登录
+// @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
 type Auth struct {
 	account contracts.AccountInterface
 }

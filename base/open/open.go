@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Open 小程序绑定开放平台
+// Open 开放平台账号管理
 type Open struct {
 	account contracts.AccountInterface
 }

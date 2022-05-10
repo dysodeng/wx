@@ -61,4 +61,5 @@ const (
 	UpdateAuthorized         Guard = "updateauthorized"
 	ComponentVerifyTicket    Guard = "component_verify_ticket"
 	NotifyThirdFasteRegister Guard = "notify_third_fasteregister"
+	WxaNicknameAudit         Guard = "wxa_nickname_audit"
 )

@@ -4,6 +4,7 @@ import (
 	"github.com/dysodeng/wx/base"
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/mini_program/auth"
+	"github.com/dysodeng/wx/mini_program/authorizer"
 	"github.com/dysodeng/wx/mini_program/encryptor"
 	"github.com/dysodeng/wx/mini_program/qr_code"
 	"github.com/dysodeng/wx/mini_program/wxa_code"
@@ -73,6 +74,12 @@ func NewMiniProgramWithOpenPlatform(
 		config: c,
 		option: o,
 	}
+}
+
+// Authorizer 小程序授权开放平台后的相关接口
+// 此类接口只能由授权到开放平台的小程序调用或直接由开放平台调用
+func (mp *MiniProgram) Authorizer() *authorizer.Authorizer {
+	return authorizer.NewAuthorizer(mp)
 }
 
 // Server 服务端

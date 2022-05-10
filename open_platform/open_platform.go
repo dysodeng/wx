@@ -6,6 +6,7 @@ import (
 	"github.com/dysodeng/wx/mini_program"
 	"github.com/dysodeng/wx/official"
 	"github.com/dysodeng/wx/open_platform/authorizer"
+	"github.com/dysodeng/wx/open_platform/code"
 	"github.com/dysodeng/wx/open_platform/code_template"
 	"github.com/dysodeng/wx/support/cache"
 )
@@ -55,6 +56,11 @@ func (open *OpenPlatform) Authorizer() *authorizer.Authorizer {
 // CodeTemplate 小程序代码模板
 func (open *OpenPlatform) CodeTemplate() *code_template.CodeTemplate {
 	return code_template.NewCodeTemplate(open)
+}
+
+// Code 小程序代码管理
+func (open *OpenPlatform) Code() *code.Code {
+	return code.NewCode(open)
 }
 
 // Official 授权到开放平台的公众号

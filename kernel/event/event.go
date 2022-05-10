@@ -62,4 +62,7 @@ const (
 	ComponentVerifyTicket    Guard = "component_verify_ticket"
 	NotifyThirdFasteRegister Guard = "notify_third_fasteregister"
 	WxaNicknameAudit         Guard = "wxa_nickname_audit"
+	WeAppAuditSuccess        Guard = "weapp_audit_success"
+	WeAppAuditFail           Guard = "weapp_audit_fail"
+	WeAppAuditDelay          Guard = "weapp_audit_delay"
 )

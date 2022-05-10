@@ -27,6 +27,24 @@ func Get(uri string) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
+// GetWithRespContentType get请求，并返回content-type
+func GetWithRespContentType(uri string) ([]byte, string, error) {
+	response, err := http.Get(baseUri + uri)
+	if err != nil {
+		return nil, "", err
+	}
+	defer func() {
+		_ = response.Body.Close()
+	}()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, "", fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
+	}
+	responseData, err := ioutil.ReadAll(response.Body)
+	contentType := response.Header.Get("Content-Type")
+	return responseData, contentType, err
+}
+
 // Post post请求
 func Post(uri, data, contentType string) ([]byte, error) {
 	body := bytes.NewBuffer([]byte(data))

@@ -71,4 +71,9 @@ type Message struct {
 	Reason   string `xml:"reason"`
 	First    int64  `xml:"first"`
 	Second   int64  `xml:"second"`
+
+	SuccTime   int64
+	FailTime   int64
+	DelayTime  int64
+	ScreenShot string
 }

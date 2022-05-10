@@ -5,6 +5,7 @@ import (
 	"github.com/dysodeng/wx/base/jssdk"
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/official/article"
+	"github.com/dysodeng/wx/official/authorizer"
 	"github.com/dysodeng/wx/official/oauth"
 	"github.com/dysodeng/wx/official/template_message"
 	"github.com/dysodeng/wx/official/user"
@@ -74,6 +75,12 @@ func NewOfficialWithOpenPlatform(
 		config: c,
 		option: o,
 	}
+}
+
+// Authorizer 公众号授权开放平台后的相关接口
+// 此类接口只能由授权到开放平台的公众号调用或直接由开放平台调用
+func (official *Official) Authorizer() *authorizer.Authorizer {
+	return authorizer.NewAuthorizer(official)
 }
 
 // Server 服务端

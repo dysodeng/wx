@@ -10,6 +10,8 @@ type config struct {
 	isOpenPlatform         bool
 	appId                  string
 	appSecret              string
+	token                  string
+	aesKey                 string
 	authorizerRefreshToken string
 	authorizerAccount      contracts.AuthorizerAccountInterface
 }

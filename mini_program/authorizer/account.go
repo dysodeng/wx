@@ -156,3 +156,32 @@ func (account *Account) ModifySignature(signature string) error {
 
 	return nil
 }
+
+// HaveOpen 查询小程序是否绑定开放平台账号
+func (account *Account) HaveOpen() (bool, error) {
+	accountToken, err := account.account.AccessToken()
+	if err != nil {
+		return false, err
+	}
+
+	apiUrl := fmt.Sprintf("cgi-bin/account/getaccountbasicinfo?access_token=%s", accountToken.AccessToken)
+	res, err := http.Get(apiUrl)
+	if err != nil {
+		return false, err
+	}
+
+	type have struct {
+		baseError.WxApiError
+		HaveOpen bool
+	}
+	var result have
+	err = json.Unmarshal(res, &result)
+	if err != nil {
+		return false, err
+	}
+	if err == nil && result.ErrCode != 0 {
+		return false, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+	}
+
+	return result.HaveOpen, nil
+}

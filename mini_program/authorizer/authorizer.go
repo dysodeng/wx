@@ -1,6 +1,9 @@
 package authorizer
 
-import "github.com/dysodeng/wx/kernel/contracts"
+import (
+	"github.com/dysodeng/wx/base/open"
+	"github.com/dysodeng/wx/kernel/contracts"
+)
 
 // Authorizer 小程序授权开放平台后的相关接口
 // 此类接口只能由授权到开放平台的小程序调用或直接由开放平台调用
@@ -20,4 +23,9 @@ func (authorizer *Authorizer) Account() *Account {
 // Domain 小程序域名配置
 func (authorizer *Authorizer) Domain() *Domain {
 	return NewDomain(authorizer.account)
+}
+
+// Open 小程序绑定开放平台
+func (authorizer *Authorizer) Open() *open.Open {
+	return open.NewOpen(authorizer.account)
 }

@@ -88,9 +88,9 @@ func (template *CodeTemplate) GetTemplateList(templateType int8) ([]Template, er
 
 	var apiUrl string
 	if templateType == -1 {
-		apiUrl = fmt.Sprintf("wxa/gettemplatedraftlist?access_token=%s", accountToken.AccessToken)
+		apiUrl = fmt.Sprintf("wxa/gettemplatelist?access_token=%s", accountToken.AccessToken)
 	} else {
-		apiUrl = fmt.Sprintf("wxa/gettemplatedraftlist?access_token=%stemplate_type=%d", accountToken.AccessToken, templateType)
+		apiUrl = fmt.Sprintf("wxa/gettemplatelist?access_token=%stemplate_type=%d", accountToken.AccessToken, templateType)
 	}
 
 	res, err := http.Get(apiUrl)
@@ -120,7 +120,7 @@ func (template *CodeTemplate) DeleteTemplate(templateId int64) error {
 		return err
 	}
 
-	apiUrl := fmt.Sprintf("wxa/addtotemplate?access_token=%s", accountToken.AccessToken)
+	apiUrl := fmt.Sprintf("wxa/deletetemplate?access_token=%s", accountToken.AccessToken)
 	res, err := http.PostJson(apiUrl, map[string]interface{}{
 		"template_id": templateId,
 	})

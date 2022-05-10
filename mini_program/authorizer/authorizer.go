@@ -20,6 +20,11 @@ func (authorizer *Authorizer) Account() *Account {
 	return NewAccount(authorizer.account)
 }
 
+// Categories 小程序类目管理
+func (authorizer *Authorizer) Categories() *Categories {
+	return NewCategories(authorizer.account)
+}
+
 // Domain 小程序域名配置
 func (authorizer *Authorizer) Domain() *Domain {
 	return NewDomain(authorizer.account)

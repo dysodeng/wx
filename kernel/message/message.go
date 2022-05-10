@@ -65,7 +65,10 @@ type Message struct {
 	AuthorizationCode            string
 	AuthorizationCodeExpiredTime int64
 	PreAuthCode                  string
-	Ret                          int    `xml:"ret"`
-	Nickname                     string `xml:"nickname"`
-	Reason                       string `xml:"reason"`
+
+	Ret      int    `xml:"ret"`
+	Nickname string `xml:"nickname"`
+	Reason   string `xml:"reason"`
+	First    int64  `xml:"first"`
+	Second   int64  `xml:"second"`
 }

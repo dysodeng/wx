@@ -29,3 +29,8 @@ func (authorizer *Authorizer) Domain() *Domain {
 func (authorizer *Authorizer) Open() *open.Open {
 	return open.NewOpen(authorizer.account)
 }
+
+// Tester 小程序成员管理
+func (authorizer *Authorizer) Tester() *Tester {
+	return NewTester(authorizer.account)
+}

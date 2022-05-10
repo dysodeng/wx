@@ -113,6 +113,7 @@ func (template *CodeTemplate) GetTemplateList(templateType int8) ([]Template, er
 	return result.TemplateList, nil
 }
 
+// DeleteTemplate 删除指定代码模板
 func (template *CodeTemplate) DeleteTemplate(templateId int64) error {
 	accountToken, err := template.account.AccessToken()
 	if err != nil {

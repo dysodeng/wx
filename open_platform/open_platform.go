@@ -5,6 +5,7 @@ import (
 	"github.com/dysodeng/wx/kernel/event"
 	"github.com/dysodeng/wx/mini_program"
 	"github.com/dysodeng/wx/official"
+	"github.com/dysodeng/wx/open_platform/authorizer"
 	"github.com/dysodeng/wx/support/cache"
 )
 
@@ -36,6 +37,11 @@ func NewOpenPlatform(appId, appSecret, token, aesKey string, opts ...Option) *Op
 		config: cfg,
 		option: o,
 	}
+}
+
+// Authorizer 公众账号授权
+func (open *OpenPlatform) Authorizer() *authorizer.Authorizer {
+	return authorizer.NewAuthorizer(open)
 }
 
 // Server 服务端

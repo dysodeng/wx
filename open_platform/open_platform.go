@@ -3,6 +3,7 @@ package open_platform
 import (
 	"github.com/dysodeng/wx/base"
 	"github.com/dysodeng/wx/kernel/event"
+	"github.com/dysodeng/wx/mini_program"
 	"github.com/dysodeng/wx/official"
 	"github.com/dysodeng/wx/support/cache"
 )
@@ -56,5 +57,20 @@ func (open *OpenPlatform) Official(appId, authorizerRefreshToken string) *offici
 		open,
 		official.WithCache(open.option.cache),
 		official.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
+	)
+}
+
+// MiniProgram 授权到开放平台的小程序
+// @param appId string 小程序appID
+// @param authorizerRefreshToken string 小程序授权刷新token
+func (open *OpenPlatform) MiniProgram(appId, authorizerRefreshToken string) *mini_program.MiniProgram {
+	return mini_program.NewMiniProgramWithOpenPlatform(
+		appId,
+		authorizerRefreshToken,
+		open.config.token,
+		open.config.aesKey,
+		open,
+		mini_program.WithCache(open.option.cache),
+		mini_program.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
 	)
 }

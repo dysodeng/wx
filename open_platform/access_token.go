@@ -147,7 +147,7 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 	})
 
 	err = open.option.cache.Put(
-		open.AccessTokenCacheKey(),
+		open.AuthorizerAccessTokenCacheKey(appId),
 		string(tokenByte),
 		time.Second*time.Duration(result.ExpiresIn-600), // 提前过期
 	)

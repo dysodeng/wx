@@ -24,7 +24,7 @@ func NewWxaCode(account contracts.AccountInterface) *WxaCode {
 
 // CreateQrCode 获取小程序二维码，适用于需要的码数量较少的业务场景
 // 通过该接口生成的小程序码，永久有效，有数量限制
-func (code *WxaCode) CreateQrCode(path string, opts map[string]interface{}) ([]byte, error) {
+func (code *WxaCode) CreateQrCode(path string, opts map[string]interface{}) ([]byte, string, error) {
 	if opts == nil {
 		opts = make(map[string]interface{})
 	}
@@ -32,33 +32,33 @@ func (code *WxaCode) CreateQrCode(path string, opts map[string]interface{}) ([]b
 
 	accountToken, err := code.account.AccessToken()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	apiUrl := fmt.Sprintf("cgi-bin/wxaapp/createwxaqrcode?access_token=%s", accountToken.AccessToken)
 
 	res, contentType, err := http.PostJSONWithRespContentType(apiUrl, opts)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
 		var result baseError.WxApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
 	if strings.HasPrefix(contentType, "image") {
-		return res, nil
+		return res, contentType, nil
 	}
 
-	return nil, nil
+	return nil, "", errors.New("get qr_code image error")
 }
 
 // Get 获取小程序码，适用于需要的码数量较少的业务场景
 // 通过该接口生成的小程序码，永久有效，有数量限制
-func (code *WxaCode) Get(path string, opts map[string]interface{}) ([]byte, error) {
+func (code *WxaCode) Get(path string, opts map[string]interface{}) ([]byte, string, error) {
 	if opts == nil {
 		opts = make(map[string]interface{})
 	}
@@ -66,33 +66,33 @@ func (code *WxaCode) Get(path string, opts map[string]interface{}) ([]byte, erro
 
 	accountToken, err := code.account.AccessToken()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	apiUrl := fmt.Sprintf("cgi-bin/wxaapp/getwxacode?access_token=%s", accountToken.AccessToken)
+	apiUrl := fmt.Sprintf("wxa/getwxacode?access_token=%s", accountToken.AccessToken)
 
 	res, contentType, err := http.PostJSONWithRespContentType(apiUrl, opts)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
 		var result baseError.WxApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
 	if strings.HasPrefix(contentType, "image") {
-		return res, nil
+		return res, contentType, nil
 	}
 
-	return nil, nil
+	return nil, "", errors.New("get qr_code image error")
 }
 
 // GetUnlimited 获取小程序码，适用于需要的码数量极多的业务场景
 // 通过该接口生成的小程序码，永久有效，数量暂无限制
-func (code *WxaCode) GetUnlimited(scene string, opts map[string]interface{}) ([]byte, error) {
+func (code *WxaCode) GetUnlimited(scene string, opts map[string]interface{}) ([]byte, string, error) {
 	if opts == nil {
 		opts = make(map[string]interface{})
 	}
@@ -100,26 +100,26 @@ func (code *WxaCode) GetUnlimited(scene string, opts map[string]interface{}) ([]
 
 	accountToken, err := code.account.AccessToken()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	apiUrl := fmt.Sprintf("cgi-bin/wxaapp/getwxacodeunlimit?access_token=%s", accountToken.AccessToken)
+	apiUrl := fmt.Sprintf("wxa/getwxacodeunlimit?access_token=%s", accountToken.AccessToken)
 
 	res, contentType, err := http.PostJSONWithRespContentType(apiUrl, opts)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
 		var result baseError.WxApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
 	if strings.HasPrefix(contentType, "image") {
-		return res, nil
+		return res, contentType, nil
 	}
 
-	return nil, nil
+	return nil, "", errors.New("get qr_code image error")
 }

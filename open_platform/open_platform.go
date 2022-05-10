@@ -6,6 +6,7 @@ import (
 	"github.com/dysodeng/wx/mini_program"
 	"github.com/dysodeng/wx/official"
 	"github.com/dysodeng/wx/open_platform/authorizer"
+	"github.com/dysodeng/wx/open_platform/code_template"
 	"github.com/dysodeng/wx/support/cache"
 )
 
@@ -39,16 +40,21 @@ func NewOpenPlatform(appId, appSecret, token, aesKey string, opts ...Option) *Op
 	}
 }
 
-// Authorizer 公众账号授权
-func (open *OpenPlatform) Authorizer() *authorizer.Authorizer {
-	return authorizer.NewAuthorizer(open)
-}
-
 // Server 服务端
 func (open *OpenPlatform) Server() *base.Server {
 	server := base.NewServer(open)
 	server.Push(&ComponentVerifyTicket{}, event.ComponentVerifyTicket)
 	return server
+}
+
+// Authorizer 公众账号授权
+func (open *OpenPlatform) Authorizer() *authorizer.Authorizer {
+	return authorizer.NewAuthorizer(open)
+}
+
+// CodeTemplate 小程序代码模板
+func (open *OpenPlatform) CodeTemplate() *code_template.CodeTemplate {
+	return code_template.NewCodeTemplate(open)
 }
 
 // Official 授权到开放平台的公众号

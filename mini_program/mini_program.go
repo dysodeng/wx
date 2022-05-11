@@ -5,6 +5,7 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/mini_program/auth"
 	"github.com/dysodeng/wx/mini_program/authorizer"
+	"github.com/dysodeng/wx/mini_program/content"
 	"github.com/dysodeng/wx/mini_program/encryptor"
 	"github.com/dysodeng/wx/mini_program/qr_code"
 	"github.com/dysodeng/wx/mini_program/wxa_code"
@@ -105,4 +106,9 @@ func (mp *MiniProgram) WxaCode() *wxa_code.WxaCode {
 // QrCode 普通链接二维码
 func (mp *MiniProgram) QrCode() *qr_code.QrCode {
 	return qr_code.NewQrCode(mp)
+}
+
+// ContentSecurity 内容安全
+func (mp *MiniProgram) ContentSecurity() *content.Security {
+	return content.NewContentSecurity(mp)
 }

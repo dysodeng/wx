@@ -7,6 +7,7 @@ import (
 	"github.com/dysodeng/wx/official/article"
 	"github.com/dysodeng/wx/official/authorizer"
 	"github.com/dysodeng/wx/official/oauth"
+	"github.com/dysodeng/wx/official/qr_code"
 	"github.com/dysodeng/wx/official/template_message"
 	"github.com/dysodeng/wx/official/user"
 	"github.com/dysodeng/wx/support/cache"
@@ -116,4 +117,9 @@ func (official *Official) TemplateMessage() *template_message.TemplateMessage {
 // Jssdk 微信JSSDK
 func (official *Official) Jssdk() *jssdk.Jssdk {
 	return jssdk.NewJssdk(official)
+}
+
+// QrCode 带参数的二维码
+func (official *Official) QrCode() *qr_code.QrCode {
+	return qr_code.NewQrCode(official)
 }

@@ -2,7 +2,6 @@ package open_platform
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/dysodeng/wx/kernel/contracts"
@@ -13,7 +12,6 @@ import (
 type ComponentVerifyTicket struct{}
 
 func (ComponentVerifyTicket) Handle(account contracts.AccountInterface, messageBody *message.Message) *message.Reply {
-	log.Printf("appId:%s, component_verify_ticket:%s", messageBody.AppId, messageBody.ComponentVerifyTicket)
 	if messageBody.ComponentVerifyTicket != "" {
 		cache, cacheKeyPrefix := account.Cache()
 		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, messageBody.AppId)

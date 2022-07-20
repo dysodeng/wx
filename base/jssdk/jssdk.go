@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/dysodeng/wx/support"
@@ -87,6 +88,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	} else {
 		accountAccessToken, err := js.account.AccessToken()
 		if err != nil {
+			log.Printf("%+v", err)
 			return Ticket{}
 		}
 		accessToken = accountAccessToken.AccessToken
@@ -99,6 +101,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
+		log.Printf("%+v", err)
 		return Ticket{}
 	}
 
@@ -110,10 +113,12 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	var result ticketResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
+		log.Printf("%+v", err)
 		return Ticket{}
 	}
 
 	if result.ErrCode != 0 {
+		log.Printf("errcode: %d, errmsg: %s", result.ErrCode, result.ErrMsg)
 		return Ticket{}
 	}
 

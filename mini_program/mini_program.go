@@ -49,7 +49,7 @@ func NewMiniProgramWithOpenPlatform(
 	authorizerRefreshToken,
 	token,
 	aesKey string,
-	authorizerAccount contracts.AuthorizerAccountInterface,
+	authorizerAccount contracts.AuthorizerInterface,
 	opts ...Option,
 ) *MiniProgram {
 	c := &config{

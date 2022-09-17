@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -53,90 +53,90 @@ func (authorizer *Authorizer) MobilePreAuthorizationUrl(callbackUrl string, auth
 }
 
 // getPreAuthCode 获取预授权码
-func (authorizer *Authorizer) getPreAuthCode() (PreAuthCode, error) {
+func (authorizer *Authorizer) getPreAuthCode() (*PreAuthCode, error) {
 	accessToken, err := authorizer.account.AccessToken()
 	if err != nil {
-		return PreAuthCode{}, err
+		return nil, err
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/component/api_create_preauthcode?component_access_token=%s", accessToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"component_appid": authorizer.account.AppId(),
 	})
 	if err != nil {
-		return PreAuthCode{}, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type preAuthCode struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		PreAuthCode
 	}
 	var result preAuthCode
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return PreAuthCode{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	return result.PreAuthCode, nil
+	return &result.PreAuthCode, nil
 }
 
 // AuthorizationInfo 使用授权码获取授权信息
-func (authorizer *Authorizer) AuthorizationInfo(authCode string) (AuthorizationInfo, error) {
+func (authorizer *Authorizer) AuthorizationInfo(authCode string) (*AuthorizationInfo, error) {
 	accessToken, err := authorizer.account.AccessToken()
 	if err != nil {
-		return AuthorizationInfo{}, err
+		return nil, err
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/component/api_query_auth?component_access_token=%s", accessToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"component_appid":    authorizer.account.AppId(),
 		"authorization_code": authCode,
 	})
 	if err != nil {
-		return AuthorizationInfo{}, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type info struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		AuthorizationInfo
 	}
 	var result info
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return AuthorizationInfo{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	return result.AuthorizationInfo, nil
+	return &result.AuthorizationInfo, nil
 }
 
 // AuthorizerInfo 获取授权帐号详情
-func (authorizer *Authorizer) AuthorizerInfo(appId string) (Info, error) {
+func (authorizer *Authorizer) AuthorizerInfo(appId string) (*Info, error) {
 	accessToken, err := authorizer.account.AccessToken()
 	if err != nil {
-		return Info{}, err
+		return nil, err
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/component/api_get_authorizer_info?component_access_token=%s", accessToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"component_appid":  authorizer.account.AppId(),
 		"authorizer_appid": appId,
 	})
 	if err != nil {
-		return Info{}, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type info struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Info
 	}
 	var result info
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return Info{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	return result.Info, nil
+	return &result.Info, nil
 }

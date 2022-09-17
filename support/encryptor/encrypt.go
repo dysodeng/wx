@@ -108,7 +108,7 @@ func (e *Encryptor) ValidSignature(timestamp, nonce, signature string) bool {
 }
 
 // ValidMsgSignature 验证消息签名
-func (e Encryptor) ValidMsgSignature(timestamp, nonce, msgEncrypt, signature string) bool {
+func (e *Encryptor) ValidMsgSignature(timestamp, nonce, msgEncrypt, signature string) bool {
 	return e.makeMsgSignature(timestamp, nonce, msgEncrypt) == signature
 }
 

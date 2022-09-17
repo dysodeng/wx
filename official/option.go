@@ -13,7 +13,7 @@ type config struct {
 	token                  string
 	aesKey                 string
 	authorizerRefreshToken string
-	authorizerAccount      contracts.AuthorizerAccountInterface
+	authorizerAccount      contracts.AuthorizerInterface
 }
 
 // option 公众号选项

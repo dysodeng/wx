@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -28,17 +28,17 @@ func (o *Open) Create(appId string) (string, error) {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/open/create?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"appid": appId,
 	})
 	if err != nil {
-		return "", baseError.New(0, err)
+		return "", kernelError.New(0, err)
 	}
 
 	var result openResult
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.OpenAppid, nil
@@ -54,18 +54,18 @@ func (o *Open) Bind(appId, openAppId string) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/open/bind?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"appid":      appId,
 		"open_appid": openAppId,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -81,18 +81,18 @@ func (o *Open) Unbind(appId, openAppId string) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/open/unbind?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"appid":      appId,
 		"open_appid": openAppId,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -107,23 +107,23 @@ func (o *Open) Get(appId string) (string, error) {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/open/get?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"appid": appId,
 	})
 	if err != nil {
-		return "", baseError.New(0, err)
+		return "", kernelError.New(0, err)
 	}
 
 	var result openResult
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.OpenAppid, nil
 }
 
 type openResult struct {
-	baseError.WxApiError
+	kernelError.ApiError
 	OpenAppid string `json:"open_appid"`
 }

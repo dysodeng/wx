@@ -1,5 +1,7 @@
 package open_platform
 
+import "github.com/dysodeng/wx/support/cache"
+
 func (open *OpenPlatform) Token() string {
 	return open.config.token
 }
@@ -16,8 +18,16 @@ func (open *OpenPlatform) AppSecret() string {
 	return open.config.appSecret
 }
 
+func (open *OpenPlatform) IsOpenPlatform() bool {
+	return false
+}
+
+func (open *OpenPlatform) Cache() (cache.Cache, string) {
+	return open.option.cache, open.option.cacheKeyPrefix
+}
+
 func (open *OpenPlatform) ComponentAppId() string {
-	return open.config.appId
+	return open.AppId()
 }
 
 func (open *OpenPlatform) ComponentAccessToken() string {
@@ -26,10 +36,6 @@ func (open *OpenPlatform) ComponentAccessToken() string {
 		return ""
 	}
 	return token.AccessToken
-}
-
-func (open *OpenPlatform) IsOpenPlatform() bool {
-	return false
 }
 
 func (open *OpenPlatform) AuthorizerAccountToken() string {

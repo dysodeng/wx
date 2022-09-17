@@ -6,8 +6,7 @@ import (
 	"time"
 
 	"github.com/dysodeng/wx/kernel"
-	baseError "github.com/dysodeng/wx/kernel/error"
-	"github.com/dysodeng/wx/support/cache"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -49,17 +48,17 @@ func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return kernel.AccessToken{}, baseError.New(0, err)
+		return kernel.AccessToken{}, kernelError.New(0, err)
 	}
 
 	type accessToken struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		kernel.AccessToken
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernel.AccessToken{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernel.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	tokenByte, _ := json.Marshal(kernel.AccessToken{
@@ -73,7 +72,7 @@ func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
 	)
 	if err != nil {
-		return kernel.AccessToken{}, baseError.New(0, err)
+		return kernel.AccessToken{}, kernelError.New(0, err)
 	}
 
 	return kernel.AccessToken{
@@ -84,8 +83,4 @@ func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 
 func (mp *MiniProgram) AccessTokenCacheKey() string {
 	return fmt.Sprintf("%s%s.%s", mp.option.cacheKeyPrefix, "access_token", mp.config.appId)
-}
-
-func (mp *MiniProgram) Cache() (cache.Cache, string) {
-	return mp.option.cache, mp.option.cacheKeyPrefix
 }

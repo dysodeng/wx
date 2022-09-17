@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
@@ -76,22 +76,22 @@ func (tm *TemplateMessage) SetIndustry(industryOne, industryTwo string) error {
 		accessToken.AccessToken,
 	)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"industry_id1": industryOne,
 		"industry_id2": industryTwo,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
 	// 返回信息
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -104,21 +104,21 @@ func (tm *TemplateMessage) GetIndustry() (*Industry, error) {
 
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type industryResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Industry
 	}
 	var result industryResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return &result.Industry, nil
@@ -129,24 +129,24 @@ func (tm *TemplateMessage) AddTemplate(templateIdShort string) (string, error) {
 	accessToken, _ := tm.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/template/api_add_template?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"template_id_short": templateIdShort})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"template_id_short": templateIdShort})
 	if err != nil {
-		return "", baseError.New(0, err)
+		return "", kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type tempResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TemplateId string `json:"template_id"`
 	}
 
 	var result tempResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return "", baseError.New(0, err)
+		return "", kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.TemplateId, nil
@@ -159,21 +159,21 @@ func (tm *TemplateMessage) GetPrivateTemplates() (*TemplateList, error) {
 
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type templateListResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TemplateList
 	}
 	var result templateListResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return &result.TemplateList, nil
@@ -184,18 +184,18 @@ func (tm *TemplateMessage) DeletePrivateTemplate(templateId string) error {
 	accessToken, _ := tm.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/template/del_private_template?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"template_id": templateId})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"template_id": templateId})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -204,10 +204,10 @@ func (tm *TemplateMessage) DeletePrivateTemplate(templateId string) error {
 // Send 模板消息发送
 func (tm *TemplateMessage) Send(message Message) (int, error) {
 	if message.ToUser == "" {
-		return 0, baseError.New(0, errors.New("attribute touser can not be empty!"))
+		return 0, kernelError.New(0, errors.New("attribute touser can not be empty!"))
 	}
 	if message.TemplateId == "" {
-		return 0, baseError.New(0, errors.New("attribute template_id can not be empty!"))
+		return 0, kernelError.New(0, errors.New("attribute template_id can not be empty!"))
 	}
 	if message.TopColor == "" {
 		message.TopColor = defaultColor
@@ -227,24 +227,24 @@ func (tm *TemplateMessage) Send(message Message) (int, error) {
 	var messageBody map[string]interface{}
 	_ = json.Unmarshal(body, &messageBody)
 
-	res, err := http.PostJson(apiUrl, messageBody)
+	res, err := http.PostJSON(apiUrl, messageBody)
 	if err != nil {
-		return 0, baseError.New(0, err)
+		return 0, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type sendResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		MsgId int `json:"msgid"`
 	}
 
 	var result sendResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return 0, baseError.New(0, err)
+		return 0, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return 0, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return 0, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.MsgId, nil

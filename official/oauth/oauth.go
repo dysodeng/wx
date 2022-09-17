@@ -7,10 +7,10 @@ import (
 	"net/url"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/kernel/user"
 
-	baseHttp "github.com/dysodeng/wx/support/http"
+	supportHttp "github.com/dysodeng/wx/support/http"
 
 	"github.com/pkg/errors"
 )
@@ -87,7 +87,7 @@ func (auth *OAuth) UserFromCode(code string) (*user.User, error) {
 		token.Openid,
 	)
 
-	res, err := baseHttp.Get(apiUrl)
+	res, err := supportHttp.Get(apiUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (auth *OAuth) UserFromCode(code string) (*user.User, error) {
 func (auth *OAuth) TokenFromCode(code string) (*AccessTokenResponse, error) {
 	apiUrl := auth.getTokenUrl(code)
 
-	res, err := baseHttp.Get(apiUrl)
+	res, err := supportHttp.Get(apiUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (auth *OAuth) getTokenUrl(code string) string {
 }
 
 type AccessTokenResponse struct {
-	baseError.WxApiError
+	kernelError.ApiError
 	AccessToken  string `json:"access_token"`
 	ExpiresIn    int64  `json:"expires_in"`
 	RefreshToken string `json:"refresh_token"`
@@ -154,6 +154,6 @@ type AccessTokenResponse struct {
 }
 
 type userResponse struct {
-	baseError.WxApiError
+	kernelError.ApiError
 	user.User
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -36,7 +36,7 @@ func (auth *Auth) Session(code string) (Session, error) {
 	}
 
 	type sessionResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Session
 	}
 	var result sessionResult

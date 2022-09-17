@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -27,7 +27,7 @@ func (domain *Domain) Modify(data map[string][]string) (map[string]interface{}, 
 	}
 
 	apiUrl := fmt.Sprintf("wxa/modify_domain?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, data)
+	res, err := http.PostJSON(apiUrl, data)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (domain *Domain) Modify(data map[string][]string) (map[string]interface{}, 
 	}
 
 	if result["errcode"] != 0 {
-		return result, baseError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
+		return result, kernelError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
 	}
 
 	return result, nil
@@ -53,7 +53,7 @@ func (domain *Domain) SetWebViewDomain(action string, domains ...string) error {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/setwebviewdomain?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"action":        action,
 		"webviewdomain": domains,
 	})
@@ -61,10 +61,10 @@ func (domain *Domain) SetWebViewDomain(action string, domains ...string) error {
 		return err
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil

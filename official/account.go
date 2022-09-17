@@ -1,5 +1,7 @@
 package official
 
+import "github.com/dysodeng/wx/support/cache"
+
 func (official *Official) Token() string {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccountToken()
@@ -39,4 +41,9 @@ func (official *Official) ComponentAccessToken() string {
 // IsOpenPlatform 是否为开放平台下的公众账号
 func (official *Official) IsOpenPlatform() bool {
 	return official.config.isOpenPlatform
+}
+
+// Cache 获取缓存实例
+func (official *Official) Cache() (cache.Cache, string) {
+	return official.option.cache, official.option.cacheKeyPrefix
 }

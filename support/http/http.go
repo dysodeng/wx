@@ -66,16 +66,16 @@ func Post(uri, data, contentType string) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-// PostJson Post Json 请求
-func PostJson(uri string, data interface{}) ([]byte, error) {
-	jsonBuf := new(bytes.Buffer)
-	enc := json.NewEncoder(jsonBuf)
+// PostJSON Post Json 请求
+func PostJSON(uri string, data interface{}) ([]byte, error) {
+	jsonBuffer := new(bytes.Buffer)
+	enc := json.NewEncoder(jsonBuffer)
 	enc.SetEscapeHTML(false)
 	err := enc.Encode(data)
 	if err != nil {
 		return nil, err
 	}
-	response, err := http.Post(baseUri+uri, "application/json;charset=utf-8", jsonBuf)
+	response, err := http.Post(baseUri+uri, "application/json;charset=utf-8", jsonBuffer)
 	if err != nil {
 		return nil, err
 	}
@@ -91,15 +91,15 @@ func PostJson(uri string, data interface{}) ([]byte, error) {
 
 // PostJSONWithRespContentType post json数据请求，且返回数据类型
 func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, error) {
-	jsonBuf := new(bytes.Buffer)
-	enc := json.NewEncoder(jsonBuf)
+	jsonBuffer := new(bytes.Buffer)
+	enc := json.NewEncoder(jsonBuffer)
 	enc.SetEscapeHTML(false)
 	err := enc.Encode(obj)
 	if err != nil {
 		return nil, "", err
 	}
 
-	response, err := http.Post(baseUri+uri, "application/json;charset=utf-8", jsonBuf)
+	response, err := http.Post(baseUri+uri, "application/json;charset=utf-8", jsonBuffer)
 	if err != nil {
 		return nil, "", err
 	}

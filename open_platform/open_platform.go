@@ -44,7 +44,7 @@ func NewOpenPlatform(appId, appSecret, token, aesKey string, opts ...Option) *Op
 // Server 服务端
 func (open *OpenPlatform) Server() *base.Server {
 	server := base.NewServer(open)
-	server.Push(&ComponentVerifyTicket{}, event.ComponentVerifyTicket)
+	server.Register(&componentVerifyTicket{}, event.ComponentVerifyTicket)
 	return server
 }
 

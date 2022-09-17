@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -42,10 +42,10 @@ func (code *WxaCode) CreateQrCode(path string, opts map[string]interface{}) ([]b
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
-		var result baseError.WxApiError
+		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
@@ -76,10 +76,10 @@ func (code *WxaCode) Get(path string, opts map[string]interface{}) ([]byte, stri
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
-		var result baseError.WxApiError
+		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
@@ -110,10 +110,10 @@ func (code *WxaCode) GetUnlimited(scene string, opts map[string]interface{}) ([]
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
-		var result baseError.WxApiError
+		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 

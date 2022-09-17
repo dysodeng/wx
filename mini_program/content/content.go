@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -27,18 +27,18 @@ func (c *Security) CheckText(openid, content string, scene Scene) (TextResult, e
 	}
 
 	apiUrl := fmt.Sprintf("wxa/msg_sec_check?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"version": 2,
 		"openid":  openid,
 		"scene":   scene,
 		"content": content,
 	})
 	if err != nil {
-		return TextResult{}, baseError.New(0, err)
+		return TextResult{}, kernelError.New(0, err)
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TextResult
 	}
 	err = json.Unmarshal(res, &result)
@@ -46,7 +46,7 @@ func (c *Security) CheckText(openid, content string, scene Scene) (TextResult, e
 		return TextResult{}, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return TextResult{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TextResult{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.TextResult, nil
@@ -60,7 +60,7 @@ func (c *Security) AsyncCheckMedia(openid, mediaUrl string, mediaType MediaType,
 	}
 
 	apiUrl := fmt.Sprintf("wxa/media_check_async?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"version":    2,
 		"openid":     openid,
 		"scene":      scene,
@@ -68,10 +68,10 @@ func (c *Security) AsyncCheckMedia(openid, mediaUrl string, mediaType MediaType,
 		"media_type": mediaType,
 	})
 	if err != nil {
-		return "", baseError.New(0, err)
+		return "", kernelError.New(0, err)
 	}
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TraceId string `json:"trace_id"`
 	}
 	err = json.Unmarshal(res, &result)
@@ -79,7 +79,7 @@ func (c *Security) AsyncCheckMedia(openid, mediaUrl string, mediaType MediaType,
 		return "", err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.TraceId, nil

@@ -1,6 +1,6 @@
 package user
 
-// User 微信用户
+// User 微信用户信息
 type User struct {
 	Openid     string   `json:"openid"`
 	Nickname   string   `json:"nickname"`

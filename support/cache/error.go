@@ -1,6 +1,6 @@
 package cache
 
-import "errors"
+import "github.com/pkg/errors"
 
 var (
 	ErrKeyExpired  = errors.New("key expired")

@@ -1,6 +1,6 @@
 package message
 
-// CDATAText 文本域
+// CDATAText XML文本域
 type CDATAText struct {
 	Text string `xml:",innerxml"`
 }

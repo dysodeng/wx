@@ -35,8 +35,8 @@ func NewServer(account contracts.AccountInterface) *Server {
 	}
 }
 
-// Push 添加消息处理器
-func (sg *Server) Push(handler contracts.EventHandlerInterface, guard event.Guard) {
+// Register 注册消息处理器
+func (sg *Server) Register(handler contracts.EventHandlerInterface, guard event.Guard) {
 	sg.lock.Lock()
 	defer sg.lock.Unlock()
 

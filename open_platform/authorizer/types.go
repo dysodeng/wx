@@ -37,35 +37,36 @@ type FuncInfo struct {
 	} `json:"confirm_info,omitempty"`
 }
 
+type InfoBody struct {
+	// 通用字段
+	Nickname        string `json:"nick_name"`
+	HeadImg         string `json:"head_img"`
+	ServiceTypeInfo struct {
+		Id int `json:"id"`
+	} `json:"service_type_info"`
+	VerifyTypeInfo struct {
+		Id int `json:"id"`
+	} `json:"verify_type_info"`
+	Username      string         `json:"user_name"`
+	PrincipalName string         `json:"principal_name"`
+	BusinessInfo  map[string]int `json:"business_info"`
+	Alias         string         `json:"alias"`
+	QrcodeUrl     string         `json:"qrcode_url"`
+	AccountStatus int            `json:"account_status"`
+	Idc           int            `json:"idc"`
+	Signature     string         `json:"signature"`
+
+	// 小程序独有字段
+	RegisterType    int              `json:"register_type"`
+	BasicConfig     map[string]bool  `json:"basic_config"`
+	MiniProgramInfo *MiniProgramInfo `json:"MiniProgramInfo"`
+}
+
 // Info 授权账号详情信息
 type Info struct {
 	AuthorizationInfo AuthorizationInfoBody `json:"authorization_info"`
-
 	// 授权账号详情信息
-	AuthorizerInfo struct {
-		// 通用字段
-		Nickname        string `json:"nick_name"`
-		HeadImg         string `json:"head_img"`
-		ServiceTypeInfo struct {
-			Id int `json:"id"`
-		} `json:"service_type_info"`
-		VerifyTypeInfo struct {
-			Id int `json:"id"`
-		} `json:"verify_type_info"`
-		Username      string         `json:"user_name"`
-		PrincipalName string         `json:"principal_name"`
-		BusinessInfo  map[string]int `json:"business_info"`
-		Alias         string         `json:"alias"`
-		QrcodeUrl     string         `json:"qrcode_url"`
-		AccountStatus int            `json:"account_status"`
-		Idc           int            `json:"idc"`
-		Signature     string         `json:"signature"`
-
-		// 小程序独有字段
-		RegisterType    int              `json:"register_type"`
-		BasicConfig     map[string]bool  `json:"basic_config"`
-		MiniProgramInfo *MiniProgramInfo `json:"MiniProgramInfo"`
-	} `json:"authorizer_info"`
+	AuthorizerInfo InfoBody `json:"authorizer_info"`
 }
 
 type MiniProgramInfo struct {

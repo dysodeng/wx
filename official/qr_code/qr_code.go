@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -54,7 +54,7 @@ type ticket struct {
 }
 
 type ticketResult struct {
-	baseError.WxApiError
+	kernelError.ApiError
 	ticket
 }
 
@@ -122,18 +122,18 @@ func (qr *QrCode) create(action string, scene map[string]interface{}, isTemporar
 		accessToken.AccessToken,
 	)
 
-	res, err := http.PostJson(apiUrl, data)
+	res, err := http.PostJSON(apiUrl, data)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	var result ticketResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return &result.ticket, nil

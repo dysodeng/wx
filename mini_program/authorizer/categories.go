@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -33,7 +33,7 @@ func (c *Categories) GetAllCategories() ([]Category, error) {
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		CategoriesList struct {
 			Categories []Category `json:"categories"`
 		} `json:"categories_list"`
@@ -43,7 +43,7 @@ func (c *Categories) GetAllCategories() ([]Category, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.CategoriesList.Categories, nil
@@ -63,7 +63,7 @@ func (c *Categories) GetCategories() (*CategoryItem, error) {
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		CategoryItem
 	}
 	err = json.Unmarshal(res, &result)
@@ -71,7 +71,7 @@ func (c *Categories) GetCategories() (*CategoryItem, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return &result.CategoryItem, nil
@@ -86,13 +86,13 @@ func (c *Categories) GetCategoriesByType(verifyType uint8) ([]Category, error) {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/wxopen/getcategoriesbytype?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"verify_type": verifyType})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"verify_type": verifyType})
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		CategoriesList struct {
 			Categories []Category `json:"categories"`
 		} `json:"categories_list"`
@@ -102,7 +102,7 @@ func (c *Categories) GetCategoriesByType(verifyType uint8) ([]Category, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.CategoriesList.Categories, nil
@@ -116,18 +116,18 @@ func (c *Categories) AddCategory(categories []map[string]interface{}) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/wxopen/addcategory?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"categories": categories})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"categories": categories})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -141,18 +141,18 @@ func (c *Categories) DeleteCategory(first, second int64) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/wxopen/deletecategory?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"first": first, "second": second})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"first": first, "second": second})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -166,18 +166,18 @@ func (c *Categories) ModifyCategory(data map[string]interface{}) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/wxopen/modifycategory?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, data)
+	res, err := http.PostJSON(apiUrl, data)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil

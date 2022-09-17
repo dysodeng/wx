@@ -5,14 +5,19 @@ import (
 	"time"
 )
 
-// Message 消息体
-type Message struct {
+// Header 消息头
+type Header struct {
 	XMLName      xml.Name `xml:"xml"`
 	ToUserName   string
 	FromUserName string
 	CreateTime   time.Duration
 	MsgType      string
 	MsgId        int
+}
+
+// Message 消息体
+type Message struct {
+	Header
 
 	// 文本消息
 	Content string

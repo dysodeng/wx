@@ -1,15 +1,16 @@
 package error
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
-// WxApiError 微信Api返回的通用错误
-type WxApiError struct {
+// ApiError 微信Api返回的通用错误
+type ApiError struct {
 	ErrCode int64  `json:"errcode"`
 	ErrMsg  string `json:"errmsg"`
 }
@@ -38,8 +39,8 @@ func Convert(err error) Error {
 	codeMatcher := regexp.MustCompile(codeRegxPatter)
 	code := codeMatcher.Find([]byte(e))
 	codeString := strings.TrimRight(strings.Replace(string(code), "errcode=", "", -1), ",")
-	codeInt, er := strconv.ParseInt(codeString, 10, 64)
-	if er != nil {
+	codeInt, codeErr := strconv.ParseInt(codeString, 10, 64)
+	if codeErr != nil {
 		return Error{Code: 0, Err: err}
 	}
 

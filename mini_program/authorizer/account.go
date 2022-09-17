@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -64,7 +64,7 @@ func (account *Account) GetBaseInfo() (*AccountInfo, error) {
 	}
 
 	type info struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		AccountInfo
 	}
 	var result info
@@ -73,7 +73,7 @@ func (account *Account) GetBaseInfo() (*AccountInfo, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return &result.AccountInfo, nil
@@ -87,9 +87,9 @@ func (account *Account) SetNickname(data map[string]interface{}) (map[string]int
 	}
 
 	apiUrl := fmt.Sprintf("wxa/setnickname?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, data)
+	res, err := http.PostJSON(apiUrl, data)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	var result map[string]interface{}
@@ -99,7 +99,7 @@ func (account *Account) SetNickname(data map[string]interface{}) (map[string]int
 	}
 
 	if result["errcode"] != 0 {
-		return nil, baseError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
+		return nil, kernelError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
 	}
 
 	return result, nil
@@ -113,7 +113,7 @@ func (account *Account) ModifyAvatar(mediaId, x1, y1, x2, y2 string) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/account/modifyheadimage?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"head_img_media_id": mediaId,
 		"x1":                x1,
 		"y1":                y1,
@@ -121,13 +121,13 @@ func (account *Account) ModifyAvatar(mediaId, x1, y1, x2, y2 string) error {
 		"y2":                y2,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -141,17 +141,17 @@ func (account *Account) ModifySignature(signature string) error {
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/account/modifysignature?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"signature": signature,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -171,7 +171,7 @@ func (account *Account) HaveOpen() (bool, error) {
 	}
 
 	type have struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		HaveOpen bool
 	}
 	var result have
@@ -180,7 +180,7 @@ func (account *Account) HaveOpen() (bool, error) {
 		return false, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return false, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return false, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.HaveOpen, nil

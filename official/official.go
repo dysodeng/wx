@@ -50,7 +50,7 @@ func NewOfficialWithOpenPlatform(
 	authorizerRefreshToken,
 	token,
 	aesKey string,
-	authorizerAccount contracts.AuthorizerAccountInterface,
+	authorizerAccount contracts.AuthorizerInterface,
 	opts ...Option,
 ) *Official {
 	c := &config{

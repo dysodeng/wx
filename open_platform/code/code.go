@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -29,23 +29,23 @@ func (code *Code) Commit(templateId int64, version, description, extJson string)
 	}
 
 	apiUrl := fmt.Sprintf("wxa/commit?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"template_id":  templateId,
 		"user_version": version,
 		"user_desc":    description,
 		"ext_json":     extJson,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -69,10 +69,10 @@ func (code *Code) QrCode(path string) ([]byte, string, error) {
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
-		var result baseError.WxApiError
+		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 		}
 	}
 
@@ -83,7 +83,7 @@ func (code *Code) QrCode(path string) ([]byte, string, error) {
 	return nil, "", errors.New("get qr_code image error")
 }
 
-// GetPage 获取忆上传的代码的页面列表
+// GetPage 获取已上传代码的页面列表
 func (code *Code) GetPage() ([]string, error) {
 	accountToken, err := code.account.AccessToken()
 	if err != nil {
@@ -97,7 +97,7 @@ func (code *Code) GetPage() ([]string, error) {
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		PageList []string `json:"page_list"`
 	}
 
@@ -106,7 +106,7 @@ func (code *Code) GetPage() ([]string, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.PageList, nil
@@ -126,7 +126,7 @@ func (code *Code) GetCategory() ([]map[string]interface{}, error) {
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		CategoryList []map[string]interface{} `json:"category_list"`
 	}
 
@@ -135,7 +135,7 @@ func (code *Code) GetCategory() ([]map[string]interface{}, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.CategoryList, nil
@@ -149,13 +149,13 @@ func (code *Code) SubmitAudit(data map[string]interface{}) (int64, error) {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/submit_audit?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, data)
+	res, err := http.PostJSON(apiUrl, data)
 	if err != nil {
-		return 0, baseError.New(0, err)
+		return 0, kernelError.New(0, err)
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		AuditId int64 `json:"auditid"`
 	}
 	err = json.Unmarshal(res, &result)
@@ -163,7 +163,7 @@ func (code *Code) SubmitAudit(data map[string]interface{}) (int64, error) {
 		return 0, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return 0, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return 0, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.AuditId, nil
@@ -177,7 +177,7 @@ func (code *Code) AuditStatus(auditId int64) (map[string]interface{}, error) {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/get_auditstatus?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"auditid": auditId})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"auditid": auditId})
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (code *Code) AuditStatus(auditId int64) (map[string]interface{}, error) {
 	}
 
 	if result["errcode"] != 0 {
-		return nil, baseError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
+		return nil, kernelError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
 	}
 
 	delete(result, "errcode")
@@ -218,7 +218,7 @@ func (code *Code) LatestAuditStatus() (map[string]interface{}, error) {
 	}
 
 	if result["errcode"] != 0 {
-		return nil, baseError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
+		return nil, kernelError.New(result["errcode"].(int64), errors.New(result["errmsg"].(string)))
 	}
 
 	delete(result, "errcode")
@@ -240,13 +240,13 @@ func (code *Code) RevokeAudit() error {
 		return err
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -260,18 +260,18 @@ func (code *Code) UrgentAudit(auditId int64) error {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/speedupaudit?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"auditid": auditId})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"auditid": auditId})
 	if err != nil {
 		return err
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -285,25 +285,25 @@ func (code *Code) Release() error {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/release?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, nil)
+	res, err := http.PostJSON(apiUrl, nil)
 	if err != nil {
 		return err
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
 }
 
 // RollbackRelease 版本回退
-func (code Code) RollbackRelease() error {
+func (code *Code) RollbackRelease() error {
 	accountToken, err := code.account.AccessToken()
 	if err != nil {
 		return err
@@ -315,13 +315,13 @@ func (code Code) RollbackRelease() error {
 		return err
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil

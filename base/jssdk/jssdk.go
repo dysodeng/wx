@@ -11,12 +11,12 @@ import (
 	"github.com/dysodeng/wx/support"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 
 	"github.com/dysodeng/wx/support/http"
 )
 
-const cacheKeyTemplate = "jssdk.ticket.%s.%s"
+const jssdkTicketCacheKey = "jssdk.ticket.%s.%s"
 
 // Jssdk 微信JSSDK
 type Jssdk struct {
@@ -101,7 +101,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 
 	// 返回信息
 	type ticketResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Ticket
 	}
 	var result ticketResult
@@ -112,7 +112,7 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	}
 
 	if result.ErrCode != 0 {
-		log.Printf("errcode: %d, errmsg: %s", result.ErrCode, result.ErrMsg)
+		log.Printf("errcode: %d, errmsg: %s\n", result.ErrCode, result.ErrMsg)
 		return Ticket{}
 	}
 
@@ -139,7 +139,7 @@ func (js *Jssdk) getTicketCacheKey(ticketType string) string {
 	if js.account.IsOpenPlatform() {
 		appId = js.account.ComponentAppId() + "." + appId
 	}
-	return fmt.Sprintf(cacheKeyTemplate, ticketType, appId)
+	return fmt.Sprintf(jssdkTicketCacheKey, ticketType, appId)
 }
 
 // configSignature jssdk 配置签名

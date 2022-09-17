@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
@@ -33,7 +33,7 @@ func (template *CodeTemplate) GetDraftList() ([]Draft, error) {
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		DraftList []Draft `json:"draft_list"`
 	}
 
@@ -42,7 +42,7 @@ func (template *CodeTemplate) GetDraftList() ([]Draft, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.DraftList, nil
@@ -58,21 +58,21 @@ func (template *CodeTemplate) AddDraftToTemplate(draftId int64, templateType uin
 	}
 
 	apiUrl := fmt.Sprintf("wxa/addtotemplate?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"draft_id":      draftId,
 		"template_type": templateType,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -99,7 +99,7 @@ func (template *CodeTemplate) GetTemplateList(templateType int8) ([]Template, er
 	}
 
 	var result struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TemplateList []Template `json:"template_list"`
 	}
 	err = json.Unmarshal(res, &result)
@@ -107,7 +107,7 @@ func (template *CodeTemplate) GetTemplateList(templateType int8) ([]Template, er
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.TemplateList, nil
@@ -121,20 +121,20 @@ func (template *CodeTemplate) DeleteTemplate(templateId int64) error {
 	}
 
 	apiUrl := fmt.Sprintf("wxa/deletetemplate?access_token=%s", accountToken.AccessToken)
-	res, err := http.PostJson(apiUrl, map[string]interface{}{
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"template_id": templateId,
 	})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil

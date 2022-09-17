@@ -1,5 +1,7 @@
 package mini_program
 
+import "github.com/dysodeng/wx/support/cache"
+
 func (mp *MiniProgram) IsOpenPlatform() bool {
 	return mp.config.isOpenPlatform
 }
@@ -38,4 +40,8 @@ func (mp *MiniProgram) ComponentAccessToken() string {
 		return mp.config.authorizerAccount.ComponentAccessToken()
 	}
 	return ""
+}
+
+func (mp *MiniProgram) Cache() (cache.Cache, string) {
+	return mp.option.cache, mp.option.cacheKeyPrefix
 }

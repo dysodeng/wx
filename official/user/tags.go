@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/dysodeng/wx/kernel/contracts"
-	baseError "github.com/dysodeng/wx/kernel/error"
+	kernelError "github.com/dysodeng/wx/kernel/error"
 
 	"github.com/dysodeng/wx/support/http"
 )
@@ -41,23 +41,23 @@ func (tag *Tag) Create(name string) (TagItem, error) {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/create?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]string{"name": name}})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"tag": map[string]string{"name": name}})
 	if err != nil {
-		return TagItem{}, baseError.New(0, err)
+		return TagItem{}, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type tagResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Tag TagItem `json:"tag"`
 	}
 	var result tagResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return TagItem{}, baseError.New(0, err)
+		return TagItem{}, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return TagItem{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TagItem{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.Tag, nil
@@ -70,21 +70,21 @@ func (tag *Tag) List() ([]TagItem, error) {
 
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type tagResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		Tags []TagItem `json:"tags"`
 	}
 	var result tagResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.Tags, nil
@@ -95,19 +95,19 @@ func (tag *Tag) Update(tagId int, name string) error {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/update?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId, "name": name}})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId, "name": name}})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
 	// 返回信息
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -118,19 +118,19 @@ func (tag *Tag) Delete(tagId int) error {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/delete?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId}})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"tag": map[string]interface{}{"id": tagId}})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
 	// 返回信息
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -141,23 +141,23 @@ func (tag *Tag) UsersOfTag(tagId int, nextOpenid string) (TagUser, error) {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/user/tag/get?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"tagid": tagId, "next_openid": nextOpenid})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"tagid": tagId, "next_openid": nextOpenid})
 	if err != nil {
-		return TagUser{}, baseError.New(0, err)
+		return TagUser{}, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type tagResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TagUser
 	}
 	var result tagResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return TagUser{}, baseError.New(0, err)
+		return TagUser{}, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return TagUser{}, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TagUser{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return TagUser{Count: result.Count, Data: result.Data, NextOpenid: result.NextOpenid}, nil
@@ -168,19 +168,19 @@ func (tag *Tag) TagUsers(openidList []string, tagId int) error {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/members/batchtagging?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
 	// 返回信息
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -191,19 +191,19 @@ func (tag *Tag) UntagUsers(openidList []string, tagId int) error {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/members/batchuntagging?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"openid_list": openidList, "tagid": tagId})
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 
 	// 返回信息
-	var result baseError.WxApiError
+	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return baseError.New(0, err)
+		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return nil
@@ -214,23 +214,23 @@ func (tag *Tag) UserTags(openid string) ([]int, error) {
 	accessToken, _ := tag.account.AccessToken()
 	apiUrl := fmt.Sprintf("cgi-bin/tags/getidlist?access_token=%s", accessToken.AccessToken)
 
-	res, err := http.PostJson(apiUrl, map[string]interface{}{"openid": openid})
+	res, err := http.PostJSON(apiUrl, map[string]interface{}{"openid": openid})
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 
 	// 返回信息
 	type tagResult struct {
-		baseError.WxApiError
+		kernelError.ApiError
 		TagIdList []int `json:"tagid_list"`
 	}
 	var result tagResult
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return nil, baseError.New(0, err)
+		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, baseError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
 	return result.TagIdList, nil

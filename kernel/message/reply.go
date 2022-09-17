@@ -6,8 +6,11 @@ import (
 	"time"
 )
 
+// Replier 消息回复接口
 type Replier interface {
+	// BuildXml 构建消息XML
 	BuildXml(fromUserName, toUserName string) []byte
+	// ContentType 消息类型
 	ContentType() string
 }
 
@@ -21,6 +24,7 @@ func NewReply(replier Replier) *Reply {
 		replier: replier,
 	}
 }
+
 func (reply *Reply) Replier() Replier {
 	return reply.replier
 }

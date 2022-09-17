@@ -8,10 +8,10 @@ import (
 	"github.com/dysodeng/wx/kernel/message"
 )
 
-// ComponentVerifyTicket verify_ticket推送事件
-type ComponentVerifyTicket struct{}
+// componentVerifyTicket verify_ticket推送事件
+type componentVerifyTicket struct{}
 
-func (ComponentVerifyTicket) Handle(account contracts.AccountInterface, messageBody *message.Message) *message.Reply {
+func (componentVerifyTicket) Handle(account contracts.AccountInterface, messageBody *message.Message) *message.Reply {
 	if messageBody.ComponentVerifyTicket != "" {
 		cache, cacheKeyPrefix := account.Cache()
 		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, messageBody.AppId)

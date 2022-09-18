@@ -42,7 +42,7 @@ func main() {
 
 	// 服务端
 	appServer := officialSdk.Server()
-	appServer.Push(func(messageBody *message.Message) *reply.Reply {
+	appServer.Register(func(messageBody *message.Message) *reply.Reply {
 		log.Println("这里是用户自定义的消息处理器")
 		log.Println(messageBody)
 		return reply.NewReply(reply.NewText("你好呀"))

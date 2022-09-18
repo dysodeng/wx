@@ -18,8 +18,9 @@ Usage
 package main
 
 import (
-	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/kernel/event"
 	"github.com/dysodeng/wx/kernel/message"
+	"github.com/dysodeng/wx/kernel/message/reply"
 	"github.com/dysodeng/wx/official"
 	"log"
 	"net/http"
@@ -33,10 +34,7 @@ var (
 )
 
 func main() {
-	officialSdk, err := official.NewOfficial(appId, appSecret, token, aesKey)
-	if err != nil {
-		log.Fatal(err)
-	}
+	officialSdk := official.NewOfficial(appId, appSecret, token, aesKey)
 
 	// 公众号接口调用
 	userTag := officialSdk.UserTag()
@@ -44,11 +42,11 @@ func main() {
 
 	// 服务端
 	appServer := officialSdk.Server()
-	appServer.Push(func(messageBody *message.Message) *message.Reply {
+	appServer.Push(func(messageBody *message.Message) *reply.Reply {
 		log.Println("这里是用户自定义的消息处理器")
 		log.Println(messageBody)
-		return message.NewMessageReply(message.NewText("你好呀"))
-	}, base.GuardAll)
+		return reply.NewReply(reply.NewText("你好呀"))
+	}, event.All)
 
 	h := http.DefaultServeMux
 	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

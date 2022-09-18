@@ -9,6 +9,7 @@ import (
 	"github.com/dysodeng/wx/open_platform/code"
 	"github.com/dysodeng/wx/open_platform/code_template"
 	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/lock"
 )
 
 // OpenPlatform 微信开放平台
@@ -33,6 +34,9 @@ func NewOpenPlatform(appId, appSecret, token, aesKey string, opts ...Option) *Op
 	}
 	if o.cache == nil {
 		o.cache = cache.NewMemoryCache()
+	}
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
 	}
 
 	return &OpenPlatform{
@@ -75,6 +79,7 @@ func (open *OpenPlatform) Official(appId, authorizerRefreshToken string) *offici
 		open,
 		official.WithCache(open.option.cache),
 		official.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
+		official.WithLocker(open.option.locker.Clone()),
 	)
 }
 
@@ -90,5 +95,6 @@ func (open *OpenPlatform) MiniProgram(appId, authorizerRefreshToken string) *min
 		open,
 		mini_program.WithCache(open.option.cache),
 		mini_program.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
+		mini_program.WithLocker(open.option.locker.Clone()),
 	)
 }

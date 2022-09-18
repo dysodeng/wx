@@ -3,6 +3,7 @@ package mini_program
 import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/lock"
 )
 
 // config 小程序配置
@@ -20,6 +21,7 @@ type config struct {
 type option struct {
 	cache          cache.Cache
 	cacheKeyPrefix string
+	locker         lock.Locker
 }
 
 type Option func(*option)
@@ -35,5 +37,12 @@ func WithCache(cache cache.Cache) Option {
 func WithCacheKeyPrefix(cacheKeyPrefix string) Option {
 	return func(o *option) {
 		o.cacheKeyPrefix = cacheKeyPrefix
+	}
+}
+
+// WithLocker 设置锁
+func WithLocker(locker lock.Locker) Option {
+	return func(o *option) {
+		o.locker = locker
 	}
 }

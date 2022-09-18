@@ -10,6 +10,7 @@ import (
 	"github.com/dysodeng/wx/mini_program/qr_code"
 	"github.com/dysodeng/wx/mini_program/wxa_code"
 	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/lock"
 )
 
 // MiniProgram 小程序
@@ -35,6 +36,9 @@ func NewMiniProgram(appId, appSecret, token, aesKey string, opts ...Option) *Min
 	}
 	if o.cache == nil {
 		o.cache = cache.NewMemoryCache()
+	}
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
 	}
 
 	return &MiniProgram{
@@ -69,6 +73,9 @@ func NewMiniProgramWithOpenPlatform(
 	}
 	if o.cache == nil {
 		o.cache = cache.NewMemoryCache()
+	}
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
 	}
 
 	return &MiniProgram{

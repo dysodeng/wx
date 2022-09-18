@@ -11,6 +11,7 @@ import (
 	"github.com/dysodeng/wx/official/template_message"
 	"github.com/dysodeng/wx/official/user"
 	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/lock"
 )
 
 // Official 公众号
@@ -36,6 +37,9 @@ func NewOfficial(appId, appSecret, token, aesKey string, opts ...Option) *Offici
 	}
 	if o.cache == nil {
 		o.cache = cache.NewMemoryCache()
+	}
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
 	}
 
 	return &Official{
@@ -70,6 +74,9 @@ func NewOfficialWithOpenPlatform(
 	}
 	if o.cache == nil {
 		o.cache = cache.NewMemoryCache()
+	}
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
 	}
 
 	return &Official{

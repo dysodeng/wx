@@ -1,6 +1,9 @@
 package open_platform
 
-import "github.com/dysodeng/wx/support/cache"
+import (
+	"github.com/dysodeng/wx/support/cache"
+	"github.com/dysodeng/wx/support/lock"
+)
 
 // config 开放平台配置
 type config struct {
@@ -13,6 +16,7 @@ type config struct {
 type option struct {
 	cache          cache.Cache
 	cacheKeyPrefix string
+	locker         lock.Locker
 }
 
 type Option func(*option)
@@ -28,5 +32,12 @@ func WithCache(cache cache.Cache) Option {
 func WithCacheKeyPrefix(cacheKeyPrefix string) Option {
 	return func(o *option) {
 		o.cacheKeyPrefix = cacheKeyPrefix
+	}
+}
+
+// WithLocker 设置锁
+func WithLocker(locker lock.Locker) Option {
+	return func(o *option) {
+		o.locker = locker
 	}
 }

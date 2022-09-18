@@ -25,8 +25,10 @@ func (official *Official) accessToken(refresh bool) (contracts.AccessToken, erro
 			official.config.appId,
 			official.config.authorizerRefreshToken,
 			refresh,
+			official.option.locker,
 		)
 	} else {
+	cache:
 		if !refresh && official.option.cache.IsExist(official.AccessTokenCacheKey()) {
 			tokenString, err := official.option.cache.Get(official.AccessTokenCacheKey())
 			if err == nil {
@@ -37,10 +39,19 @@ func (official *Official) accessToken(refresh bool) (contracts.AccessToken, erro
 				}
 			}
 		}
-	}
 
-	// 刷新access_token
-	return official.refreshAccessToken()
+		_ = official.option.locker.Lock()
+		defer func() {
+			_ = official.option.locker.Unlock()
+		}()
+
+		if official.option.cache.IsExist(official.AccessTokenCacheKey()) {
+			goto cache
+		}
+
+		// 刷新access_token
+		return official.refreshAccessToken()
+	}
 }
 
 // refreshAccessToken 刷新access_token

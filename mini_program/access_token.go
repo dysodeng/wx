@@ -22,8 +22,10 @@ func (mp *MiniProgram) accessToken(refresh bool) (contracts.AccessToken, error) 
 			mp.config.appId,
 			mp.config.authorizerRefreshToken,
 			refresh,
+			mp.option.locker,
 		)
 	} else {
+	cache:
 		if !refresh && mp.option.cache.IsExist(mp.AccessTokenCacheKey()) {
 			tokenString, err := mp.option.cache.Get(mp.AccessTokenCacheKey())
 			if err == nil {
@@ -34,10 +36,19 @@ func (mp *MiniProgram) accessToken(refresh bool) (contracts.AccessToken, error) 
 				}
 			}
 		}
-	}
 
-	// 刷新access_token
-	return mp.refreshAccessToken()
+		_ = mp.option.locker.Lock()
+		defer func() {
+			_ = mp.option.locker.Unlock()
+		}()
+
+		if mp.option.cache.IsExist(mp.AccessTokenCacheKey()) {
+			goto cache
+		}
+
+		// 刷新access_token
+		return mp.refreshAccessToken()
+	}
 }
 
 func (mp *MiniProgram) refreshAccessToken() (contracts.AccessToken, error) {

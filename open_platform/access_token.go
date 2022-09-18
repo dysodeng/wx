@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dysodeng/wx/support/lock"
+
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
@@ -19,6 +21,7 @@ func (open *OpenPlatform) AccessToken() (contracts.AccessToken, error) {
 }
 
 func (open *OpenPlatform) accessToken(refresh bool) (contracts.AccessToken, error) {
+cache:
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
 		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())
 		if err == nil {
@@ -28,6 +31,15 @@ func (open *OpenPlatform) accessToken(refresh bool) (contracts.AccessToken, erro
 				return accessToken, nil
 			}
 		}
+	}
+
+	_ = open.option.locker.Lock()
+	defer func() {
+		_ = open.option.locker.Unlock()
+	}()
+
+	if open.option.cache.IsExist(open.AccessTokenCacheKey()) {
+		goto cache
 	}
 
 	// 刷新access_token
@@ -94,7 +106,8 @@ func (open *OpenPlatform) AccessTokenCacheKey() string {
 }
 
 // AuthorizerAccessToken 代公众账号获取access_token
-func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (contracts.AccessToken, error) {
+func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool, locker lock.Locker) (contracts.AccessToken, error) {
+cache:
 	if !refresh && open.option.cache.IsExist(open.AuthorizerAccessTokenCacheKey(appId)) {
 		tokenString, err := open.option.cache.Get(open.AuthorizerAccessTokenCacheKey(appId))
 		if err == nil {
@@ -104,6 +117,15 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 				return accessToken, nil
 			}
 		}
+	}
+
+	_ = locker.Lock()
+	defer func() {
+		_ = locker.Unlock()
+	}()
+
+	if open.option.cache.IsExist(open.AuthorizerAccessTokenCacheKey(appId)) {
+		goto cache
 	}
 
 	// 刷新公众账号access_token

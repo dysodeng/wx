@@ -1,5 +1,7 @@
 package contracts
 
+import "github.com/dysodeng/wx/support/lock"
+
 // AccessToken access token
 type AccessToken struct {
 	AccessToken string `json:"access_token"`
@@ -17,7 +19,7 @@ type AccessTokenInterface interface {
 // AuthorizerAccessTokenInterface 开放平台代公众账号获取token接口
 type AuthorizerAccessTokenInterface interface {
 	// AuthorizerAccessToken 代公众账号获取access_token
-	AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (AccessToken, error)
+	AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool, locker lock.Locker) (AccessToken, error)
 	// AuthorizerAccessTokenCacheKey 公众账号access_token缓存key
 	AuthorizerAccessTokenCacheKey(appId string) string
 }

@@ -79,7 +79,7 @@ func (open *OpenPlatform) Official(appId, authorizerRefreshToken string) *offici
 		open,
 		official.WithCache(open.option.cache),
 		official.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
-		official.WithLocker(open.option.locker.Clone()),
+		official.WithLocker(open.option.locker.Clone("official")),
 	)
 }
 
@@ -95,6 +95,6 @@ func (open *OpenPlatform) MiniProgram(appId, authorizerRefreshToken string) *min
 		open,
 		mini_program.WithCache(open.option.cache),
 		mini_program.WithCacheKeyPrefix(open.option.cacheKeyPrefix),
-		mini_program.WithLocker(open.option.locker.Clone()),
+		mini_program.WithLocker(open.option.locker.Clone("mini_program")),
 	)
 }

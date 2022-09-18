@@ -17,6 +17,6 @@ func (mu *Mutex) Unlock() error {
 	return nil
 }
 
-func (mu *Mutex) Clone() Locker {
+func (mu *Mutex) Clone(name string) Locker {
 	return &Mutex{}
 }

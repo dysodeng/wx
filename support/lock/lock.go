@@ -4,5 +4,5 @@ package lock
 type Locker interface {
 	Lock() error
 	Unlock() error
-	Clone() Locker
+	Clone(name string) Locker
 }

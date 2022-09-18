@@ -123,7 +123,7 @@ func (official *Official) TemplateMessage() *template_message.TemplateMessage {
 
 // Jssdk 微信JSSDK
 func (official *Official) Jssdk() *jssdk.Jssdk {
-	return jssdk.NewJssdk(official)
+	return jssdk.NewJssdk(official, jssdk.WithLocker(official.option.locker.Clone("jssdk")))
 }
 
 // QrCode 带参数的二维码

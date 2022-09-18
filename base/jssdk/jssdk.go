@@ -8,6 +8,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/dysodeng/wx/support/lock"
+
 	"github.com/dysodeng/wx/support"
 
 	"github.com/dysodeng/wx/kernel/contracts"
@@ -22,6 +24,11 @@ const jssdkTicketCacheKey = "jssdk.ticket.%s.%s"
 type Jssdk struct {
 	account contracts.AccountInterface
 	url     string
+	option  *option
+}
+
+type option struct {
+	locker lock.Locker
 }
 
 type signatureConfig struct {
@@ -36,7 +43,24 @@ type Ticket struct {
 	ExpiresIn int    `json:"expires_in"`
 }
 
-func NewJssdk(account contracts.AccountInterface) *Jssdk {
+type Option func(o *option)
+
+func WithLocker(locker lock.Locker) Option {
+	return func(o *option) {
+		o.locker = locker
+	}
+}
+
+func NewJssdk(account contracts.AccountInterface, opts ...Option) *Jssdk {
+	o := &option{}
+	for _, opt := range opts {
+		opt(o)
+	}
+
+	if o.locker == nil {
+		o.locker = &lock.Mutex{}
+	}
+
 	return &Jssdk{account: account}
 }
 
@@ -65,6 +89,7 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 	cache, cacheKeyPrefix := js.account.Cache()
 	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
+cachePoint:
 	if cache.IsExist(cacheKey) {
 		ticketString, err := cache.Get(cacheKey)
 		if err == nil {
@@ -74,6 +99,15 @@ func (js *Jssdk) getTicket(ticketType string) Ticket {
 				return ticketBody
 			}
 		}
+	}
+
+	_ = js.option.locker.Lock()
+	defer func() {
+		_ = js.option.locker.Unlock()
+	}()
+
+	if cache.IsExist(cacheKey) {
+		goto cachePoint
 	}
 
 	// 获取新的ticket

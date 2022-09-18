@@ -7,19 +7,19 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dysodeng/wx/kernel"
+	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 
 	"github.com/dysodeng/wx/support/http"
 )
 
 // AccessToken 获取/刷新token
-func (official *Official) AccessToken() (kernel.AccessToken, error) {
+func (official *Official) AccessToken() (contracts.AccessToken, error) {
 	return official.accessToken(false)
 }
 
 // accessToken 获取/刷新token
-func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) {
+func (official *Official) accessToken(refresh bool) (contracts.AccessToken, error) {
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccessToken(
 			official.config.appId,
@@ -30,7 +30,7 @@ func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) 
 		if !refresh && official.option.cache.IsExist(official.AccessTokenCacheKey()) {
 			tokenString, err := official.option.cache.Get(official.AccessTokenCacheKey())
 			if err == nil {
-				var accessToken kernel.AccessToken
+				var accessToken contracts.AccessToken
 				err = json.Unmarshal([]byte(tokenString), &accessToken)
 				if err == nil {
 					return accessToken, nil
@@ -44,7 +44,7 @@ func (official *Official) accessToken(refresh bool) (kernel.AccessToken, error) 
 }
 
 // refreshAccessToken 刷新access_token
-func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
+func (official *Official) refreshAccessToken() (contracts.AccessToken, error) {
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		official.config.appId,
@@ -52,20 +52,20 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
 	type accessToken struct {
 		kernelError.ApiError
-		kernel.AccessToken
+		contracts.AccessToken
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernel.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	tokenByte, _ := json.Marshal(kernel.AccessToken{
+	tokenByte, _ := json.Marshal(contracts.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	})
@@ -76,10 +76,10 @@ func (official *Official) refreshAccessToken() (kernel.AccessToken, error) {
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
 	)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
-	return kernel.AccessToken{
+	return contracts.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	}, nil

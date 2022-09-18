@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dysodeng/wx/kernel"
+	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
@@ -14,15 +14,15 @@ import (
 const componentVerifyTicketCacheKey = "component_verify_ticket.%s"
 
 // AccessToken 获取开放平台access_token
-func (open *OpenPlatform) AccessToken() (kernel.AccessToken, error) {
+func (open *OpenPlatform) AccessToken() (contracts.AccessToken, error) {
 	return open.accessToken(false)
 }
 
-func (open *OpenPlatform) accessToken(refresh bool) (kernel.AccessToken, error) {
+func (open *OpenPlatform) accessToken(refresh bool) (contracts.AccessToken, error) {
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
 		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())
 		if err == nil {
-			var accessToken kernel.AccessToken
+			var accessToken contracts.AccessToken
 			err = json.Unmarshal([]byte(tokenString), &accessToken)
 			if err == nil {
 				return accessToken, nil
@@ -34,7 +34,7 @@ func (open *OpenPlatform) accessToken(refresh bool) (kernel.AccessToken, error) 
 	return open.refreshAccessToken()
 }
 
-func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
+func (open *OpenPlatform) refreshAccessToken() (contracts.AccessToken, error) {
 	verifyTicket := open.getComponentVerifyTicket()
 	res, err := http.PostJSON("cgi-bin/component/api_component_token", map[string]interface{}{
 		"component_appid":         open.config.appId,
@@ -42,7 +42,7 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 		"component_verify_ticket": verifyTicket,
 	})
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
 	// 返回信息
@@ -54,10 +54,10 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernel.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	tokenByte, _ := json.Marshal(kernel.AccessToken{
+	tokenByte, _ := json.Marshal(contracts.AccessToken{
 		AccessToken: result.ComponentAccessToken,
 		ExpiresIn:   result.ExpiresIn,
 	})
@@ -68,10 +68,10 @@ func (open *OpenPlatform) refreshAccessToken() (kernel.AccessToken, error) {
 		time.Second*time.Duration(result.ExpiresIn-600), // 提前过期
 	)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
-	return kernel.AccessToken{
+	return contracts.AccessToken{
 		AccessToken: result.ComponentAccessToken,
 		ExpiresIn:   result.ExpiresIn,
 	}, nil
@@ -94,11 +94,11 @@ func (open *OpenPlatform) AccessTokenCacheKey() string {
 }
 
 // AuthorizerAccessToken 代公众账号获取access_token
-func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (kernel.AccessToken, error) {
+func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken string, refresh bool) (contracts.AccessToken, error) {
 	if !refresh && open.option.cache.IsExist(open.AuthorizerAccessTokenCacheKey(appId)) {
 		tokenString, err := open.option.cache.Get(open.AuthorizerAccessTokenCacheKey(appId))
 		if err == nil {
-			var accessToken kernel.AccessToken
+			var accessToken contracts.AccessToken
 			err = json.Unmarshal([]byte(tokenString), &accessToken)
 			if err == nil {
 				return accessToken, nil
@@ -110,10 +110,10 @@ func (open *OpenPlatform) AuthorizerAccessToken(appId, authorizerRefreshToken st
 	return open.refreshAuthorizerAccessToken(appId, authorizerRefreshToken)
 }
 
-func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshToken string) (kernel.AccessToken, error) {
+func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshToken string) (contracts.AccessToken, error) {
 	componentAccessToken, err := open.AccessToken()
 	if err != nil {
-		return kernel.AccessToken{}, err
+		return contracts.AccessToken{}, err
 	}
 
 	apiUrl := fmt.Sprintf("cgi-bin/component/api_authorizer_token?component_access_token=%s", componentAccessToken.AccessToken)
@@ -123,7 +123,7 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 		"authorizer_refresh_token": authorizerRefreshToken,
 	})
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
 	// 返回信息
@@ -136,10 +136,10 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernel.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	tokenByte, _ := json.Marshal(kernel.AccessToken{
+	tokenByte, _ := json.Marshal(contracts.AccessToken{
 		AccessToken: result.AuthorizerAccessToken,
 		ExpiresIn:   result.ExpiresIn,
 	})
@@ -150,10 +150,10 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 		time.Second*time.Duration(result.ExpiresIn-600), // 提前过期
 	)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
-	return kernel.AccessToken{
+	return contracts.AccessToken{
 		AccessToken: result.AuthorizerRefreshToken,
 		ExpiresIn:   result.ExpiresIn,
 	}, nil

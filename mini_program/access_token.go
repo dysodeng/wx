@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dysodeng/wx/kernel"
+	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
 	"github.com/pkg/errors"
 )
 
-func (mp *MiniProgram) AccessToken() (kernel.AccessToken, error) {
+func (mp *MiniProgram) AccessToken() (contracts.AccessToken, error) {
 	return mp.accessToken(false)
 }
 
 // accessToken 获取/刷新token
-func (mp *MiniProgram) accessToken(refresh bool) (kernel.AccessToken, error) {
+func (mp *MiniProgram) accessToken(refresh bool) (contracts.AccessToken, error) {
 	if mp.config.isOpenPlatform {
 		return mp.config.authorizerAccount.AuthorizerAccessToken(
 			mp.config.appId,
@@ -27,7 +27,7 @@ func (mp *MiniProgram) accessToken(refresh bool) (kernel.AccessToken, error) {
 		if !refresh && mp.option.cache.IsExist(mp.AccessTokenCacheKey()) {
 			tokenString, err := mp.option.cache.Get(mp.AccessTokenCacheKey())
 			if err == nil {
-				var accessToken kernel.AccessToken
+				var accessToken contracts.AccessToken
 				err = json.Unmarshal([]byte(tokenString), &accessToken)
 				if err == nil {
 					return accessToken, nil
@@ -40,7 +40,7 @@ func (mp *MiniProgram) accessToken(refresh bool) (kernel.AccessToken, error) {
 	return mp.refreshAccessToken()
 }
 
-func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
+func (mp *MiniProgram) refreshAccessToken() (contracts.AccessToken, error) {
 	apiUrl := fmt.Sprintf(
 		"cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
 		mp.config.appId,
@@ -48,20 +48,20 @@ func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 	)
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
 	type accessToken struct {
 		kernelError.ApiError
-		kernel.AccessToken
+		contracts.AccessToken
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernel.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
-	tokenByte, _ := json.Marshal(kernel.AccessToken{
+	tokenByte, _ := json.Marshal(contracts.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	})
@@ -72,10 +72,10 @@ func (mp *MiniProgram) refreshAccessToken() (kernel.AccessToken, error) {
 		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
 	)
 	if err != nil {
-		return kernel.AccessToken{}, kernelError.New(0, err)
+		return contracts.AccessToken{}, kernelError.New(0, err)
 	}
 
-	return kernel.AccessToken{
+	return contracts.AccessToken{
 		AccessToken: result.AccessToken.AccessToken,
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	}, nil

@@ -1,20 +1,18 @@
 package event
 
-// Guard 事件类型
+// Guard 事件处理类型
 type Guard string
 
 const (
 	All Guard = "*"
 
-	/* 公众号普通消息 */
-
-	/* 公众号事件消息 */
+	// 公众号事件消息
 	Event     Guard = "event"
 	Subscribe Guard = "subscribe"
 	Scan      Guard = "scan"
 	Location  Guard = "location"
 
-	/* 公众号菜单事件消息 */
+	// 公众号菜单事件消息
 	Click           Guard = "click"
 	View            Guard = "view"
 	ScancodePush    Guard = "scancode_push"
@@ -25,14 +23,14 @@ const (
 	LocationSelect  Guard = "location_select"
 	ViewMiniProgram Guard = "view_miniprogram"
 
-	/* 公众号对话能力事件消息 */
+	// 公众号对话能力事件消息
 	GuideQrcodeScanEvent Guard = "guide_qrcode_scan_event"
 
-	/* 公众号群发事件消息 */
+	// 公众号群发事件消息
 	MassSendJobFinish Guard = "masssendjobfinish"
 	PublishJobFinish  Guard = "publishjobfinish"
 
-	/* 微信认证通知事件消息 */
+	// 微信认证通知事件消息
 	QualificationVerifySuccess Guard = "qualification_verify_success"
 	QualificationVerifyFail    Guard = "qualification_verify_fail"
 	NamingVerifySuccess        Guard = "naming_verify_success"
@@ -40,7 +38,7 @@ const (
 	AnnualRenew                Guard = "annual_renew"
 	VerifyExpired              Guard = "verify_expired"
 
-	/* 微信卡券事件消息 */
+	// 微信卡券事件消息
 	CardPassCheck            Guard = "card_pass_check"
 	CardNotPassCheck         Guard = "card_not_pass_check"
 	UserGetCard              Guard = "user_get_card"
@@ -55,7 +53,7 @@ const (
 	CardPayOrder             Guard = "card_pay_order"
 	SubmitMemberCardUserInfo Guard = "submit_membercard_user_info"
 
-	/* 开放平台事件 */
+	// 开放平台事件
 	Authorized               Guard = "authorized"
 	Unauthorized             Guard = "unauthorized"
 	UpdateAuthorized         Guard = "updateauthorized"

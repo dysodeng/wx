@@ -37,9 +37,9 @@ func (mp *MiniProgram) accessToken(refresh bool) (contracts.AccessToken, error) 
 			}
 		}
 
-		_ = mp.option.locker.Lock()
+		mp.option.locker.Lock()
 		defer func() {
-			_ = mp.option.locker.Unlock()
+			mp.option.locker.Unlock()
 		}()
 
 		if mp.option.cache.IsExist(mp.AccessTokenCacheKey()) {

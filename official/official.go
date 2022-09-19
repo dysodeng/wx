@@ -106,11 +106,6 @@ func (official *Official) User() *user.User {
 	return user.NewUser(official)
 }
 
-// UserTag 用户标签管理
-func (official *Official) UserTag() *user.Tag {
-	return user.NewUserTag(official)
-}
-
 // Article 文章管理
 func (official *Official) Article() *article.Article {
 	return article.NewArticle(official)

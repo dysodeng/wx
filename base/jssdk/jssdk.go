@@ -101,9 +101,9 @@ cachePoint:
 		}
 	}
 
-	_ = js.option.locker.Lock()
+	js.option.locker.Lock()
 	defer func() {
-		_ = js.option.locker.Unlock()
+		js.option.locker.Unlock()
 	}()
 
 	if cache.IsExist(cacheKey) {

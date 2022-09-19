@@ -33,9 +33,9 @@ cache:
 		}
 	}
 
-	_ = open.option.locker.Lock()
+	open.option.locker.Lock()
 	defer func() {
-		_ = open.option.locker.Unlock()
+		open.option.locker.Unlock()
 	}()
 
 	if open.option.cache.IsExist(open.AccessTokenCacheKey()) {
@@ -119,9 +119,9 @@ cache:
 		}
 	}
 
-	_ = locker.Lock()
+	locker.Lock()
 	defer func() {
-		_ = locker.Unlock()
+		locker.Unlock()
 	}()
 
 	if open.option.cache.IsExist(open.AuthorizerAccessTokenCacheKey(appId)) {

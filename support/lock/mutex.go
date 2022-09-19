@@ -7,14 +7,12 @@ type Mutex struct {
 	mu sync.Mutex
 }
 
-func (mu *Mutex) Lock() error {
+func (mu *Mutex) Lock() {
 	mu.mu.Lock()
-	return nil
 }
 
-func (mu *Mutex) Unlock() error {
+func (mu *Mutex) Unlock() {
 	mu.mu.Unlock()
-	return nil
 }
 
 func (mu *Mutex) Clone(name string) Locker {

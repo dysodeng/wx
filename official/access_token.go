@@ -40,9 +40,9 @@ func (official *Official) accessToken(refresh bool) (contracts.AccessToken, erro
 			}
 		}
 
-		_ = official.option.locker.Lock()
+		official.option.locker.Lock()
 		defer func() {
-			_ = official.option.locker.Unlock()
+			official.option.locker.Unlock()
 		}()
 
 		if official.option.cache.IsExist(official.AccessTokenCacheKey()) {

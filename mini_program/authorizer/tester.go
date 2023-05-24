@@ -66,7 +66,7 @@ func (tester *Tester) Unbind(data map[string]string) error {
 	}
 
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -94,7 +94,7 @@ func (tester *Tester) GetMemberList() ([]map[string]interface{}, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.Members, nil

@@ -11,11 +11,11 @@ type Authorizer struct {
 	account contracts.AccountInterface
 }
 
-func NewAuthorizer(account contracts.AccountInterface) *Authorizer {
+func New(account contracts.AccountInterface) *Authorizer {
 	return &Authorizer{account: account}
 }
 
 // Open 开放平台
 func (authorizer *Authorizer) Open() *open.Open {
-	return open.NewOpen(authorizer.account)
+	return open.New(authorizer.account)
 }

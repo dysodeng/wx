@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // Security 内容安全
@@ -15,7 +14,7 @@ type Security struct {
 	account contracts.AccountInterface
 }
 
-func NewContentSecurity(account contracts.AccountInterface) *Security {
+func New(account contracts.AccountInterface) *Security {
 	return &Security{account: account}
 }
 
@@ -46,7 +45,7 @@ func (c *Security) CheckText(openid, content string, scene Scene) (TextResult, e
 		return TextResult{}, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return TextResult{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TextResult{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.TextResult, nil
@@ -79,7 +78,7 @@ func (c *Security) AsyncCheckMedia(openid, mediaUrl string, mediaType MediaType,
 		return "", err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.TraceId, nil

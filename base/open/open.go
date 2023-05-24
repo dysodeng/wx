@@ -15,7 +15,7 @@ type Open struct {
 	account contracts.AccountInterface
 }
 
-func NewOpen(account contracts.AccountInterface) *Open {
+func New(account contracts.AccountInterface) *Open {
 	return &Open{account: account}
 }
 
@@ -65,7 +65,7 @@ func (o *Open) Bind(appId, openAppId string) error {
 	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -92,7 +92,7 @@ func (o *Open) Unbind(appId, openAppId string) error {
 	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

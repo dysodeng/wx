@@ -25,7 +25,7 @@ type OAuth struct {
 	state       string
 }
 
-func NewOAuth(account contracts.AccountInterface) *OAuth {
+func New(account contracts.AccountInterface) *OAuth {
 	return &OAuth{account: account, state: "state"}
 }
 

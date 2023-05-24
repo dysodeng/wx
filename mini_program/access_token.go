@@ -8,7 +8,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 func (mp *MiniProgram) AccessToken() (contracts.AccessToken, error) {
@@ -69,7 +68,7 @@ func (mp *MiniProgram) refreshAccessToken() (contracts.AccessToken, error) {
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	tokenByte, _ := json.Marshal(contracts.AccessToken{

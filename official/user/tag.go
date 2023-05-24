@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/pkg/errors"
-
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 
@@ -57,7 +55,7 @@ func (tag *Tag) Create(name string) (TagItem, error) {
 		return TagItem{}, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return TagItem{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TagItem{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.Tag, nil
@@ -84,7 +82,7 @@ func (tag *Tag) List() ([]TagItem, error) {
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.Tags, nil
@@ -107,7 +105,7 @@ func (tag *Tag) Update(tagId int, name string) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -130,7 +128,7 @@ func (tag *Tag) Delete(tagId int) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -157,7 +155,7 @@ func (tag *Tag) UsersOfTag(tagId int, nextOpenid string) (TagUser, error) {
 		return TagUser{}, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return TagUser{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return TagUser{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return TagUser{Count: result.Count, Data: result.Data, NextOpenid: result.NextOpenid}, nil
@@ -180,7 +178,7 @@ func (tag *Tag) TagUsers(openidList []string, tagId int) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -203,7 +201,7 @@ func (tag *Tag) UntagUsers(openidList []string, tagId int) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -230,7 +228,7 @@ func (tag *Tag) UserTags(openid string) ([]int, error) {
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.TagIdList, nil

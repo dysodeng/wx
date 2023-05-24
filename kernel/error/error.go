@@ -25,6 +25,10 @@ func New(code int64, err error) error {
 	return Error{Code: code, Err: err}
 }
 
+func NewWithApiError(err ApiError) error {
+	return Error{Code: err.ErrCode, Err: errors.New(err.ErrMsg)}
+}
+
 func (e Error) Error() string {
 	return fmt.Sprintf("error: errcode=%d, errmsg=%s.", e.Code, e.Err.Error())
 }

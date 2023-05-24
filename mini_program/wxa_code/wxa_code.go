@@ -18,7 +18,7 @@ type WxaCode struct {
 	account contracts.AccountInterface
 }
 
-func NewWxaCode(account contracts.AccountInterface) *WxaCode {
+func New(account contracts.AccountInterface) *WxaCode {
 	return &WxaCode{account: account}
 }
 
@@ -45,7 +45,7 @@ func (code *WxaCode) CreateQrCode(path string, opts map[string]interface{}) ([]b
 		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.NewWithApiError(result)
 		}
 	}
 
@@ -79,7 +79,7 @@ func (code *WxaCode) Get(path string, opts map[string]interface{}) ([]byte, stri
 		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.NewWithApiError(result)
 		}
 	}
 
@@ -113,7 +113,7 @@ func (code *WxaCode) GetUnlimited(scene string, opts map[string]interface{}) ([]
 		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.NewWithApiError(result)
 		}
 	}
 

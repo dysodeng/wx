@@ -27,23 +27,25 @@ type Jssdk struct {
 	option  *option
 }
 
-type option struct {
-	locker lock.Locker
-}
+type (
+	signatureConfig struct {
+		nonce     string
+		timestamp int64
+		url       string
+		signature string
+	}
 
-type signatureConfig struct {
-	nonce     string
-	timestamp int64
-	url       string
-	signature string
-}
+	option struct {
+		locker lock.Locker
+	}
 
-type Ticket struct {
-	Ticket    string `json:"ticket"`
-	ExpiresIn int    `json:"expires_in"`
-}
+	Option func(o *option)
 
-type Option func(o *option)
+	Ticket struct {
+		Ticket    string `json:"ticket"`
+		ExpiresIn int    `json:"expires_in"`
+	}
+)
 
 func WithLocker(locker lock.Locker) Option {
 	return func(o *option) {
@@ -51,7 +53,7 @@ func WithLocker(locker lock.Locker) Option {
 	}
 }
 
-func NewJssdk(account contracts.AccountInterface, opts ...Option) *Jssdk {
+func New(account contracts.AccountInterface, opts ...Option) *Jssdk {
 	o := &option{}
 	for _, opt := range opts {
 		opt(o)

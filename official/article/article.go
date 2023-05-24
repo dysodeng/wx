@@ -9,6 +9,6 @@ type Article struct {
 	account contracts.AccountInterface
 }
 
-func NewArticle(account contracts.AccountInterface) *Article {
+func New(account contracts.AccountInterface) *Article {
 	return &Article{account: account}
 }

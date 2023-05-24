@@ -8,7 +8,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -47,7 +46,7 @@ func WithStrScene(sceneValue string) Scene {
 	}
 }
 
-type ticket struct {
+type Ticket struct {
 	Ticket        string
 	ExpireSeconds int64
 	Url           string
@@ -55,15 +54,15 @@ type ticket struct {
 
 type ticketResult struct {
 	kernelError.ApiError
-	ticket
+	Ticket
 }
 
-func NewQrCode(account contracts.AccountInterface) *QrCode {
+func New(account contracts.AccountInterface) *QrCode {
 	return &QrCode{account: account}
 }
 
 // Forever 永久二维码
-func (qr *QrCode) Forever(scene Scene) (*ticket, error) {
+func (qr *QrCode) Forever(scene Scene) (*Ticket, error) {
 	s := &sceneInfo{}
 	scene(s)
 
@@ -80,7 +79,7 @@ func (qr *QrCode) Forever(scene Scene) (*ticket, error) {
 }
 
 // Temporary 临时二维码
-func (qr *QrCode) Temporary(scene Scene, expireSeconds int64) (*ticket, error) {
+func (qr *QrCode) Temporary(scene Scene, expireSeconds int64) (*Ticket, error) {
 	s := &sceneInfo{}
 	scene(s)
 
@@ -102,7 +101,7 @@ func (qr *QrCode) Url(ticket string) string {
 }
 
 // create 创建二维码
-func (qr *QrCode) create(action string, scene map[string]interface{}, isTemporary bool, expireSeconds int64) (*ticket, error) {
+func (qr *QrCode) create(action string, scene map[string]interface{}, isTemporary bool, expireSeconds int64) (*Ticket, error) {
 	data := map[string]interface{}{
 		"action_name": action,
 		"action_info": map[string]interface{}{
@@ -133,8 +132,8 @@ func (qr *QrCode) create(action string, scene map[string]interface{}, isTemporar
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
-	return &result.ticket, nil
+	return &result.Ticket, nil
 }

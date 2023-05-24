@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 
@@ -73,7 +71,7 @@ func (official *Official) refreshAccessToken() (contracts.AccessToken, error) {
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	tokenByte, _ := json.Marshal(contracts.AccessToken{

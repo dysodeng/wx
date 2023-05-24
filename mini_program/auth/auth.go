@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // Auth 用户登录
@@ -23,7 +22,7 @@ type Session struct {
 	UnionId    string `json:"unionid"`
 }
 
-func NewAuth(account contracts.AccountInterface) *Auth {
+func New(account contracts.AccountInterface) *Auth {
 	return &Auth{account: account}
 }
 
@@ -46,7 +45,7 @@ func (auth *Auth) Session(code string) (Session, error) {
 	}
 
 	if result.ErrCode != 0 {
-		return Session{}, errors.New(result.ErrMsg)
+		return Session{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.Session, nil

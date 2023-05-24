@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // CodeTemplate 小程序代码模板
@@ -15,7 +14,7 @@ type CodeTemplate struct {
 	account contracts.AccountInterface
 }
 
-func NewCodeTemplate(account contracts.AccountInterface) *CodeTemplate {
+func New(account contracts.AccountInterface) *CodeTemplate {
 	return &CodeTemplate{account: account}
 }
 
@@ -42,7 +41,7 @@ func (template *CodeTemplate) GetDraftList() ([]Draft, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.DraftList, nil
@@ -72,7 +71,7 @@ func (template *CodeTemplate) AddDraftToTemplate(draftId int64, templateType uin
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -107,7 +106,7 @@ func (template *CodeTemplate) GetTemplateList(templateType int8) ([]Template, er
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.TemplateList, nil
@@ -134,7 +133,7 @@ func (template *CodeTemplate) DeleteTemplate(templateId int64) error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

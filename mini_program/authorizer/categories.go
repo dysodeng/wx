@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // Categories 小程序类目管理
@@ -43,7 +42,7 @@ func (c *Categories) GetAllCategories() ([]Category, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.CategoriesList.Categories, nil
@@ -71,7 +70,7 @@ func (c *Categories) GetCategories() (*CategoryItem, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.CategoryItem, nil
@@ -102,7 +101,7 @@ func (c *Categories) GetCategoriesByType(verifyType uint8) ([]Category, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.CategoriesList.Categories, nil
@@ -127,7 +126,7 @@ func (c *Categories) AddCategory(categories []map[string]interface{}) error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -152,7 +151,7 @@ func (c *Categories) DeleteCategory(first, second int64) error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -177,7 +176,7 @@ func (c *Categories) ModifyCategory(data map[string]interface{}) error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

@@ -9,6 +9,6 @@ type QrCode struct {
 	account contracts.AccountInterface
 }
 
-func NewQrCode(account contracts.AccountInterface) *QrCode {
+func New(account contracts.AccountInterface) *QrCode {
 	return &QrCode{account: account}
 }

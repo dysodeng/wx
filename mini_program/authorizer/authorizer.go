@@ -11,7 +11,7 @@ type Authorizer struct {
 	account contracts.AccountInterface
 }
 
-func NewAuthorizer(account contracts.AccountInterface) *Authorizer {
+func New(account contracts.AccountInterface) *Authorizer {
 	return &Authorizer{account: account}
 }
 
@@ -32,7 +32,7 @@ func (authorizer *Authorizer) Domain() *Domain {
 
 // Open 小程序绑定开放平台
 func (authorizer *Authorizer) Open() *open.Open {
-	return open.NewOpen(authorizer.account)
+	return open.New(authorizer.account)
 }
 
 // Tester 小程序成员管理

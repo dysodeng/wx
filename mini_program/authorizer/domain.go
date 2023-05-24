@@ -64,7 +64,7 @@ func (domain *Domain) SetWebViewDomain(action string, domains ...string) error {
 	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

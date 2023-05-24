@@ -1,4 +1,4 @@
-package base
+package server
 
 import (
 	"encoding/base64"
@@ -28,7 +28,7 @@ type Server struct {
 	handler map[event.Guard]contracts.EventHandlerInterface
 }
 
-func NewServer(account contracts.AccountInterface) *Server {
+func New(account contracts.AccountInterface) *Server {
 	return &Server{
 		account: account,
 		handler: make(map[event.Guard]contracts.EventHandlerInterface),

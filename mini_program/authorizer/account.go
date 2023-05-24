@@ -73,7 +73,7 @@ func (account *Account) GetBaseInfo() (*AccountInfo, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.AccountInfo, nil
@@ -127,7 +127,7 @@ func (account *Account) ModifyAvatar(mediaId, x1, y1, x2, y2 string) error {
 	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -151,7 +151,7 @@ func (account *Account) ModifySignature(signature string) error {
 	var result kernelError.ApiError
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -180,7 +180,7 @@ func (account *Account) HaveOpen() (bool, error) {
 		return false, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return false, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return false, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.HaveOpen, nil

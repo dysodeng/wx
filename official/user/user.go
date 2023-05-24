@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // User 用户管理
@@ -15,7 +14,7 @@ type User struct {
 	account contracts.AccountInterface
 }
 
-func NewUser(account contracts.AccountInterface) *User {
+func New(account contracts.AccountInterface) *User {
 	return &User{account: account}
 }
 
@@ -41,7 +40,7 @@ func (u *User) Remark(openid, remark string) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -69,7 +68,7 @@ func (u *User) Info(openid string) (*Info, error) {
 	}
 
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.Info, nil
@@ -96,7 +95,7 @@ func (u *User) BatchInfo(list []map[string]string) ([]Info, error) {
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.UserInfoList, nil
@@ -124,7 +123,7 @@ func (u *User) List(nextOpenid string) (*List, error) {
 	}
 
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.List, nil
@@ -152,7 +151,7 @@ func (u *User) BlackList(beginOpenid string) (*List, error) {
 	}
 
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.List, nil
@@ -175,7 +174,7 @@ func (u *User) BatchBlackUser(openidList []string) error {
 	}
 
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -198,7 +197,7 @@ func (u *User) BatchUnBlackUser(openidList []string) error {
 	}
 
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

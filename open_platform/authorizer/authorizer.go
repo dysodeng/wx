@@ -7,7 +7,6 @@ import (
 	"github.com/dysodeng/wx/kernel/contracts"
 	kernelError "github.com/dysodeng/wx/kernel/error"
 	"github.com/dysodeng/wx/support/http"
-	"github.com/pkg/errors"
 )
 
 // Authorizer 公众账号授权
@@ -15,7 +14,7 @@ type Authorizer struct {
 	account contracts.AccountInterface
 }
 
-func NewAuthorizer(account contracts.AccountInterface) *Authorizer {
+func New(account contracts.AccountInterface) *Authorizer {
 	return &Authorizer{account: account}
 }
 
@@ -75,7 +74,7 @@ func (authorizer *Authorizer) getPreAuthCode() (*PreAuthCode, error) {
 	var result preAuthCode
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.PreAuthCode, nil
@@ -105,7 +104,7 @@ func (authorizer *Authorizer) AuthorizationInfo(authCode string) (*Authorization
 	var result info
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.AuthorizationInfo, nil
@@ -135,7 +134,7 @@ func (authorizer *Authorizer) AuthorizerInfo(appId string) (*Info, error) {
 	var result info
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.Info, nil

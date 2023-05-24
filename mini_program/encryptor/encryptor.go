@@ -14,7 +14,7 @@ type Encryptor struct {
 	account contracts.AccountInterface
 }
 
-func NewEncryptor(account contracts.AccountInterface) *Encryptor {
+func New(account contracts.AccountInterface) *Encryptor {
 	return &Encryptor{account: account}
 }
 

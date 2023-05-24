@@ -18,7 +18,7 @@ type TemplateMessage struct {
 	account contracts.AccountInterface
 }
 
-func NewTemplateMessage(account contracts.AccountInterface) *TemplateMessage {
+func New(account contracts.AccountInterface) *TemplateMessage {
 	return &TemplateMessage{account: account}
 }
 
@@ -91,7 +91,7 @@ func (tm *TemplateMessage) SetIndustry(industryOne, industryTwo string) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -118,7 +118,7 @@ func (tm *TemplateMessage) GetIndustry() (*Industry, error) {
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.Industry, nil
@@ -146,7 +146,7 @@ func (tm *TemplateMessage) AddTemplate(templateIdShort string) (string, error) {
 		return "", kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return "", kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.TemplateId, nil
@@ -173,7 +173,7 @@ func (tm *TemplateMessage) GetPrivateTemplates() (*TemplateList, error) {
 		return nil, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return &result.TemplateList, nil
@@ -195,7 +195,7 @@ func (tm *TemplateMessage) DeletePrivateTemplate(templateId string) error {
 		return kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -244,7 +244,7 @@ func (tm *TemplateMessage) Send(message Message) (int, error) {
 		return 0, kernelError.New(0, err)
 	}
 	if result.ErrCode != 0 {
-		return 0, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return 0, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.MsgId, nil

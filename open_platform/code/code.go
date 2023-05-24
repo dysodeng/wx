@@ -17,7 +17,7 @@ type Code struct {
 	account contracts.AccountInterface
 }
 
-func NewCode(account contracts.AccountInterface) *Code {
+func New(account contracts.AccountInterface) *Code {
 	return &Code{account: account}
 }
 
@@ -45,7 +45,7 @@ func (code *Code) Commit(templateId int64, version, description, extJson string)
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -72,7 +72,7 @@ func (code *Code) QrCode(path string) ([]byte, string, error) {
 		var result kernelError.ApiError
 		err = json.Unmarshal(res, &result)
 		if err == nil && result.ErrCode != 0 {
-			return nil, "", kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+			return nil, "", kernelError.NewWithApiError(result)
 		}
 	}
 
@@ -106,7 +106,7 @@ func (code *Code) GetPage() ([]string, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.PageList, nil
@@ -135,7 +135,7 @@ func (code *Code) GetCategory() ([]map[string]interface{}, error) {
 		return nil, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return nil, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.CategoryList, nil
@@ -163,7 +163,7 @@ func (code *Code) SubmitAudit(data map[string]interface{}) (int64, error) {
 		return 0, err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return 0, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return 0, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	return result.AuditId, nil
@@ -246,7 +246,7 @@ func (code *Code) RevokeAudit() error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -271,7 +271,7 @@ func (code *Code) UrgentAudit(auditId int64) error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -296,7 +296,7 @@ func (code *Code) Release() error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil
@@ -321,7 +321,7 @@ func (code *Code) RollbackRelease() error {
 		return err
 	}
 	if err == nil && result.ErrCode != 0 {
-		return kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return kernelError.NewWithApiError(result)
 	}
 
 	return nil

@@ -34,15 +34,15 @@ var (
 )
 
 func main() {
-	officialSdk := official.NewOfficial(appId, appSecret, token, aesKey)
+	officialSdk := official.New(appId, appSecret, token, aesKey)
 
 	// 公众号接口调用
-	userTag := officialSdk.UserTag()
-	log.Println(userTag.List())
+	user := officialSdk.User()
+	log.Println(user.Info("openid"))
 
-	// 服务端
-	appServer := officialSdk.Server()
-	appServer.Register(func(messageBody *message.Message) *reply.Reply {
+	// 服务器端
+	wxServer := officialSdk.Server()
+	wxServer.Register(func(messageBody *message.Message) *reply.Reply {
 		log.Println("这里是用户自定义的消息处理器")
 		log.Println(messageBody)
 		return reply.NewReply(reply.NewText("你好呀"))
@@ -50,7 +50,7 @@ func main() {
 
 	h := http.DefaultServeMux
 	h.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		appServer.Serve(r, w)
+		wxServer.Serve(r, w)
 	})
 	server := http.Server{
 		Addr:    ":80",

@@ -158,7 +158,7 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 	var result accessToken
 	err = json.Unmarshal(res, &result)
 	if err == nil && result.ErrCode != 0 {
-		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
+		return contracts.AccessToken{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	tokenByte, _ := json.Marshal(contracts.AccessToken{

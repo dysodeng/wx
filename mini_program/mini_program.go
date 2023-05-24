@@ -1,7 +1,7 @@
 package mini_program
 
 import (
-	"github.com/dysodeng/wx/base"
+	"github.com/dysodeng/wx/base/server"
 	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/mini_program/auth"
 	"github.com/dysodeng/wx/mini_program/authorizer"
@@ -19,7 +19,7 @@ type MiniProgram struct {
 	option *option
 }
 
-func NewMiniProgram(appId, appSecret, token, aesKey string, opts ...Option) *MiniProgram {
+func New(appId, appSecret, token, aesKey string, opts ...Option) *MiniProgram {
 	c := &config{
 		isOpenPlatform: false,
 		appId:          appId,
@@ -47,8 +47,8 @@ func NewMiniProgram(appId, appSecret, token, aesKey string, opts ...Option) *Min
 	}
 }
 
-// NewMiniProgramWithOpenPlatform 开放平台代小程序调用接口
-func NewMiniProgramWithOpenPlatform(
+// NewWithOpenPlatform 开放平台代小程序调用接口
+func NewWithOpenPlatform(
 	appId,
 	authorizerRefreshToken,
 	token,
@@ -87,35 +87,35 @@ func NewMiniProgramWithOpenPlatform(
 // Authorizer 小程序授权开放平台后的相关接口
 // 此类接口只能由授权到开放平台的小程序调用或直接由开放平台调用
 func (mp *MiniProgram) Authorizer() *authorizer.Authorizer {
-	return authorizer.NewAuthorizer(mp)
+	return authorizer.New(mp)
 }
 
 // Server 服务端
-func (mp *MiniProgram) Server() *base.Server {
-	return base.NewServer(mp)
+func (mp *MiniProgram) Server() *server.Server {
+	return server.New(mp)
 }
 
 // Encryptor 小程序加密数据的解密
 func (mp *MiniProgram) Encryptor() *encryptor.Encryptor {
-	return encryptor.NewEncryptor(mp)
+	return encryptor.New(mp)
 }
 
 // Auth 用户登录
 func (mp *MiniProgram) Auth() *auth.Auth {
-	return auth.NewAuth(mp)
+	return auth.New(mp)
 }
 
 // WxaCode 小程序码
 func (mp *MiniProgram) WxaCode() *wxa_code.WxaCode {
-	return wxa_code.NewWxaCode(mp)
+	return wxa_code.New(mp)
 }
 
 // QrCode 普通链接二维码
 func (mp *MiniProgram) QrCode() *qr_code.QrCode {
-	return qr_code.NewQrCode(mp)
+	return qr_code.New(mp)
 }
 
 // ContentSecurity 内容安全
 func (mp *MiniProgram) ContentSecurity() *content.Security {
-	return content.NewContentSecurity(mp)
+	return content.New(mp)
 }

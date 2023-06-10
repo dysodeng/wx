@@ -40,5 +40,5 @@ func New(appId, appSecret, token, aesKey string, opts ...Option) *App {
 }
 
 func (app *App) OAuth() *oauth.OAuth {
-	return oauth.New(app, oauth.WithLocker(app.option.locker.Clone("wx_app")))
+	return oauth.New(app, oauth.WithLocker(app.option.locker.Clone("wx_app_oauth")))
 }

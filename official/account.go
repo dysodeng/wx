@@ -3,14 +3,14 @@ package official
 import "github.com/dysodeng/wx/support/cache"
 
 func (official *Official) Token() string {
-	if official.config.isOpenPlatform {
+	if official.IsOpenPlatform() {
 		return official.config.authorizerAccount.AuthorizerAccountToken()
 	}
 	return official.config.token
 }
 
 func (official *Official) AesKey() string {
-	if official.config.isOpenPlatform {
+	if official.IsOpenPlatform() {
 		return official.config.authorizerAccount.AuthorizerAccountAesKey()
 	}
 	return official.config.aesKey

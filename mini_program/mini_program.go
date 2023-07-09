@@ -7,8 +7,8 @@ import (
 	"github.com/dysodeng/wx/mini_program/authorizer"
 	"github.com/dysodeng/wx/mini_program/content"
 	"github.com/dysodeng/wx/mini_program/encryptor"
-	"github.com/dysodeng/wx/mini_program/message"
 	"github.com/dysodeng/wx/mini_program/qr_code"
+	"github.com/dysodeng/wx/mini_program/template_message"
 	"github.com/dysodeng/wx/mini_program/wxa_code"
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
@@ -121,7 +121,7 @@ func (mp *MiniProgram) ContentSecurity() *content.Security {
 	return content.New(mp)
 }
 
-// Message 订阅消息
-func (mp *MiniProgram) Message() *message.Message {
-	return message.New(mp)
+// TemplateMessage 模板消息
+func (mp *MiniProgram) TemplateMessage() *template_message.TemplateMessage {
+	return template_message.New(mp)
 }

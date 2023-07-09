@@ -1,4 +1,4 @@
-package message
+package template_message
 
 import (
 	"encoding/json"
@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Message 小程序订阅消息
-type Message struct {
+// TemplateMessage 小程序模板消息
+type TemplateMessage struct {
 	account contracts.AccountInterface
 }
 
@@ -29,12 +29,12 @@ type DataValue struct {
 	Value string `json:"value"`
 }
 
-func New(account contracts.AccountInterface) *Message {
-	return &Message{account: account}
+func New(account contracts.AccountInterface) *TemplateMessage {
+	return &TemplateMessage{account: account}
 }
 
 // Send 发送订阅消息
-func (m *Message) Send(message Body) error {
+func (m *TemplateMessage) Send(message Body) error {
 	if message.ToUser == "" {
 		return kernelError.New(0, errors.New("attribute touser can not be empty!"))
 	}

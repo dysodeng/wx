@@ -48,12 +48,12 @@ type Template struct {
 
 // Message 消息体
 type Message struct {
-	ToUser      string                       `json:"touser"`
-	TemplateId  string                       `json:"template_id"`
-	TopColor    string                       `json:"topcolor"`
-	Url         string                       `json:"url"`
-	MiniProgram *MiniProgram                 `json:"miniprogram,omitempty"`
-	Data        map[string]*MessageDataValue `json:"data,omitempty"`
+	ToUser      string                `json:"touser"`
+	TemplateId  string                `json:"template_id"`
+	TopColor    string                `json:"topcolor"`
+	Url         string                `json:"url"`
+	MiniProgram *MiniProgram          `json:"miniprogram,omitempty"`
+	Data        map[string]*DataValue `json:"data,omitempty"`
 }
 
 // MiniProgram 跳转小程序
@@ -62,8 +62,8 @@ type MiniProgram struct {
 	PagePath string `json:"pagepath,omitempty"`
 }
 
-// MessageDataValue 消息数据值
-type MessageDataValue struct {
+// DataValue 消息数据值
+type DataValue struct {
 	Value string `json:"value,omitempty"`
 	Color string `json:"color,omitempty"`
 }

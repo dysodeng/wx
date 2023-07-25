@@ -43,8 +43,8 @@ func (reply *News) ContentType() string {
 
 // NewNews 图文消息
 func NewNews(articles []map[string]string) *News {
-	var list []NewsArticle
-	for _, article := range articles {
+	list := make([]NewsArticle, len(articles))
+	for i, article := range articles {
 		art := NewsArticle{}
 		for key, value := range article {
 			switch key {
@@ -62,6 +62,7 @@ func NewNews(articles []map[string]string) *News {
 				break
 			}
 		}
+		list[i] = art
 	}
 	return &News{
 		MsgType:      message.Value2CDATA("news"),

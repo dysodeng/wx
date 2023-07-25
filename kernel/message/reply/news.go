@@ -43,7 +43,8 @@ func (reply *News) ContentType() string {
 
 // NewNews 图文消息
 func NewNews(articles []map[string]string) *News {
-	list := make([]NewsArticle, len(articles))
+	length := len(articles)
+	list := make([]NewsArticle, length)
 	for i, article := range articles {
 		art := NewsArticle{}
 		for key, value := range article {
@@ -66,7 +67,7 @@ func NewNews(articles []map[string]string) *News {
 	}
 	return &News{
 		MsgType:      message.Value2CDATA("news"),
-		ArticleCount: len(list),
+		ArticleCount: length,
 		Articles:     list,
 	}
 }

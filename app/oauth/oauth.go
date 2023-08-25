@@ -56,7 +56,7 @@ func New(account contracts.AccountInterface, opts ...Option) *OAuth {
 // LoginCodeAccessToken 用户登录授权code换取access_token
 func (oauth *OAuth) LoginCodeAccessToken(code string) (*BaseUserInfo, error) {
 	apiUrl := fmt.Sprintf(
-		"/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
+		"sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
 		oauth.account.AppId(),
 		oauth.account.AppSecret(),
 		code,
@@ -108,7 +108,7 @@ func (oauth *OAuth) UserInfo(openid string) (*UserInfo, error) {
 	}
 
 	apiUrl := fmt.Sprintf(
-		"/sns/userinfo?access_token=%s&openid=%s",
+		"sns/userinfo?access_token=%s&openid=%s",
 		accessToken,
 		openid,
 	)
@@ -170,7 +170,7 @@ func (oauth *OAuth) refreshAccessToken(openid string) (string, error) {
 	}
 
 	apiUrl := fmt.Sprintf(
-		"/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s",
+		"sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s",
 		oauth.account.AppId(),
 		refreshTokenString,
 	)

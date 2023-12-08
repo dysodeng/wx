@@ -14,7 +14,7 @@ type Security struct {
 	account contracts.AccountInterface
 }
 
-func New(account contracts.AccountInterface) *Security {
+func NewSecurity(account contracts.AccountInterface) *Security {
 	return &Security{account: account}
 }
 

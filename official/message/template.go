@@ -1,4 +1,4 @@
-package template_message
+package message
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type TemplateMessage struct {
 	account contracts.AccountInterface
 }
 
-func New(account contracts.AccountInterface) *TemplateMessage {
+func NewTemplateMessage(account contracts.AccountInterface) *TemplateMessage {
 	return &TemplateMessage{account: account}
 }
 

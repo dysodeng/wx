@@ -1,4 +1,4 @@
-package template_message
+package message
 
 import (
 	"encoding/json"
@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TemplateMessage 小程序模板消息
-type TemplateMessage struct {
+// Subscribe 小程序订阅消息
+type Subscribe struct {
 	account contracts.AccountInterface
 }
 
@@ -66,12 +66,12 @@ type KeywordEnumValue struct {
 	KeywordCode   string   `json:"keywordCode"`
 }
 
-func New(account contracts.AccountInterface) *TemplateMessage {
-	return &TemplateMessage{account: account}
+func NewSubscribe(account contracts.AccountInterface) *Subscribe {
+	return &Subscribe{account: account}
 }
 
 // GetCategory 获取类目
-func (m *TemplateMessage) GetCategory() ([]Category, error) {
+func (m *Subscribe) GetCategory() ([]Category, error) {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/getcategory?access_token=%s", accessToken.AccessToken)
 
@@ -98,7 +98,7 @@ func (m *TemplateMessage) GetCategory() ([]Category, error) {
 }
 
 // GetKeywords 获取关键词列表
-func (m *TemplateMessage) GetKeywords(tid string) ([]Keyword, error) {
+func (m *Subscribe) GetKeywords(tid string) ([]Keyword, error) {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/getpubtemplatekeywords?access_token=%s&tid=%s", accessToken.AccessToken, tid)
 
@@ -125,7 +125,7 @@ func (m *TemplateMessage) GetKeywords(tid string) ([]Keyword, error) {
 }
 
 // GetPublicTemplates 获取所属类目下的公共模板
-func (m *TemplateMessage) GetPublicTemplates(ids string, start, limit int) ([]PublicTemplate, error) {
+func (m *Subscribe) GetPublicTemplates(ids string, start, limit int) ([]PublicTemplate, error) {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/getpubtemplatetitles?access_token=%s&ids=%s&start=%d&limit=%d", accessToken.AccessToken, ids, start, limit)
 
@@ -152,7 +152,7 @@ func (m *TemplateMessage) GetPublicTemplates(ids string, start, limit int) ([]Pu
 }
 
 // GetTemplateList 获取个人模板列表
-func (m *TemplateMessage) GetTemplateList() ([]PrivateTemplate, error) {
+func (m *Subscribe) GetTemplateList() ([]PrivateTemplate, error) {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/gettemplate?access_token=%s", accessToken.AccessToken)
 
@@ -179,7 +179,7 @@ func (m *TemplateMessage) GetTemplateList() ([]PrivateTemplate, error) {
 }
 
 // AddTemplate 添加订阅消息模板
-func (m *TemplateMessage) AddTemplate(tid string, kidList []int, sceneDesc string) (string, error) {
+func (m *Subscribe) AddTemplate(tid string, kidList []int, sceneDesc string) (string, error) {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/addtemplate?access_token=%s", accessToken.AccessToken)
 
@@ -207,7 +207,7 @@ func (m *TemplateMessage) AddTemplate(tid string, kidList []int, sceneDesc strin
 }
 
 // DeleteTemplate 删除订阅消息模板
-func (m *TemplateMessage) DeleteTemplate(privateTemplateId string) error {
+func (m *Subscribe) DeleteTemplate(privateTemplateId string) error {
 	accessToken, _ := m.account.AccessToken()
 	apiUrl := fmt.Sprintf("wxaapi/newtmpl/deltemplate?access_token=%s", accessToken.AccessToken)
 
@@ -229,7 +229,7 @@ func (m *TemplateMessage) DeleteTemplate(privateTemplateId string) error {
 }
 
 // Send 发送订阅消息
-func (m *TemplateMessage) Send(message Message) error {
+func (m *Subscribe) Send(message Message) error {
 	if message.ToUser == "" {
 		return kernelError.New(0, errors.New("attribute touser can not be empty!"))
 	}

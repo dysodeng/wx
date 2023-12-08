@@ -7,9 +7,9 @@ import (
 	"github.com/dysodeng/wx/official/article"
 	"github.com/dysodeng/wx/official/authorizer"
 	"github.com/dysodeng/wx/official/menu"
+	"github.com/dysodeng/wx/official/message"
 	"github.com/dysodeng/wx/official/oauth"
 	"github.com/dysodeng/wx/official/qr_code"
-	"github.com/dysodeng/wx/official/template_message"
 	"github.com/dysodeng/wx/official/user"
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
@@ -119,8 +119,8 @@ func (official *Official) Article() *article.Article {
 }
 
 // TemplateMessage 模板消息
-func (official *Official) TemplateMessage() *template_message.TemplateMessage {
-	return template_message.New(official)
+func (official *Official) TemplateMessage() *message.TemplateMessage {
+	return message.NewTemplateMessage(official)
 }
 
 // Jssdk 微信JSSDK

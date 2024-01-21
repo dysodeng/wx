@@ -19,7 +19,7 @@ type Subscribe struct {
 type Message struct {
 	ToUser           string                `json:"touser"`
 	TemplateId       string                `json:"template_id"`
-	Path             string                `json:"path"`
+	Page             string                `json:"page"`
 	Data             map[string]*DataValue `json:"data,omitempty"`
 	MiniProgramState string                `json:"miniprogram_state"`
 	Lang             string                `json:"lang"`

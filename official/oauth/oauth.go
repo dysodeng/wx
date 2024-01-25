@@ -151,6 +151,7 @@ type AccessTokenResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	Openid       string `json:"openid"`
 	Scope        string `json:"scope"`
+	UnionID      string `json:"unionid"`
 }
 
 type userResponse struct {

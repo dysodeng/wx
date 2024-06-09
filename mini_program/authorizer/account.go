@@ -72,7 +72,7 @@ func (account *Account) GetBaseInfo() (*AccountInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err == nil && result.ErrCode != 0 {
+	if result.ErrCode != 0 {
 		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/dysodeng/wx/mini_program/encryptor"
 	"github.com/dysodeng/wx/mini_program/message"
 	"github.com/dysodeng/wx/mini_program/qr_code"
+	"github.com/dysodeng/wx/mini_program/user"
 	"github.com/dysodeng/wx/mini_program/wxa_code"
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
@@ -124,4 +125,9 @@ func (mp *MiniProgram) ContentSecurity() *content.Security {
 // SubscribeMessage 订阅消息
 func (mp *MiniProgram) SubscribeMessage() *message.Subscribe {
 	return message.NewSubscribe(mp)
+}
+
+// User 小程序用户信息
+func (mp *MiniProgram) User() *user.User {
+	return user.New(mp)
 }

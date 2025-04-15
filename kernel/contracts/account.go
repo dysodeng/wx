@@ -21,4 +21,6 @@ type AccountInterface interface {
 	ComponentAccessToken() string
 	// Cache 获取缓存实例
 	Cache() (cache.Cache, string)
+	// PlatformType 平台类型
+	PlatformType() string
 }

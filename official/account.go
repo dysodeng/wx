@@ -43,6 +43,10 @@ func (official *Official) IsOpenPlatform() bool {
 	return official.config.isOpenPlatform
 }
 
+func (official *Official) PlatformType() string {
+	return "official"
+}
+
 // Cache 获取缓存实例
 func (official *Official) Cache() (cache.Cache, string) {
 	return official.option.cache, official.option.cacheKeyPrefix

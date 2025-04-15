@@ -22,6 +22,10 @@ func (open *OpenPlatform) IsOpenPlatform() bool {
 	return false
 }
 
+func (open *OpenPlatform) PlatformType() string {
+	return "open_platform"
+}
+
 func (open *OpenPlatform) Cache() (cache.Cache, string) {
 	return open.option.cache, open.option.cacheKeyPrefix
 }

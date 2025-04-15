@@ -44,6 +44,10 @@ func (app *App) IsOpenPlatform() bool {
 	return false
 }
 
+func (app *App) PlatformType() string {
+	return "app"
+}
+
 func (app *App) Cache() (cache.Cache, string) {
 	return app.option.cache, app.option.cacheKeyPrefix
 }

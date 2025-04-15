@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -24,7 +24,7 @@ func Get(uri string) ([]byte, error) {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
 
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }
 
 // GetWithRespContentType get请求，并返回content-type
@@ -40,7 +40,7 @@ func GetWithRespContentType(uri string) ([]byte, string, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, "", fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
-	responseData, err := ioutil.ReadAll(response.Body)
+	responseData, err := io.ReadAll(response.Body)
 	contentType := response.Header.Get("Content-Type")
 	return responseData, contentType, err
 }
@@ -63,7 +63,7 @@ func Post(uri, data, contentType string) ([]byte, error) {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
 
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }
 
 // PostJSON Post Json 请求
@@ -86,7 +86,7 @@ func PostJSON(uri string, data interface{}) ([]byte, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }
 
 // PostJSONWithRespContentType post json数据请求，且返回数据类型
@@ -110,7 +110,7 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 	if response.StatusCode != http.StatusOK {
 		return nil, "", fmt.Errorf("http get error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
-	responseData, err := ioutil.ReadAll(response.Body)
+	responseData, err := io.ReadAll(response.Body)
 	contentType := response.Header.Get("Content-Type")
 	return responseData, contentType, err
 }

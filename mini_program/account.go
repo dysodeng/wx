@@ -42,6 +42,10 @@ func (mp *MiniProgram) ComponentAccessToken() string {
 	return ""
 }
 
+func (mp *MiniProgram) PlatformType() string {
+	return "mini_program"
+}
+
 func (mp *MiniProgram) Cache() (cache.Cache, string) {
 	return mp.option.cache, mp.option.cacheKeyPrefix
 }

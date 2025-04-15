@@ -11,7 +11,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"sort"
 	"strconv"
@@ -114,7 +113,7 @@ func (e *Encryptor) ValidMsgSignature(timestamp, nonce, msgEncrypt, signature st
 
 // ParseEncryptBody 解析加密消息数据
 func (e *Encryptor) ParseEncryptBody(r *http.Request) (*EncryptRequestBody, error) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +126,7 @@ func (e *Encryptor) ParseEncryptBody(r *http.Request) (*EncryptRequestBody, erro
 
 // ParseTextBody 解析文本消息数据
 func (e *Encryptor) ParseTextBody(r *http.Request) (*message.Message, error) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -199,7 +198,7 @@ func (e *Encryptor) AesEncrypt(plainData []byte) ([]byte, error) {
 // AesDecrypt 解密
 func (e *Encryptor) AesDecrypt(cipherData []byte) ([]byte, error) {
 	aesKey := []byte(e.aesKey)
-	k := len(aesKey) //PKCS#7
+	k := len(aesKey) // PKCS#7
 	if len(cipherData)%k != 0 {
 		return nil, errors.New("crypto/cipher: ciphertext size is not multiple of aes key length")
 	}

@@ -8,11 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dysodeng/wx/kernel/event"
-
 	"github.com/dysodeng/wx/kernel/contracts"
+	"github.com/dysodeng/wx/kernel/event"
 	"github.com/dysodeng/wx/kernel/message"
-
 	"github.com/dysodeng/wx/support/encryptor"
 )
 

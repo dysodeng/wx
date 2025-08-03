@@ -64,4 +64,4 @@ func main() {
 ```
 
 ## 致谢
-- 本库参考了 [EaseWechat 5.x](https://github.com/w7corp/easywechat/tree/5.x) 的一些实现思想
+- 本库参考了 [EasyWeChat 5.x](https://github.com/w7corp/easywechat/tree/5.x) 的一些实现思想

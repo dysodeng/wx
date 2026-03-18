@@ -1,0 +1,63 @@
+package auth
+
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/dysodeng/wx/kernel/contracts"
+	kernelError "github.com/dysodeng/wx/kernel/error"
+	"github.com/dysodeng/wx/work/http"
+)
+
+// Auth 小程序用户登录
+// @see https://developer.work.weixin.qq.com/document/path/91507
+type Auth struct {
+	account contracts.AccountInterface
+}
+
+// Session 登录凭证
+type Session struct {
+	CorpId     string `json:"corpid"`
+	UserId     string `json:"userid"`
+	SessionKey string `json:"session_key"`
+}
+
+func New(account contracts.AccountInterface) *Auth {
+	return &Auth{account: account}
+}
+
+func (auth *Auth) Session(code string) (Session, error) {
+	apiUrl := auth.getCodeUrl(code)
+	res, err := http.Get(apiUrl)
+	if err != nil {
+		return Session{}, err
+	}
+
+	type sessionResult struct {
+		kernelError.ApiError
+		Session
+	}
+	var result sessionResult
+	err = json.Unmarshal(res, &result)
+	if err != nil {
+		return Session{}, err
+	}
+
+	if result.ErrCode != 0 {
+		return Session{}, kernelError.NewWithApiError(result.ApiError)
+	}
+
+	return result.Session, nil
+}
+
+func (auth *Auth) getCodeUrl(code string) string {
+	accessToken, err := auth.account.AccessToken()
+	if err != nil {
+		return ""
+	}
+	return fmt.Sprintf(
+		"cgi-bin/miniprogram/jscode2session?access_token=%s&js_code=%s&grant_type=authorization_code",
+		accessToken.AccessToken,
+		code,
+	)
+}

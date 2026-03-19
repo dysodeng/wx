@@ -3,6 +3,7 @@ package work
 import (
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
+	"github.com/dysodeng/wx/work/base"
 	"github.com/dysodeng/wx/work/mini_program"
 )
 
@@ -37,6 +38,11 @@ func New(corpId, secret, token, aesKey string, opts ...Option) *Work {
 		config: c,
 		option: o,
 	}
+}
+
+// Base 基础模块
+func (w *Work) Base() *base.Base {
+	return base.New(w)
 }
 
 // MiniProgram 小程序

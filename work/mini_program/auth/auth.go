@@ -51,6 +51,15 @@ func (auth *Auth) Session(code string) (Session, error) {
 }
 
 func (auth *Auth) getCodeUrl(code string) string {
+	if auth.account.IsOpenPlatform() {
+		accessToken := auth.account.ComponentAccessToken()
+		return fmt.Sprintf(
+			"cgi-bin/service/miniprogram/jscode2session?suite_access_token=%s&js_code=%s&grant_type=authorization_code",
+			accessToken,
+			code,
+		)
+	}
+
 	accessToken, err := auth.account.AccessToken()
 	if err != nil {
 		return ""

@@ -1,4 +1,4 @@
-package oauth
+package auth
 
 import kernelError "github.com/dysodeng/wx/kernel/error"
 

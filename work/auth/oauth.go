@@ -1,4 +1,4 @@
-package oauth
+package auth
 
 import (
 	"encoding/json"
@@ -12,9 +12,10 @@ import (
 )
 
 const oauthBaseUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
+const qrLoginBaseUrl = "https://login.work.weixin.qq.com/wwlogin/sso/login"
 
-// OAuth 企业微信网页授权登录
-type OAuth struct {
+// Auth 企业微信网页授权登录
+type Auth struct {
 	account     contracts.AccountInterface
 	scope       string
 	redirectUrl string
@@ -22,35 +23,35 @@ type OAuth struct {
 	agentId     string
 }
 
-func New(account contracts.AccountInterface) *OAuth {
-	return &OAuth{account: account, state: "state", scope: "snsapi_base"}
+func NewAuth(account contracts.AccountInterface) *Auth {
+	return &Auth{account: account, state: "state", scope: "snsapi_base"}
 }
 
 // WithScope 设置授权作用域
-func (auth *OAuth) WithScope(scope string) *OAuth {
+func (auth *Auth) WithScope(scope string) *Auth {
 	auth.scope = scope
 	return auth
 }
 
 // WithRedirectUrl 设置回调URL
-func (auth *OAuth) WithRedirectUrl(redirectUrl string) *OAuth {
+func (auth *Auth) WithRedirectUrl(redirectUrl string) *Auth {
 	auth.redirectUrl = redirectUrl
 	return auth
 }
 
 // WithState 设置state参数
-func (auth *OAuth) WithState(state string) *OAuth {
+func (auth *Auth) WithState(state string) *Auth {
 	auth.state = state
 	return auth
 }
 
 // WithAgentId 设置agentid
-func (auth *OAuth) WithAgentId(agentId string) *OAuth {
+func (auth *Auth) WithAgentId(agentId string) *Auth {
 	auth.agentId = agentId
 	return auth
 }
 
-func (auth *OAuth) buildAuthUrl() string {
+func (auth *Auth) buildAuthUrl() string {
 	authUrl := fmt.Sprintf(
 		"%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s",
 		oauthBaseUrl,
@@ -67,17 +68,17 @@ func (auth *OAuth) buildAuthUrl() string {
 }
 
 // AuthUrl 构造授权链接
-func (auth *OAuth) AuthUrl() string {
+func (auth *Auth) AuthUrl() string {
 	return auth.buildAuthUrl()
 }
 
 // Redirect 302重定向到授权页
-func (auth *OAuth) Redirect(writer http.ResponseWriter, request *http.Request) {
+func (auth *Auth) Redirect(writer http.ResponseWriter, request *http.Request) {
 	http.Redirect(writer, request, auth.buildAuthUrl(), http.StatusFound)
 }
 
 // UserFromCode 通过code获取用户身份
-func (auth *OAuth) UserFromCode(code string) (*UserIdentity, error) {
+func (auth *Auth) UserFromCode(code string) (*UserIdentity, error) {
 	accessToken, err := auth.account.AccessToken()
 	if err != nil {
 		return nil, kernelError.New(0, err)
@@ -102,7 +103,7 @@ func (auth *OAuth) UserFromCode(code string) (*UserIdentity, error) {
 }
 
 // GetUserDetail 获取用户敏感信息
-func (auth *OAuth) GetUserDetail(userTicket string) (*UserDetail, error) {
+func (auth *Auth) GetUserDetail(userTicket string) (*UserDetail, error) {
 	accessToken, err := auth.account.AccessToken()
 	if err != nil {
 		return nil, kernelError.New(0, err)
@@ -124,4 +125,28 @@ func (auth *OAuth) GetUserDetail(userTicket string) (*UserDetail, error) {
 	}
 
 	return &result.UserDetail, nil
+}
+
+// QrLoginUrl 构造企业微信扫码登录链接
+func (auth *Auth) QrLoginUrl(loginType string) string {
+	if loginType == "" {
+		loginType = "CorpApp"
+	}
+	qrUrl := fmt.Sprintf(
+		"%s?login_type=%s&appid=%s&redirect_uri=%s&state=%s",
+		qrLoginBaseUrl,
+		loginType,
+		auth.account.AppId(),
+		url.QueryEscape(auth.redirectUrl),
+		auth.state,
+	)
+	if auth.agentId != "" {
+		qrUrl += fmt.Sprintf("&agentid=%s", auth.agentId)
+	}
+	return qrUrl
+}
+
+// QrLoginRedirect 302重定向到扫码登录页
+func (auth *Auth) QrLoginRedirect(writer http.ResponseWriter, request *http.Request, loginType string) {
+	http.Redirect(writer, request, auth.QrLoginUrl(loginType), http.StatusFound)
 }

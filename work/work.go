@@ -3,6 +3,7 @@ package work
 import (
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
+	"github.com/dysodeng/wx/work/auth"
 	"github.com/dysodeng/wx/work/base"
 	"github.com/dysodeng/wx/work/mini_program"
 )
@@ -38,6 +39,11 @@ func New(corpId, secret, token, aesKey string, opts ...Option) *Work {
 		config: c,
 		option: o,
 	}
+}
+
+// Auth 身份验证
+func (w *Work) Auth() *auth.Auth {
+	return auth.NewAuth(w)
 }
 
 // Base 基础模块

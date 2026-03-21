@@ -117,6 +117,21 @@ type UserIdList struct {
 	DeptUser   []UserIdItem `json:"dept_user"`
 }
 
+// SimpleUser 部门成员简要信息
+type SimpleUser struct {
+	Userid     string `json:"userid"`
+	Name       string `json:"name"`
+	Department []int  `json:"department"`
+	OpenUserid string `json:"open_userid"`
+}
+
+// InviteResult 邀请成员结果
+type InviteResult struct {
+	InvalidUser  []string `json:"invaliduser"`
+	InvalidParty []int    `json:"invalidparty"`
+	InvalidTag   []int    `json:"invalidtag"`
+}
+
 // userInfoResult 获取成员信息响应
 type userInfoResult struct {
 	kernelError.ApiError
@@ -127,4 +142,40 @@ type userInfoResult struct {
 type userIdListResult struct {
 	kernelError.ApiError
 	UserIdList
+}
+
+// simpleUserListResult 获取部门成员响应
+type simpleUserListResult struct {
+	kernelError.ApiError
+	UserList []SimpleUser `json:"userlist"`
+}
+
+// userDetailListResult 获取部门成员详情响应
+type userDetailListResult struct {
+	kernelError.ApiError
+	UserList []UserInfo `json:"userlist"`
+}
+
+// convertToOpenidResult userid转openid响应
+type convertToOpenidResult struct {
+	kernelError.ApiError
+	Openid string `json:"openid"`
+}
+
+// convertToUseridResult openid转userid响应
+type convertToUseridResult struct {
+	kernelError.ApiError
+	Userid string `json:"userid"`
+}
+
+// inviteResult 邀请成员响应
+type inviteResult struct {
+	kernelError.ApiError
+	InviteResult
+}
+
+// getUseridResult 手机号/邮箱获取userid响应
+type getUseridResult struct {
+	kernelError.ApiError
+	Userid string `json:"userid"`
 }

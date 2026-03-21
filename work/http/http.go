@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 )
 
 const baseUri = "https://qyapi.weixin.qq.com/"
@@ -113,4 +115,37 @@ func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, e
 	responseData, err := io.ReadAll(response.Body)
 	contentType := response.Header.Get("Content-Type")
 	return responseData, contentType, err
+}
+
+// Upload 上传文件
+func Upload(uri string, filename string, fileData []byte) ([]byte, error) {
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+
+	part, err := writer.CreateFormFile("media", filepath.Base(filename))
+	if err != nil {
+		return nil, err
+	}
+	_, err = part.Write(fileData)
+	if err != nil {
+		return nil, err
+	}
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := http.Post(baseUri+uri, writer.FormDataContentType(), body)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = response.Body.Close()
+	}()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("http upload error : uri=%v , statusCode=%v", uri, response.StatusCode)
+	}
+
+	return io.ReadAll(response.Body)
 }

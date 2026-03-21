@@ -357,7 +357,7 @@ func (u *User) ListId(cursor string, limit int) (*UserIdList, error) {
 		return nil, kernelError.New(0, err)
 	}
 
-	apiUrl := fmt.Sprintf("cgi-bin/user/list_id?access_token=%s", accessToken.AccessToken)
+	apiUrl := fmt.Sprintf("cgi-bin/user/list_id?access_token=%s&debug=1", accessToken.AccessToken)
 	res, err := http.PostJSON(apiUrl, map[string]interface{}{
 		"cursor": cursor,
 		"limit":  limit,

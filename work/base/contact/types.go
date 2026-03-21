@@ -291,3 +291,42 @@ type tagListResult struct {
 	kernelError.ApiError
 	TagList []TagInfo `json:"taglist"`
 }
+
+// ========== 异步导入相关类型 ==========
+
+// BatchCallback 异步任务回调信息
+type BatchCallback struct {
+	Url            string `json:"url"`
+	Token          string `json:"token"`
+	EncodingAesKey string `json:"encodingaeskey"`
+}
+
+// BatchResultItem 异步任务结果项
+type BatchResultItem struct {
+	Userid  string `json:"userid,omitempty"`
+	Action  int    `json:"action"`
+	ErrCode int64  `json:"errcode"`
+	ErrMsg  string `json:"errmsg"`
+	PartyId int    `json:"partyid,omitempty"`
+}
+
+// BatchResult 异步任务结果
+type BatchResult struct {
+	Status     int               `json:"status"`
+	Type       string            `json:"type"`
+	Total      int               `json:"total"`
+	Percentage int               `json:"percentage"`
+	Result     []BatchResultItem `json:"result"`
+}
+
+// batchJobResult 批量任务响应
+type batchJobResult struct {
+	kernelError.ApiError
+	JobId string `json:"jobid"`
+}
+
+// batchResultResponse 获取异步任务结果响应
+type batchResultResponse struct {
+	kernelError.ApiError
+	BatchResult
+}

@@ -100,7 +100,10 @@ func (d *Department) List(id int) ([]DepartmentInfo, error) {
 		return nil, kernelError.New(0, err)
 	}
 
-	apiUrl := fmt.Sprintf("cgi-bin/department/list?access_token=%s&id=%d", accessToken.AccessToken, id)
+	apiUrl := fmt.Sprintf("cgi-bin/department/list?access_token=%s", accessToken.AccessToken)
+	if id > 0 {
+		apiUrl = fmt.Sprintf("%s&id=%d", apiUrl, id)
+	}
 	res, err := http.Get(apiUrl)
 	if err != nil {
 		return nil, kernelError.New(0, err)
@@ -125,7 +128,11 @@ func (d *Department) SimpleList(id int) ([]DepartmentIdInfo, error) {
 		return nil, kernelError.New(0, err)
 	}
 
-	apiUrl := fmt.Sprintf("cgi-bin/department/simplelist?access_token=%s&id=%d", accessToken.AccessToken, id)
+	apiUrl := fmt.Sprintf("cgi-bin/department/simplelist?access_token=%s", accessToken.AccessToken)
+	if id > 0 {
+		apiUrl = fmt.Sprintf("%s&id=%d", apiUrl, id)
+	}
+
 	res, err := http.Get(apiUrl)
 	if err != nil {
 		return nil, kernelError.New(0, err)

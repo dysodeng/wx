@@ -272,31 +272,6 @@ func (u *User) Invite(userIds []string, partyIds []int, tagIds []int) (*InviteRe
 	return &result.InviteResult, nil
 }
 
-// AuthSucc 二次验证
-func (u *User) AuthSucc(userid string) error {
-	accessToken, err := u.account.AccessToken()
-	if err != nil {
-		return kernelError.New(0, err)
-	}
-
-	apiUrl := fmt.Sprintf("cgi-bin/user/authsucc?access_token=%s&userid=%s", accessToken.AccessToken, userid)
-	res, err := http.Get(apiUrl)
-	if err != nil {
-		return kernelError.New(0, err)
-	}
-
-	var result kernelError.ApiError
-	err = json.Unmarshal(res, &result)
-	if err != nil {
-		return kernelError.New(0, err)
-	}
-	if result.ErrCode != 0 {
-		return kernelError.NewWithApiError(result)
-	}
-
-	return nil
-}
-
 // GetUseridByMobile 手机号获取userid
 func (u *User) GetUseridByMobile(mobile string) (string, error) {
 	accessToken, err := u.account.AccessToken()

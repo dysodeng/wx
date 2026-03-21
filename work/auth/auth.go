@@ -150,3 +150,8 @@ func (auth *Auth) QrLoginUrl(loginType string) string {
 func (auth *Auth) QrLoginRedirect(writer http.ResponseWriter, request *http.Request, loginType string) {
 	http.Redirect(writer, request, auth.QrLoginUrl(loginType), http.StatusFound)
 }
+
+// TFA 二次验证
+func (auth *Auth) TFA() *Tfa {
+	return NewTfa(auth.account)
+}

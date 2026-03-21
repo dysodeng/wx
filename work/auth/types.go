@@ -34,3 +34,17 @@ type userDetailResult struct {
 	kernelError.ApiError
 	UserDetail
 }
+
+// ========== 二次验证相关类型 ==========
+
+// TfaInfo 成员二次验证信息
+type TfaInfo struct {
+	Userid  string `json:"userid"`
+	TfaCode string `json:"tfa_code"`
+}
+
+// tfaInfoResult 获取成员二次验证信息响应
+type tfaInfoResult struct {
+	kernelError.ApiError
+	TfaInfo
+}

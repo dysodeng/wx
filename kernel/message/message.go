@@ -17,6 +17,7 @@ type Message struct {
 	CreateTime   time.Duration
 	MsgType      string
 	MsgId        int64
+	AgentID      string // 企业微信应用ID
 
 	// 文本消息
 	Content string
@@ -55,6 +56,9 @@ type Message struct {
 
 	// 开放平台消息路由字段
 	InfoType string
+
+	// 企业微信通讯录变更事件
+	ChangeType string
 
 	// 位置上报事件
 	Latitude  string
@@ -123,6 +127,7 @@ func (m *Message) Header() *Header {
 		CreateTime:   m.CreateTime,
 		MsgType:      m.MsgType,
 		MsgId:        m.MsgId,
+		AgentID:      m.AgentID,
 	}
 }
 
@@ -202,4 +207,44 @@ func (m *Message) EventMessage() *Event {
 // OpenPlatformEvent 开放平台事件消息
 func (m *Message) OpenPlatformEvent() *OpenPlatformEvent {
 	return parseOpenPlatformEvent(m.RawBody)
+}
+
+// WorkContactEvent 企业微信通讯录变更事件消息
+func (m *Message) WorkContactEvent() *WorkContactEvent {
+	return parseWorkContactEvent(m.RawBody)
+}
+
+// WorkBatchJobResultEvent 企业微信异步任务完成事件消息
+func (m *Message) WorkBatchJobResultEvent() *WorkBatchJobResultEvent {
+	return parseWorkBatchJobResultEvent(m.RawBody)
+}
+
+// WorkExternalContactEvent 企业微信外部联系人变更事件消息
+func (m *Message) WorkExternalContactEvent() *WorkExternalContactEvent {
+	return parseWorkExternalContactEvent(m.RawBody)
+}
+
+// WorkExternalChatEvent 企业微信客户群变更事件消息
+func (m *Message) WorkExternalChatEvent() *WorkExternalChatEvent {
+	return parseWorkExternalChatEvent(m.RawBody)
+}
+
+// WorkExternalTagEvent 企业微信企业客户标签变更事件消息
+func (m *Message) WorkExternalTagEvent() *WorkExternalTagEvent {
+	return parseWorkExternalTagEvent(m.RawBody)
+}
+
+// WorkTemplateCardEvent 企业微信模板卡片事件消息
+func (m *Message) WorkTemplateCardEvent() *WorkTemplateCardEvent {
+	return parseWorkTemplateCardEvent(m.RawBody)
+}
+
+// WorkLivingStatusChangeEvent 企业微信直播事件消息
+func (m *Message) WorkLivingStatusChangeEvent() *WorkLivingStatusChangeEvent {
+	return parseWorkLivingStatusChangeEvent(m.RawBody)
+}
+
+// WorkApprovalEvent 企业微信审批事件消息
+func (m *Message) WorkApprovalEvent() *WorkApprovalEvent {
+	return parseWorkApprovalEvent(m.RawBody)
 }

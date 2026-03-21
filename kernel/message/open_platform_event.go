@@ -31,7 +31,7 @@ type OpenPlatformEvent struct {
 // parseOpenPlatformEvent 从 RawBody 解析开放平台事件
 func parseOpenPlatformEvent(rawBody []byte) *OpenPlatformEvent {
 	if len(rawBody) == 0 {
-		return nil
+		return &OpenPlatformEvent{}
 	}
 	var op struct {
 		XMLName                      xml.Name `xml:"xml"`
@@ -53,7 +53,7 @@ func parseOpenPlatformEvent(rawBody []byte) *OpenPlatformEvent {
 		ScreenShot                   string
 	}
 	if xml.Unmarshal(rawBody, &op) != nil {
-		return nil
+		return &OpenPlatformEvent{}
 	}
 	return &OpenPlatformEvent{
 		AppId:                        op.AppId,

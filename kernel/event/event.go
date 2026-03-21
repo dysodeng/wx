@@ -7,10 +7,11 @@ const (
 	All EventType = "*"
 
 	// 公众号事件消息
-	Event     EventType = "event"
-	Subscribe EventType = "subscribe"
-	Scan      EventType = "scan"
-	Location  EventType = "location"
+	Event       EventType = "event"
+	Subscribe   EventType = "subscribe"
+	Unsubscribe EventType = "unsubscribe"
+	Scan        EventType = "scan"
+	Location    EventType = "location"
 
 	// 公众号菜单事件消息
 	Click           EventType = "click"
@@ -63,4 +64,24 @@ const (
 	WeAppAuditSuccess        EventType = "weapp_audit_success"
 	WeAppAuditFail           EventType = "weapp_audit_fail"
 	WeAppAuditDelay          EventType = "weapp_audit_delay"
+
+	// 企业微信通讯录变更事件
+	ChangeContact EventType = "change_contact"
+
+	// 企业微信异步任务完成事件
+	BatchJobResult EventType = "batch_job_result"
+
+	// 企业微信应用事件
+	EnterAgent            EventType = "enter_agent"              // 进入应用
+	ChangeExternalChat    EventType = "change_external_chat"     // 客户群变更事件
+	ChangeExternalContact EventType = "change_external_contact"  // 外部联系人变更事件
+	ChangeExternalTag     EventType = "change_external_tag"      // 企业客户标签变更事件
+	SysApprovalChange     EventType = "sys_approval_change"      // 审批状态变更事件
+	OpenApprovalChange    EventType = "open_approval_change"     // 自建审批申请状态变化回调
+	ShareAgentChange      EventType = "share_agent_change"       // 共享应用事件回调
+	ShareChain            EventType = "share_chain"              // 上下游共享应用事件回调
+	TemplateCardEvent     EventType = "template_card_event"      // 模板卡片事件推送
+	TemplateCardMenu      EventType = "template_card_menu_event" // 通用模板卡片右上角菜单事件推送
+	LivingStatusChange    EventType = "living_status_change"     // 直播事件回调
+	MsgAuditNotify        EventType = "msgaudit_notify"          // 会话存档事件回调
 )

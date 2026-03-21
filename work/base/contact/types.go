@@ -240,3 +240,54 @@ type departmentGetResult struct {
 	kernelError.ApiError
 	Department DepartmentInfo `json:"department"`
 }
+
+// ========== 标签管理相关类型 ==========
+
+// TagInfo 标签信息
+type TagInfo struct {
+	TagId   int    `json:"tagid"`
+	TagName string `json:"tagname"`
+}
+
+// TagUserInfo 标签成员信息
+type TagUserInfo struct {
+	Userid string `json:"userid"`
+	Name   string `json:"name"`
+}
+
+// TagDetail 标签详情（含成员列表）
+type TagDetail struct {
+	TagName   string        `json:"tagname"`
+	UserList  []TagUserInfo `json:"userlist"`
+	PartyList []int         `json:"partylist"`
+}
+
+// TagMemberResult 标签成员操作结果
+type TagMemberResult struct {
+	InvalidList  string `json:"invalidlist"`
+	InvalidParty []int  `json:"invalidparty"`
+}
+
+// createTagResult 创建标签响应
+type createTagResult struct {
+	kernelError.ApiError
+	TagId int `json:"tagid"`
+}
+
+// tagDetailResult 获取标签成员响应
+type tagDetailResult struct {
+	kernelError.ApiError
+	TagDetail
+}
+
+// tagMemberOpResult 标签成员操作响应
+type tagMemberOpResult struct {
+	kernelError.ApiError
+	TagMemberResult
+}
+
+// tagListResult 获取标签列表响应
+type tagListResult struct {
+	kernelError.ApiError
+	TagList []TagInfo `json:"taglist"`
+}

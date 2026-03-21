@@ -20,3 +20,8 @@ func (b *Contact) User() *User {
 func (b *Contact) Department() *Department {
 	return NewDepartment(b.account)
 }
+
+// Tag 通讯录管理-标签管理
+func (b *Contact) Tag() *Tag {
+	return NewTag(b.account)
+}

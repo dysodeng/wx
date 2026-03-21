@@ -7,6 +7,7 @@ import (
 	"github.com/dysodeng/wx/work/auth"
 	"github.com/dysodeng/wx/work/contact"
 	"github.com/dysodeng/wx/work/media"
+	"github.com/dysodeng/wx/work/message"
 	"github.com/dysodeng/wx/work/mini_program"
 )
 
@@ -61,6 +62,11 @@ func (w *Work) Contact() *contact.Contact {
 // Media 素材管理
 func (w *Work) Media() *media.Media {
 	return media.NewMedia(w)
+}
+
+// Message 应用消息
+func (w *Work) Message() *message.Message {
+	return message.NewMessage(w)
 }
 
 // MiniProgram 小程序

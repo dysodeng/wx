@@ -3,8 +3,10 @@ package work
 import (
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
+	"github.com/dysodeng/wx/work/account_id"
 	"github.com/dysodeng/wx/work/auth"
-	"github.com/dysodeng/wx/work/base"
+	"github.com/dysodeng/wx/work/contact"
+	"github.com/dysodeng/wx/work/media"
 	"github.com/dysodeng/wx/work/mini_program"
 )
 
@@ -46,9 +48,19 @@ func (w *Work) Auth() *auth.Auth {
 	return auth.NewAuth(w)
 }
 
-// Base 基础模块
-func (w *Work) Base() *base.Base {
-	return base.New(w, w.config.token, w.config.aesKey)
+// AccountId 账号ID
+func (w *Work) AccountId() *account_id.AccountId {
+	return account_id.New(w)
+}
+
+// Contact 通讯录管理
+func (w *Work) Contact() *contact.Contact {
+	return contact.New(w, w.config.token, w.config.aesKey)
+}
+
+// Media 素材管理
+func (w *Work) Media() *media.Media {
+	return media.NewMedia(w)
 }
 
 // MiniProgram 小程序

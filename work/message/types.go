@@ -336,3 +336,58 @@ type RecallRequest struct {
 type recallResponse struct {
 	kernelError.ApiError
 }
+
+// ========== 群聊会话相关类型 ==========
+
+// CreateChatRequest 创建群聊会话请求
+type CreateChatRequest struct {
+	Name     string   `json:"name,omitempty"`
+	Owner    string   `json:"owner,omitempty"`
+	UserList []string `json:"userlist"`
+	ChatId   string   `json:"chatid,omitempty"`
+}
+
+// createChatResponse 创建群聊会话响应
+type createChatResponse struct {
+	kernelError.ApiError
+	ChatId string `json:"chatid"`
+}
+
+// UpdateChatRequest 修改群聊会话请求
+type UpdateChatRequest struct {
+	ChatId      string   `json:"chatid"`
+	Name        string   `json:"name,omitempty"`
+	Owner       string   `json:"owner,omitempty"`
+	AddUserList []string `json:"add_user_list,omitempty"`
+	DelUserList []string `json:"del_user_list,omitempty"`
+}
+
+// ChatInfo 群聊会话信息
+type ChatInfo struct {
+	ChatId   string   `json:"chatid"`
+	Name     string   `json:"name"`
+	Owner    string   `json:"owner"`
+	UserList []string `json:"userlist"`
+}
+
+// getChatResponse 获取群聊会话响应
+type getChatResponse struct {
+	kernelError.ApiError
+	ChatInfo ChatInfo `json:"chat_info"`
+}
+
+// ChatSendRequest 应用推送消息到群聊会话请求
+type ChatSendRequest struct {
+	ChatId   string    `json:"chatid"`
+	MsgType  string    `json:"msgtype"`
+	Text     *Text     `json:"text,omitempty"`
+	Image    *Image    `json:"image,omitempty"`
+	Voice    *Voice    `json:"voice,omitempty"`
+	Video    *Video    `json:"video,omitempty"`
+	File     *File     `json:"file,omitempty"`
+	TextCard *TextCard `json:"textcard,omitempty"`
+	News     *News     `json:"news,omitempty"`
+	MpNews   *MpNews   `json:"mpnews,omitempty"`
+	Markdown *Markdown `json:"markdown,omitempty"`
+	Safe     int       `json:"safe,omitempty"`
+}

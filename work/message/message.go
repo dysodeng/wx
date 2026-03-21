@@ -18,6 +18,11 @@ func NewMessage(account contracts.AccountInterface) *Message {
 	return &Message{account: account}
 }
 
+// Chat 群聊会话
+func (m *Message) Chat() *Chat {
+	return newChat(m)
+}
+
 // Send 发送应用消息
 func (m *Message) Send(req SendRequest) (*SendResult, error) {
 	accessToken, err := m.account.AccessToken()

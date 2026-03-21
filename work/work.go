@@ -1,6 +1,7 @@
 package work
 
 import (
+	"github.com/dysodeng/wx/base/server"
 	"github.com/dysodeng/wx/support/cache"
 	"github.com/dysodeng/wx/support/lock"
 	"github.com/dysodeng/wx/work/account_id"
@@ -72,4 +73,12 @@ func (w *Work) Message() *message.Message {
 // MiniProgram 小程序
 func (w *Work) MiniProgram() *mini_program.MiniProgram {
 	return mini_program.New(w.config.corpId, w.config.secret, w.config.token, w.config.aesKey)
+}
+
+// Server 服务端
+func (w *Work) Server() *server.Server {
+	return server.New(w,
+		server.WithEncryptMode(server.EncryptModeAES),
+		server.WithEchoStrMode(server.EchoStrDecrypt),
+	)
 }

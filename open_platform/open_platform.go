@@ -1,8 +1,15 @@
 package open_platform
 
 import (
+	"context"
+	"fmt"
+	"time"
+
 	"github.com/dysodeng/wx/base/server"
+	"github.com/dysodeng/wx/kernel/contracts"
 	"github.com/dysodeng/wx/kernel/event"
+	"github.com/dysodeng/wx/kernel/message"
+	"github.com/dysodeng/wx/kernel/message/reply"
 	"github.com/dysodeng/wx/mini_program"
 	"github.com/dysodeng/wx/official"
 	"github.com/dysodeng/wx/open_platform/authorizer"
@@ -49,8 +56,24 @@ func New(appId, appSecret, token, aesKey string, opts ...Option) *OpenPlatform {
 // Server 服务端
 func (open *OpenPlatform) Server() *server.Server {
 	svr := server.New(open)
-	svr.Register(&componentVerifyTicket{}, event.ComponentVerifyTicket)
+	svr.On(open.handleComponentVerifyTicket, event.ComponentVerifyTicket)
 	return svr
+}
+
+// handleComponentVerifyTicket component_verify_ticket 推送事件
+func (open *OpenPlatform) handleComponentVerifyTicket(
+	ctx context.Context,
+	account contracts.AccountInterface,
+	msg *message.Message,
+) (*reply.Reply, error) {
+	e := msg.EventMessage()
+	verifyTicket := e.ComponentVerifyTicket()
+	if verifyTicket.ComponentVerifyTicket != "" {
+		c, cacheKeyPrefix := account.Cache()
+		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, verifyTicket.AppId)
+		_ = c.Put(cacheKey, verifyTicket.ComponentVerifyTicket, time.Second*42600)
+	}
+	return nil, nil
 }
 
 // Authorizer 公众账号授权

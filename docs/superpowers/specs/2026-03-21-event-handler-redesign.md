@@ -4,7 +4,7 @@
 
 The current event handling system has several architectural issues:
 
-1. **Code duplication** — `base/server/server.go` and `work/server/server.go` are nearly identical, differing only in echostr validation mode and encryption mode.
+1. **Code duplication** — `base/server/server.go` and `work/server/server.go` share most of the same logic (signature validation, decryption, handler dispatch, reply encryption). They differ in: echostr validation mode, encryption mode, and `base/server` has an additional `Dispatch` method for Open Platform use.
 2. **Single handler per event** — `map[event.Guard]EventHandlerInterface` only allows one handler per guard type; later registrations overwrite earlier ones.
 3. **No context passing** — `Handle` method lacks `context.Context`, preventing timeout control and tracing.
 4. **No middleware mechanism** — No support for cross-cutting concerns like logging, panic recovery, etc.
@@ -109,7 +109,9 @@ func (s *Server) Dispatch(request *http.Request, writer http.ResponseWriter, han
 
 ### 4. Event Routing Logic
 
-Inside `Serve`, event routing follows this priority (unchanged from current behavior):
+Inside `Serve`, event routing follows this priority:
+
+**Breaking change from current behavior**: The old code checked `event.Event` (generic event catch-all) *before* the exact event type match. This meant registering a handler on `event.Event` would shadow all specific event handlers like `event.Subscribe` or `event.Click`. The new design fixes this by checking exact match first, which is the intuitive and correct behavior.
 
 For event messages (`MsgType == "event"`):
 1. Exact event type match: `handlers[EventType(strings.ToLower(msg.Event))]`
@@ -127,16 +129,18 @@ Handler execution:
 - A handler returning `(nil, nil)` means "I don't handle this, pass to next".
 - A handler returning an error stops execution immediately; `Serve` logs the error and returns "success" to WeChat to prevent retries.
 
+`Serve` creates the context from `request.Context()`, so handler timeouts and cancellation are tied to the HTTP request lifecycle.
+
 ### 5. Platform Integration
 
-**Official Account (`official/official.go`)**:
+**Official Account (`official/official.go`)** — existing `Server()` method, minimal change:
 ```go
 func (official *Official) Server() *server.Server {
     return server.New(official)  // defaults: EncryptModeAuto + EchoStrPlain
 }
 ```
 
-**Enterprise WeChat (`work/work.go`)**:
+**Enterprise WeChat (`work/work.go`)** — add new `Server()` method (Work currently has no Server method):
 ```go
 func (w *Work) Server() *server.Server {
     return server.New(w,
@@ -146,7 +150,7 @@ func (w *Work) Server() *server.Server {
 }
 ```
 
-**Open Platform (`open_platform/open_platform.go`)**:
+**Open Platform (`open_platform/open_platform.go`)** — existing `Server()` method, update to new API:
 ```go
 func (open *OpenPlatform) Server() *server.Server {
     svr := server.New(open)
@@ -168,6 +172,13 @@ func (open *OpenPlatform) handleComponentVerifyTicket(
         _ = c.Put(key, ticket.ComponentVerifyTicket, time.Second*42600)
     }
     return nil, nil
+}
+```
+
+**Mini Program (`mini_program/mini_program.go`)** — existing `Server()` method, no change needed (already uses default options):
+```go
+func (mp *MiniProgram) Server() *server.Server {
+    return server.New(mp)  // defaults work for mini program
 }
 ```
 
@@ -225,10 +236,11 @@ http.HandleFunc("/wx/event", func(w http.ResponseWriter, r *http.Request) {
 | Modify | `kernel/event/event.go` | Rename `Guard` to `EventType` |
 | Rewrite | `base/server/server.go` | Unified Server with EncryptMode/EchoStrMode config, `On`/`Use` methods, multi-handler support |
 | Delete | `work/server/server.go` | Enterprise WeChat no longer has its own server implementation |
-| Modify | `work/work.go` | `Server()` method uses `base/server` with Options |
+| Add | `work/work.go` | Add new `Server()` method using `base/server` with Options |
 | Modify | `open_platform/open_platform.go` | `Server()` uses new API |
 | Delete | `open_platform/event.go` | Handler becomes a method on `OpenPlatform` |
 | Modify | `official/official.go` | `Server()` uses new API (minimal change) |
+| Modify | `mini_program/mini_program.go` | `Server()` uses new `server.New` signature (no options needed, minimal change) |
 | Modify | `main.go` | Example code updated to function-style handlers |
 
 ## Out of Scope

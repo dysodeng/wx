@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/base64"
 	"log"
 	"net/http"
@@ -102,10 +103,37 @@ func (s *Server) Dispatch(
 	writer http.ResponseWriter,
 	handler contracts.EventHandler,
 ) {
+	s.serveWith(request, writer, func(ctx context.Context, msg *message.Message) (*reply.Reply, error) {
+		wrapped := s.applyMiddleware(handler)
+		return wrapped(ctx, s.account, msg)
+	})
+}
+
+// Serve 处理微信回调请求
+func (s *Server) Serve(request *http.Request, writer http.ResponseWriter) {
+	s.serveWith(request, writer, func(ctx context.Context, msg *message.Message) (*reply.Reply, error) {
+		handlers := s.matchHandlers(msg)
+		for _, handler := range handlers {
+			wrapped := s.applyMiddleware(handler)
+			r, err := wrapped(ctx, s.account, msg)
+			if err != nil {
+				return nil, err
+			}
+			if r != nil {
+				return r, nil
+			}
+		}
+		return nil, nil
+	})
+}
+
+// serveWith 统一请求处理流程
+func (s *Server) serveWith(
+	request *http.Request,
+	writer http.ResponseWriter,
+	exec func(ctx context.Context, msg *message.Message) (*reply.Reply, error),
+) {
 	params, encrypt := s.parseRequest(request)
-	if encrypt == nil {
-		return
-	}
 
 	if !encrypt.ValidSignature(params.timestamp, params.nonce, params.signature) {
 		log.Println("signature is invalid")
@@ -125,8 +153,7 @@ func (s *Server) Dispatch(
 		}
 
 		ctx := request.Context()
-		wrapped := s.applyMiddleware(handler)
-		r, err := wrapped(ctx, s.account, messageBody)
+		r, err := exec(ctx, messageBody)
 		if err != nil {
 			log.Printf("handler error: %+v", err)
 			_, _ = writer.Write([]byte(SuccessEmptyResponse))
@@ -136,51 +163,6 @@ func (s *Server) Dispatch(
 		if r != nil {
 			s.writeReply(writer, encrypt, params, messageBody, r)
 			return
-		}
-	}
-
-	_, _ = writer.Write([]byte(SuccessEmptyResponse))
-}
-
-// Serve 处理微信回调请求
-func (s *Server) Serve(request *http.Request, writer http.ResponseWriter) {
-	params, encrypt := s.parseRequest(request)
-	if encrypt == nil {
-		return
-	}
-
-	if !encrypt.ValidSignature(params.timestamp, params.nonce, params.signature) {
-		log.Println("signature is invalid")
-		return
-	}
-
-	if e := request.FormValue(EchoStr); e != "" {
-		s.handleEchoStr(writer, encrypt, params, e)
-		return
-	}
-
-	if request.Method == http.MethodPost {
-		messageBody := s.decryptMessage(request, encrypt, params)
-		if messageBody == nil {
-			_, _ = writer.Write([]byte(SuccessEmptyResponse))
-			return
-		}
-
-		ctx := request.Context()
-		handlers := s.matchHandlers(messageBody)
-
-		for _, handler := range handlers {
-			wrapped := s.applyMiddleware(handler)
-			r, err := wrapped(ctx, s.account, messageBody)
-			if err != nil {
-				log.Printf("handler error: %+v", err)
-				_, _ = writer.Write([]byte(SuccessEmptyResponse))
-				return
-			}
-			if r != nil {
-				s.writeReply(writer, encrypt, params, messageBody, r)
-				return
-			}
 		}
 	}
 

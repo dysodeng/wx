@@ -179,3 +179,64 @@ type getUseridResult struct {
 	kernelError.ApiError
 	Userid string `json:"userid"`
 }
+
+// ========== 部门管理相关类型 ==========
+
+// CreateDepartmentRequest 创建部门请求
+type CreateDepartmentRequest struct {
+	Name     string `json:"name"`
+	NameEn   string `json:"name_en,omitempty"`
+	Parentid int    `json:"parentid"`
+	Order    int    `json:"order,omitempty"`
+	Id       int    `json:"id,omitempty"`
+}
+
+// UpdateDepartmentRequest 更新部门请求
+type UpdateDepartmentRequest struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name,omitempty"`
+	NameEn   string `json:"name_en,omitempty"`
+	Parentid int    `json:"parentid,omitempty"`
+	Order    int    `json:"order,omitempty"`
+}
+
+// DepartmentInfo 部门信息
+type DepartmentInfo struct {
+	Id               int      `json:"id"`
+	Name             string   `json:"name"`
+	NameEn           string   `json:"name_en"`
+	DepartmentLeader []string `json:"department_leader"`
+	Parentid         int      `json:"parentid"`
+	Order            int      `json:"order"`
+}
+
+// DepartmentIdInfo 子部门ID信息
+type DepartmentIdInfo struct {
+	Id       int `json:"id"`
+	Parentid int `json:"parentid"`
+	Order    int `json:"order"`
+}
+
+// createDepartmentResult 创建部门响应
+type createDepartmentResult struct {
+	kernelError.ApiError
+	Id int `json:"id"`
+}
+
+// departmentListResult 获取部门列表响应
+type departmentListResult struct {
+	kernelError.ApiError
+	Department []DepartmentInfo `json:"department"`
+}
+
+// departmentIdListResult 获取子部门ID列表响应
+type departmentIdListResult struct {
+	kernelError.ApiError
+	DepartmentId []DepartmentIdInfo `json:"department_id"`
+}
+
+// departmentGetResult 获取单个部门详情响应
+type departmentGetResult struct {
+	kernelError.ApiError
+	Department DepartmentInfo `json:"department"`
+}

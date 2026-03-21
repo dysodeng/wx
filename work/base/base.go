@@ -21,9 +21,14 @@ func (b *Base) AccountId() *account_id.AccountId {
 	return account_id.New(b.account)
 }
 
-// Contact 通讯录管理-成员管理
-func (b *Base) Contact() *contact.User {
+// User 通讯录管理-成员管理
+func (b *Base) User() *contact.User {
 	return contact.NewUser(b.account)
+}
+
+// Department 通讯录管理-部门管理
+func (b *Base) Department() *contact.Department {
+	return contact.NewDepartment(b.account)
 }
 
 // OAuth 身份验证-网页授权登录

@@ -330,3 +330,30 @@ type batchResultResponse struct {
 	kernelError.ApiError
 	BatchResult
 }
+
+// ========== 异步导出相关类型 ==========
+
+// ExportDataItem 导出文件项
+type ExportDataItem struct {
+	Url  string `json:"url"`
+	Size int    `json:"size"`
+	Md5  string `json:"md5"`
+}
+
+// ExportResult 导出结果
+type ExportResult struct {
+	Status   int              `json:"status"`
+	DataList []ExportDataItem `json:"data_list"`
+}
+
+// exportJobResult 导出任务响应
+type exportJobResult struct {
+	kernelError.ApiError
+	JobId string `json:"jobid"`
+}
+
+// exportResultResponse 获取导出结果响应
+type exportResultResponse struct {
+	kernelError.ApiError
+	ExportResult
+}

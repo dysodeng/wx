@@ -42,7 +42,7 @@ func New(corpId, secret, token, aesKey string, opts ...Option) *Work {
 
 // Base 基础模块
 func (w *Work) Base() *base.Base {
-	return base.New(w)
+	return base.New(w, w.config.token, w.config.aesKey)
 }
 
 // MiniProgram 小程序

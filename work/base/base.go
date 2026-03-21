@@ -9,11 +9,17 @@ import (
 
 // Base 企业微信基础模块
 type Base struct {
+	token   string
+	aesKey  string
 	account contracts.AccountInterface
 }
 
-func New(account contracts.AccountInterface) *Base {
-	return &Base{account: account}
+func New(account contracts.AccountInterface, token, aesKey string) *Base {
+	return &Base{
+		token:   token,
+		aesKey:  aesKey,
+		account: account,
+	}
 }
 
 // AccountId 账号ID
@@ -23,7 +29,7 @@ func (b *Base) AccountId() *account_id.AccountId {
 
 // Contact 通讯录管理
 func (b *Base) Contact() *contact.Contact {
-	return contact.New(b.account)
+	return contact.New(b.account, b.token, b.aesKey)
 }
 
 // OAuth 身份验证-网页授权登录

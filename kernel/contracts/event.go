@@ -1,11 +1,14 @@
 package contracts
 
 import (
+	"context"
+
 	"github.com/dysodeng/wx/kernel/message"
 	"github.com/dysodeng/wx/kernel/message/reply"
 )
 
-// EventHandlerInterface 事件处理器接口
-type EventHandlerInterface interface {
-	Handle(account AccountInterface, messageBody *message.Message) *reply.Reply
-}
+// EventHandler 事件处理函数
+type EventHandler func(ctx context.Context, account AccountInterface, msg *message.Message) (*reply.Reply, error)
+
+// Middleware 中间件
+type Middleware func(next EventHandler) EventHandler

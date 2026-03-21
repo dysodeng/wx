@@ -1,66 +1,66 @@
 package event
 
-// Guard 事件处理类型
-type Guard string
+// EventType 事件处理类型
+type EventType string
 
 const (
-	All Guard = "*"
+	All EventType = "*"
 
 	// 公众号事件消息
-	Event     Guard = "event"
-	Subscribe Guard = "subscribe"
-	Scan      Guard = "scan"
-	Location  Guard = "location"
+	Event     EventType = "event"
+	Subscribe EventType = "subscribe"
+	Scan      EventType = "scan"
+	Location  EventType = "location"
 
 	// 公众号菜单事件消息
-	Click           Guard = "click"
-	View            Guard = "view"
-	ScancodePush    Guard = "scancode_push"
-	ScancodeWaitMsg Guard = "scancode_waitmsg"
-	PicSysPhoto     Guard = "pic_sysphoto"
-	PicPhotoOrAlbum Guard = "pic_photo_or_album"
-	PicWeiXin       Guard = "pic_weixin"
-	LocationSelect  Guard = "location_select"
-	ViewMiniProgram Guard = "view_miniprogram"
+	Click           EventType = "click"
+	View            EventType = "view"
+	ScancodePush    EventType = "scancode_push"
+	ScancodeWaitMsg EventType = "scancode_waitmsg"
+	PicSysPhoto     EventType = "pic_sysphoto"
+	PicPhotoOrAlbum EventType = "pic_photo_or_album"
+	PicWeiXin       EventType = "pic_weixin"
+	LocationSelect  EventType = "location_select"
+	ViewMiniProgram EventType = "view_miniprogram"
 
 	// 公众号对话能力事件消息
-	GuideQrcodeScanEvent Guard = "guide_qrcode_scan_event"
+	GuideQrcodeScanEvent EventType = "guide_qrcode_scan_event"
 
 	// 公众号群发事件消息
-	MassSendJobFinish Guard = "masssendjobfinish"
-	PublishJobFinish  Guard = "publishjobfinish"
+	MassSendJobFinish EventType = "masssendjobfinish"
+	PublishJobFinish  EventType = "publishjobfinish"
 
 	// 微信认证通知事件消息
-	QualificationVerifySuccess Guard = "qualification_verify_success"
-	QualificationVerifyFail    Guard = "qualification_verify_fail"
-	NamingVerifySuccess        Guard = "naming_verify_success"
-	NamingVerifyFail           Guard = "naming_verify_fail"
-	AnnualRenew                Guard = "annual_renew"
-	VerifyExpired              Guard = "verify_expired"
+	QualificationVerifySuccess EventType = "qualification_verify_success"
+	QualificationVerifyFail    EventType = "qualification_verify_fail"
+	NamingVerifySuccess        EventType = "naming_verify_success"
+	NamingVerifyFail           EventType = "naming_verify_fail"
+	AnnualRenew                EventType = "annual_renew"
+	VerifyExpired              EventType = "verify_expired"
 
 	// 微信卡券事件消息
-	CardPassCheck            Guard = "card_pass_check"
-	CardNotPassCheck         Guard = "card_not_pass_check"
-	UserGetCard              Guard = "user_get_card"
-	UserGiftingCard          Guard = "user_gifting_card"
-	UserDelCard              Guard = "user_del_card"
-	UserConsumeCard          Guard = "user_consume_card"
-	UserPayFromPayCell       Guard = "user_pay_from_pay_cell"
-	UserViewCard             Guard = "user_view_card"
-	UserEnterSessionFromCard Guard = "user_enter_session_from_card"
-	UpdateMemberCard         Guard = "update_member_card"
-	CardSkuRemind            Guard = "card_sku_remind"
-	CardPayOrder             Guard = "card_pay_order"
-	SubmitMemberCardUserInfo Guard = "submit_membercard_user_info"
+	CardPassCheck            EventType = "card_pass_check"
+	CardNotPassCheck         EventType = "card_not_pass_check"
+	UserGetCard              EventType = "user_get_card"
+	UserGiftingCard          EventType = "user_gifting_card"
+	UserDelCard              EventType = "user_del_card"
+	UserConsumeCard          EventType = "user_consume_card"
+	UserPayFromPayCell       EventType = "user_pay_from_pay_cell"
+	UserViewCard             EventType = "user_view_card"
+	UserEnterSessionFromCard EventType = "user_enter_session_from_card"
+	UpdateMemberCard         EventType = "update_member_card"
+	CardSkuRemind            EventType = "card_sku_remind"
+	CardPayOrder             EventType = "card_pay_order"
+	SubmitMemberCardUserInfo EventType = "submit_membercard_user_info"
 
 	// 开放平台事件
-	Authorized               Guard = "authorized"
-	Unauthorized             Guard = "unauthorized"
-	UpdateAuthorized         Guard = "updateauthorized"
-	ComponentVerifyTicket    Guard = "component_verify_ticket"
-	NotifyThirdFasteRegister Guard = "notify_third_fasteregister"
-	WxaNicknameAudit         Guard = "wxa_nickname_audit"
-	WeAppAuditSuccess        Guard = "weapp_audit_success"
-	WeAppAuditFail           Guard = "weapp_audit_fail"
-	WeAppAuditDelay          Guard = "weapp_audit_delay"
+	Authorized               EventType = "authorized"
+	Unauthorized             EventType = "unauthorized"
+	UpdateAuthorized         EventType = "updateauthorized"
+	ComponentVerifyTicket    EventType = "component_verify_ticket"
+	NotifyThirdFasteRegister EventType = "notify_third_fasteregister"
+	WxaNicknameAudit         EventType = "wxa_nickname_audit"
+	WeAppAuditSuccess        EventType = "weapp_audit_success"
+	WeAppAuditFail           EventType = "weapp_audit_fail"
+	WeAppAuditDelay          EventType = "weapp_audit_delay"
 )

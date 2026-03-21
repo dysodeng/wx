@@ -7,6 +7,9 @@ import (
 
 // Message 消息体
 type Message struct {
+	// 原始 XML 数据，供平台特定解析使用
+	RawBody []byte `xml:"-"`
+
 	// 消息头
 	XMLName      xml.Name `xml:"xml"`
 	ToUserName   string
@@ -50,6 +53,9 @@ type Message struct {
 
 	MenuId string // 菜单ID
 
+	// 开放平台消息路由字段
+	InfoType string
+
 	// 位置上报事件
 	Latitude  string
 	Longitude string
@@ -58,28 +64,6 @@ type Message struct {
 	// 模板消息发送事件
 	MsgID  int64  // 模板消息ID
 	Status string // 模板消息发送状态
-
-	// 开放平台
-	AppId                 string
-	InfoType              string
-	ComponentVerifyTicket string
-
-	// 开放平台授权事件
-	AuthorizerAppid              string
-	AuthorizationCode            string
-	AuthorizationCodeExpiredTime int64
-	PreAuthCode                  string
-
-	Ret      int    `xml:"ret"`
-	Nickname string `xml:"nickname"`
-	Reason   string `xml:"reason"`
-	First    int64  `xml:"first"`
-	Second   int64  `xml:"second"`
-
-	SuccTime   int64
-	FailTime   int64
-	DelayTime  int64
-	ScreenShot string
 }
 
 // Header 消息头
@@ -89,6 +73,7 @@ type Header struct {
 	CreateTime   time.Duration
 	MsgType      string
 	MsgId        int64
+	AgentID      string
 }
 
 // Text 文本消息
@@ -203,20 +188,18 @@ func (m *Message) Link() *Link {
 // EventMessage 事件消息
 func (m *Message) EventMessage() *Event {
 	return &Event{
-		Event:                           m.Event,
-		EventKey:                        m.EventKey,
-		Ticket:                          m.Ticket,
-		MsgID:                           m.MsgID,
-		Status:                          m.Status,
-		Latitude:                        m.Latitude,
-		Longitude:                       m.Longitude,
-		Precision:                       m.Precision,
-		AppId:                           m.AppId,
-		InfoType:                        m.InfoType,
-		AuthorizerComponentVerifyTicket: m.ComponentVerifyTicket,
-		AuthorizerAppid:                 m.AuthorizerAppid,
-		AuthorizationCode:               m.AuthorizationCode,
-		AuthorizationCodeExpiredTime:    m.AuthorizationCodeExpiredTime,
-		PreAuthCode:                     m.PreAuthCode,
+		Event:     m.Event,
+		EventKey:  m.EventKey,
+		Ticket:    m.Ticket,
+		MsgID:     m.MsgID,
+		Status:    m.Status,
+		Latitude:  m.Latitude,
+		Longitude: m.Longitude,
+		Precision: m.Precision,
 	}
+}
+
+// OpenPlatformEvent 开放平台事件消息
+func (m *Message) OpenPlatformEvent() *OpenPlatformEvent {
+	return parseOpenPlatformEvent(m.RawBody)
 }

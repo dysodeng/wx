@@ -66,12 +66,11 @@ func (open *OpenPlatform) handleComponentVerifyTicket(
 	account contracts.AccountInterface,
 	msg *message.Message,
 ) (*reply.Reply, error) {
-	e := msg.EventMessage()
-	verifyTicket := e.ComponentVerifyTicket()
-	if verifyTicket.ComponentVerifyTicket != "" {
+	e := msg.OpenPlatformEvent()
+	if e != nil && e.ComponentVerifyTicket != "" {
 		c, cacheKeyPrefix := account.Cache()
-		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, verifyTicket.AppId)
-		_ = c.Put(cacheKey, verifyTicket.ComponentVerifyTicket, time.Second*42600)
+		cacheKey := cacheKeyPrefix + fmt.Sprintf(componentVerifyTicketCacheKey, e.AppId)
+		_ = c.Put(cacheKey, e.ComponentVerifyTicket, time.Second*42600)
 	}
 	return nil, nil
 }

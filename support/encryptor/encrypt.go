@@ -133,6 +133,7 @@ func (e *Encryptor) ParseTextBody(r *http.Request) (*message.Message, error) {
 
 	messageBody := &message.Message{}
 	_ = xml.Unmarshal(body, messageBody)
+	messageBody.RawBody = body
 
 	return messageBody, nil
 }
@@ -236,7 +237,9 @@ func (e *Encryptor) ParseEncryptTextBody(plainText []byte) (*message.Message, er
 		return nil, errors.New("appid is invalid")
 	}
 
+	xmlData := plainText[20 : 20+length]
 	messageBody := &message.Message{}
-	_ = xml.Unmarshal(plainText[20:20+length], messageBody)
+	_ = xml.Unmarshal(xmlData, messageBody)
+	messageBody.RawBody = xmlData
 	return messageBody, nil
 }

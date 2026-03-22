@@ -28,7 +28,9 @@ type SendRequest struct {
 
 // Text 文本消息
 type Text struct {
-	Content string `json:"content"`
+	Content             string   `json:"content"`
+	MentionedList       []string `json:"mentioned_list,omitempty"`
+	MentionedMobileList []string `json:"mentioned_mobile_list,omitempty"`
 }
 
 // Image 图片消息

@@ -396,63 +396,53 @@ result, err := exp.GetResult(jobId)
 ### 发送消息
 
 ```go
-msg := w.Message()
-
 // 发送文本消息
-result, err := msg.Send(message.SendRequest{
+result, err := w.Message().Send(message.SendOption{
     ToUser:  "zhangsan|lisi",
-    MsgType: "text",
     AgentId: 1000002,
-    Text:    &message.Text{Content: "你好"},
-})
+}, &message.Text{Content: "你好"})
 
 // 发送图片消息
-result, err = msg.Send(message.SendRequest{
+result, err = w.Message().Send(message.SendOption{
     ToUser:  "zhangsan",
-    MsgType: "image",
     AgentId: 1000002,
-    Image:   &message.Image{MediaId: "media_id"},
-})
+}, &message.Image{MediaId: "media_id"})
 
 // 发送文件消息
-result, err = msg.Send(message.SendRequest{
+result, err = w.Message().Send(message.SendOption{
     ToUser:  "zhangsan",
-    MsgType: "file",
     AgentId: 1000002,
-    File:    &message.File{MediaId: "media_id"},
-})
+}, &message.File{MediaId: "media_id"})
 
 // 发送文本卡片消息
-result, err = msg.Send(message.SendRequest{
+result, err = w.Message().Send(message.SendOption{
     ToUser:  "zhangsan",
-    MsgType: "textcard",
     AgentId: 1000002,
-    TextCard: &message.TextCard{
-        Title:       "标题",
-        Description: "描述",
-        Url:         "https://example.com",
-        BtnTxt:      "详情",
-    },
+}, &message.TextCard{
+    Title:       "标题",
+    Description: "描述",
+    Url:         "https://example.com",
+    BtnTxt:      "详情",
 })
 
 // 发送Markdown消息
-result, err = msg.Send(message.SendRequest{
+result, err = w.Message().Send(message.SendOption{
     ToUser:  "zhangsan",
-    MsgType: "markdown",
     AgentId: 1000002,
-    Markdown: &message.Markdown{
-        Content: "# 标题\n> 引用\n**加粗**",
-    },
+}, &message.Markdown{
+    Content: "# 标题\n> 引用\n**加粗**",
 })
 
 // 撤回消息
-err = msg.Recall(result.MsgId)
+err = w.Message().Recall(result.MsgId)
 ```
+
+所有消息类型均实现了 `Messenger` 接口，支持的类型：`Text`、`Image`、`Voice`、`Video`、`File`、`TextCard`、`News`、`MpNews`、`Markdown`、`MiniProgramNotice`、`TemplateCard`。
 
 ### 群聊消息
 
 ```go
-chat := msg.Chat()
+chat := w.Message().Chat()
 
 // 创建群聊
 chatId, err := chat.Create(message.CreateChatRequest{
@@ -471,12 +461,25 @@ err = chat.Update(message.UpdateChatRequest{
     AddUserList: []string{"zhaoliu"},
 })
 
-// 向群聊发送消息
-err = chat.Send(message.ChatSendRequest{
-    ChatId:  chatId,
-    MsgType: "text",
-    Text:    &message.Text{Content: "群消息"},
+// 向群聊发送文本消息（支持@群成员）
+err = chat.Send(chatId, &message.Text{
+    Content:       "你的快递已到\n请携带工卡前往邮件中心领取",
+    MentionedList: []string{"wangqing", "@all"},
 })
+
+// 向群聊发送图片消息
+err = chat.Send(chatId, &message.Image{MediaId: "media_id"})
+
+// 向群聊发送文本卡片消息
+err = chat.Send(chatId, &message.TextCard{
+    Title:       "领奖通知",
+    Description: "恭喜你抽中iPhone一台",
+    Url:         "https://work.weixin.qq.com/",
+    BtnTxt:      "更多",
+})
+
+// 发送保密消息（safe=1）
+err = chat.Send(chatId, &message.Text{Content: "保密内容"}, 1)
 ```
 
 ## 身份验证

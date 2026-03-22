@@ -93,14 +93,23 @@ func (c *Chat) Get(chatId string) (*ChatInfo, error) {
 }
 
 // Send 应用推送消息到群聊会话
-func (c *Chat) Send(req ChatSendRequest) error {
+func (c *Chat) Send(chatId string, msg Messenger, safe ...int) error {
 	accessToken, err := c.message.account.AccessToken()
 	if err != nil {
 		return kernelError.New(0, err)
 	}
 
+	body := map[string]interface{}{
+		"chatid":      chatId,
+		"msgtype":     msg.MsgType(),
+		msg.MsgType(): msg,
+	}
+	if len(safe) > 0 && safe[0] > 0 {
+		body["safe"] = safe[0]
+	}
+
 	apiUrl := fmt.Sprintf("cgi-bin/appchat/send?access_token=%s", accessToken.AccessToken)
-	res, err := http.PostJSON(apiUrl, req)
+	res, err := http.PostJSON(apiUrl, body)
 	if err != nil {
 		return kernelError.New(0, err)
 	}

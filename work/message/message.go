@@ -24,14 +24,41 @@ func (m *Message) Chat() *Chat {
 }
 
 // Send 发送应用消息
-func (m *Message) Send(req SendRequest) (*SendResult, error) {
+func (m *Message) Send(opt SendOption, msg Messenger) (*SendResult, error) {
 	accessToken, err := m.account.AccessToken()
 	if err != nil {
 		return nil, kernelError.New(0, err)
 	}
 
+	body := map[string]interface{}{
+		"msgtype":     msg.MsgType(),
+		"agentid":     opt.AgentId,
+		msg.MsgType(): msg,
+	}
+	if opt.ToUser != "" {
+		body["touser"] = opt.ToUser
+	}
+	if opt.ToParty != "" {
+		body["toparty"] = opt.ToParty
+	}
+	if opt.ToTag != "" {
+		body["totag"] = opt.ToTag
+	}
+	if opt.Safe > 0 {
+		body["safe"] = opt.Safe
+	}
+	if opt.EnableIdTrans > 0 {
+		body["enable_id_trans"] = opt.EnableIdTrans
+	}
+	if opt.EnableDuplicateCheck > 0 {
+		body["enable_duplicate_check"] = opt.EnableDuplicateCheck
+	}
+	if opt.DuplicateCheckInterval > 0 {
+		body["duplicate_check_interval"] = opt.DuplicateCheckInterval
+	}
+
 	apiUrl := fmt.Sprintf("cgi-bin/message/send?access_token=%s", accessToken.AccessToken)
-	res, err := http.PostJSON(apiUrl, req)
+	res, err := http.PostJSON(apiUrl, body)
 	if err != nil {
 		return nil, kernelError.New(0, err)
 	}

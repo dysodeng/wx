@@ -2,28 +2,21 @@ package message
 
 import kernelError "github.com/dysodeng/wx/kernel/error"
 
-// SendRequest 发送应用消息请求
-type SendRequest struct {
-	ToUser                 string             `json:"touser,omitempty"`
-	ToParty                string             `json:"toparty,omitempty"`
-	ToTag                  string             `json:"totag,omitempty"`
-	MsgType                string             `json:"msgtype"`
-	AgentId                int64              `json:"agentid"`
-	Text                   *Text              `json:"text,omitempty"`
-	Image                  *Image             `json:"image,omitempty"`
-	Voice                  *Voice             `json:"voice,omitempty"`
-	Video                  *Video             `json:"video,omitempty"`
-	File                   *File              `json:"file,omitempty"`
-	TextCard               *TextCard          `json:"textcard,omitempty"`
-	News                   *News              `json:"news,omitempty"`
-	MpNews                 *MpNews            `json:"mpnews,omitempty"`
-	Markdown               *Markdown          `json:"markdown,omitempty"`
-	MiniProgramNotice      *MiniProgramNotice `json:"miniprogram_notice,omitempty"`
-	TemplateCard           *TemplateCard      `json:"template_card,omitempty"`
-	Safe                   int                `json:"safe,omitempty"`
-	EnableIdTrans          int                `json:"enable_id_trans,omitempty"`
-	EnableDuplicateCheck   int                `json:"enable_duplicate_check,omitempty"`
-	DuplicateCheckInterval int                `json:"duplicate_check_interval,omitempty"`
+// Messenger 消息接口
+type Messenger interface {
+	MsgType() string
+}
+
+// SendOption 发送应用消息选项
+type SendOption struct {
+	ToUser                 string `json:"touser,omitempty"`
+	ToParty                string `json:"toparty,omitempty"`
+	ToTag                  string `json:"totag,omitempty"`
+	AgentId                int64  `json:"agentid"`
+	Safe                   int    `json:"safe,omitempty"`
+	EnableIdTrans          int    `json:"enable_id_trans,omitempty"`
+	EnableDuplicateCheck   int    `json:"enable_duplicate_check,omitempty"`
+	DuplicateCheckInterval int    `json:"duplicate_check_interval,omitempty"`
 }
 
 // Text 文本消息
@@ -33,15 +26,21 @@ type Text struct {
 	MentionedMobileList []string `json:"mentioned_mobile_list,omitempty"`
 }
 
+func (t *Text) MsgType() string { return "text" }
+
 // Image 图片消息
 type Image struct {
 	MediaId string `json:"media_id"`
 }
 
+func (i *Image) MsgType() string { return "image" }
+
 // Voice 语音消息
 type Voice struct {
 	MediaId string `json:"media_id"`
 }
+
+func (v *Voice) MsgType() string { return "voice" }
 
 // Video 视频消息
 type Video struct {
@@ -50,10 +49,14 @@ type Video struct {
 	Description string `json:"description,omitempty"`
 }
 
+func (v *Video) MsgType() string { return "video" }
+
 // File 文件消息
 type File struct {
 	MediaId string `json:"media_id"`
 }
+
+func (f *File) MsgType() string { return "file" }
 
 // TextCard 文本卡片消息
 type TextCard struct {
@@ -62,6 +65,8 @@ type TextCard struct {
 	Url         string `json:"url"`
 	BtnTxt      string `json:"btntxt,omitempty"`
 }
+
+func (tc *TextCard) MsgType() string { return "textcard" }
 
 // NewsArticle 图文消息-文章
 type NewsArticle struct {
@@ -78,6 +83,8 @@ type News struct {
 	Articles []NewsArticle `json:"articles"`
 }
 
+func (n *News) MsgType() string { return "news" }
+
 // MpNewsArticle mpnews图文消息-文章
 type MpNewsArticle struct {
 	Title            string `json:"title"`
@@ -93,10 +100,14 @@ type MpNews struct {
 	Articles []MpNewsArticle `json:"articles"`
 }
 
+func (m *MpNews) MsgType() string { return "mpnews" }
+
 // Markdown markdown消息
 type Markdown struct {
 	Content string `json:"content"`
 }
+
+func (md *Markdown) MsgType() string { return "markdown" }
 
 // MiniProgramNotice 小程序通知消息
 type MiniProgramNotice struct {
@@ -107,6 +118,8 @@ type MiniProgramNotice struct {
 	EmphasisFirstItem bool                    `json:"emphasis_first_item,omitempty"`
 	ContentItem       []MiniProgramNoticeItem `json:"content_item,omitempty"`
 }
+
+func (mp *MiniProgramNotice) MsgType() string { return "miniprogram_notice" }
 
 // MiniProgramNoticeItem 小程序通知消息-内容项
 type MiniProgramNoticeItem struct {
@@ -136,6 +149,8 @@ type TemplateCard struct {
 	CardImage             *TemplateCardCardImage          `json:"card_image,omitempty"`
 	VerticalContentList   []TemplateCardVerticalContent   `json:"vertical_content_list,omitempty"`
 }
+
+func (tc *TemplateCard) MsgType() string { return "template_card" }
 
 // TemplateCardSource 模版卡片-来源
 type TemplateCardSource struct {
@@ -376,20 +391,4 @@ type ChatInfo struct {
 type getChatResponse struct {
 	kernelError.ApiError
 	ChatInfo ChatInfo `json:"chat_info"`
-}
-
-// ChatSendRequest 应用推送消息到群聊会话请求
-type ChatSendRequest struct {
-	ChatId   string    `json:"chatid"`
-	MsgType  string    `json:"msgtype"`
-	Text     *Text     `json:"text,omitempty"`
-	Image    *Image    `json:"image,omitempty"`
-	Voice    *Voice    `json:"voice,omitempty"`
-	Video    *Video    `json:"video,omitempty"`
-	File     *File     `json:"file,omitempty"`
-	TextCard *TextCard `json:"textcard,omitempty"`
-	News     *News     `json:"news,omitempty"`
-	MpNews   *MpNews   `json:"mpnews,omitempty"`
-	Markdown *Markdown `json:"markdown,omitempty"`
-	Safe     int       `json:"safe,omitempty"`
 }

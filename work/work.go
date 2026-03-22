@@ -7,6 +7,7 @@ import (
 	"github.com/dysodeng/wx/work/account_id"
 	"github.com/dysodeng/wx/work/auth"
 	"github.com/dysodeng/wx/work/contact"
+	"github.com/dysodeng/wx/work/customer"
 	"github.com/dysodeng/wx/work/media"
 	"github.com/dysodeng/wx/work/message"
 	"github.com/dysodeng/wx/work/mini_program"
@@ -58,6 +59,11 @@ func (w *Work) AccountId() *account_id.AccountId {
 // Contact 通讯录管理
 func (w *Work) Contact() *contact.Contact {
 	return contact.New(w, w.config.token, w.config.aesKey)
+}
+
+// Customer 客户管理
+func (w *Work) Customer() *customer.Customer {
+	return customer.NewCustomer(w)
 }
 
 // Media 素材管理

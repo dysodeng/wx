@@ -135,9 +135,12 @@ func (s *Server) serveWith(
 ) {
 	params, encrypt := s.parseRequest(request)
 
-	if !encrypt.ValidSignature(params.timestamp, params.nonce, params.signature) {
-		log.Println("signature is invalid")
-		return
+	// 公众号使用signature验签，企业微信使用msg_signature在后续流程中验签
+	if s.encryptMode != EncryptModeAES {
+		if !encrypt.ValidSignature(params.timestamp, params.nonce, params.signature) {
+			log.Println("signature is invalid")
+			return
+		}
 	}
 
 	if e := request.FormValue(EchoStr); e != "" {
@@ -218,7 +221,13 @@ func (s *Server) handleEchoStr(writer http.ResponseWriter, encrypt *encryptor.En
 			log.Println("Aes decrypt error:", err)
 			return
 		}
-		_, _ = writer.Write(plainData)
+		// 从明文中提取msg内容（明文格式: random + msg_len + msg + receiveid）
+		msg, err := encrypt.ExtractMsg(plainData)
+		if err != nil {
+			log.Println("Extract msg error:", err)
+			return
+		}
+		_, _ = writer.Write(msg)
 	default:
 		// 公众号：直接返回明文echostr
 		_, _ = writer.Write([]byte(echoStr))

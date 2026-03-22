@@ -32,6 +32,19 @@ func PKCS7Pad(message []byte, blockSize int) (padded []byte) {
 	panic("unsupported block size")
 }
 
+// PKCS7Unpad 去除PKCS7填充
+func PKCS7Unpad(data []byte) []byte {
+	length := len(data)
+	if length == 0 {
+		return data
+	}
+	padLen := int(data[length-1])
+	if padLen > length || padLen == 0 {
+		return data
+	}
+	return data[:length-padLen]
+}
+
 // value2CDATA 值转换为CDATA
 func value2CDATA(value string) CDATAText {
 	return CDATAText{"<![CDATA[" + value + "]]>"}

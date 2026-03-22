@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/binary"
@@ -184,10 +183,8 @@ func (e *Encryptor) AesEncrypt(plainData []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	iv := make([]byte, aes.BlockSize)
-	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
+	// IV 为 AESKey 的前16字节
+	iv := aesKey[:aes.BlockSize]
 
 	cipherData := make([]byte, len(plainData))
 	blockMode := cipher.NewCBCEncrypter(block, iv)
@@ -199,7 +196,7 @@ func (e *Encryptor) AesEncrypt(plainData []byte) ([]byte, error) {
 // AesDecrypt 解密
 func (e *Encryptor) AesDecrypt(cipherData []byte) ([]byte, error) {
 	aesKey := []byte(e.aesKey)
-	k := len(aesKey) // PKCS#7
+	k := len(aesKey)
 	if len(cipherData)%k != 0 {
 		return nil, errors.New("crypto/cipher: ciphertext size is not multiple of aes key length")
 	}
@@ -209,14 +206,16 @@ func (e *Encryptor) AesDecrypt(cipherData []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	iv := make([]byte, aes.BlockSize)
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
+	// IV 为 AESKey 的前16字节
+	iv := aesKey[:aes.BlockSize]
 
 	blockMode := cipher.NewCBCDecrypter(block, iv)
 	plainData := make([]byte, len(cipherData))
 	blockMode.CryptBlocks(plainData, cipherData)
+
+	// 去除 PKCS#7 填充
+	plainData = PKCS7Unpad(plainData)
+
 	return plainData, nil
 }
 
@@ -242,4 +241,15 @@ func (e *Encryptor) ParseEncryptTextBody(plainText []byte) (*message.Message, er
 	_ = xml.Unmarshal(xmlData, messageBody)
 	messageBody.RawBody = xmlData
 	return messageBody, nil
+}
+
+// ExtractMsg 从解密后的明文中提取 msg 内容
+// 明文格式: random(16字节) + msg_len(4字节) + msg + receiveid
+func (e *Encryptor) ExtractMsg(plainText []byte) ([]byte, error) {
+	buf := bytes.NewBuffer(plainText[16:20])
+	var length int32
+	if err := binary.Read(buf, binary.BigEndian, &length); err != nil {
+		return nil, err
+	}
+	return plainText[20 : 20+length], nil
 }

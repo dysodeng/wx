@@ -161,10 +161,14 @@ func (js *Jssdk) refreshTicket(ticketType string) Ticket {
 	cache, cacheKeyPrefix := js.account.Cache()
 	cacheKey := cacheKeyPrefix + js.getTicketCacheKey(ticketType)
 
+	expiration := result.Ticket.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.Ticket.ExpiresIn
+	}
 	_ = cache.Put(
 		cacheKey,
 		string(ticketByte),
-		time.Second*time.Duration(result.Ticket.ExpiresIn-600), // 提前过期
+		time.Second*time.Duration(expiration),
 	)
 
 	return result.Ticket

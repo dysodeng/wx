@@ -75,16 +75,23 @@ func (oauth *OAuth) LoginCodeAccessToken(code string) (*BaseUserInfo, error) {
 
 	var result accessToken
 	err = json.Unmarshal(res, &result)
-	if err == nil && result.ErrCode != 0 {
+	if err != nil {
+		return nil, kernelError.New(0, err)
+	}
+	if result.ErrCode != 0 {
 		return nil, kernelError.NewWithApiError(result.ApiError)
 	}
 
 	cache, _ := oauth.account.Cache()
 	// 保存accessToken
+	expiration := result.AccessToken.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.AccessToken.ExpiresIn
+	}
 	err = cache.Put(
 		oauth.account.AccessTokenCacheKey()+":app_user_access_token:"+result.OpenID,
 		result.AccessToken.AccessToken,
-		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
+		time.Second*time.Duration(expiration),
 	)
 	if err != nil {
 		return nil, kernelError.New(0, err)
@@ -188,15 +195,22 @@ func (oauth *OAuth) refreshAccessToken(openid string) (string, error) {
 
 	var result accessToken
 	err = json.Unmarshal(res, &result)
-	if err == nil && result.ErrCode != 0 {
+	if err != nil {
+		return "", kernelError.New(0, err)
+	}
+	if result.ErrCode != 0 {
 		return "", kernelError.NewWithApiError(result.ApiError)
 	}
 
 	// 保存accessToken
+	expiration := result.AccessToken.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.AccessToken.ExpiresIn
+	}
 	err = cache.Put(
 		oauth.account.AccessTokenCacheKey()+":app_user_access_token:"+result.OpenID,
 		result.AccessToken.AccessToken,
-		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
+		time.Second*time.Duration(expiration),
 	)
 	if err != nil {
 		return "", kernelError.New(0, err)

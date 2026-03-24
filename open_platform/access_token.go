@@ -65,7 +65,10 @@ func (open *OpenPlatform) refreshAccessToken() (contracts.AccessToken, error) {
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
-	if err == nil && result.ErrCode != 0 {
+	if err != nil {
+		return contracts.AccessToken{}, kernelError.New(0, err)
+	}
+	if result.ErrCode != 0 {
 		return contracts.AccessToken{}, kernelError.New(result.ErrCode, errors.New(result.ErrMsg))
 	}
 
@@ -74,10 +77,14 @@ func (open *OpenPlatform) refreshAccessToken() (contracts.AccessToken, error) {
 		ExpiresIn:   result.ExpiresIn,
 	})
 
+	expiration := result.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.ExpiresIn
+	}
 	err = open.option.cache.Put(
 		open.AccessTokenCacheKey(),
 		string(tokenByte),
-		time.Second*time.Duration(result.ExpiresIn-600), // 提前过期
+		time.Second*time.Duration(expiration),
 	)
 	if err != nil {
 		return contracts.AccessToken{}, kernelError.New(0, err)
@@ -157,7 +164,10 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
-	if err == nil && result.ErrCode != 0 {
+	if err != nil {
+		return contracts.AccessToken{}, kernelError.New(0, err)
+	}
+	if result.ErrCode != 0 {
 		return contracts.AccessToken{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
@@ -166,10 +176,14 @@ func (open *OpenPlatform) refreshAuthorizerAccessToken(appId, authorizerRefreshT
 		ExpiresIn:   result.ExpiresIn,
 	})
 
+	expiration := result.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.ExpiresIn
+	}
 	err = open.option.cache.Put(
 		open.AuthorizerAccessTokenCacheKey(appId),
 		string(tokenByte),
-		time.Second*time.Duration(result.ExpiresIn-600), // 提前过期
+		time.Second*time.Duration(expiration),
 	)
 	if err != nil {
 		return contracts.AccessToken{}, kernelError.New(0, err)

@@ -70,7 +70,10 @@ func (official *Official) refreshAccessToken() (contracts.AccessToken, error) {
 	}
 	var result accessToken
 	err = json.Unmarshal(res, &result)
-	if err == nil && result.ErrCode != 0 {
+	if err != nil {
+		return contracts.AccessToken{}, kernelError.New(0, err)
+	}
+	if result.ErrCode != 0 {
 		return contracts.AccessToken{}, kernelError.NewWithApiError(result.ApiError)
 	}
 
@@ -79,10 +82,14 @@ func (official *Official) refreshAccessToken() (contracts.AccessToken, error) {
 		ExpiresIn:   result.AccessToken.ExpiresIn,
 	})
 
+	expiration := result.AccessToken.ExpiresIn - 600
+	if expiration <= 0 {
+		expiration = result.AccessToken.ExpiresIn
+	}
 	err = official.option.cache.Put(
 		official.AccessTokenCacheKey(),
 		string(tokenByte),
-		time.Second*time.Duration(result.AccessToken.ExpiresIn-600),
+		time.Second*time.Duration(expiration),
 	)
 	if err != nil {
 		return contracts.AccessToken{}, kernelError.New(0, err)

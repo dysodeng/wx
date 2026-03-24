@@ -6,6 +6,12 @@ type EventType string
 const (
 	All EventType = "*"
 
+	// 普通消息
+	Text  EventType = "text"
+	Image EventType = "image"
+	Voice EventType = "voice"
+	Video EventType = "video"
+
 	// 公众号事件消息
 	Event       EventType = "event"
 	Subscribe   EventType = "subscribe"

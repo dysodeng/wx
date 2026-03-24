@@ -15,3 +15,8 @@ func NewKf(account contracts.AccountInterface) *Kf {
 func (k *Kf) Account() *Account {
 	return NewAccount(k.account)
 }
+
+// Servicer 接待人员管理
+func (k *Kf) Servicer() *Servicer {
+	return NewServicer(k.account)
+}

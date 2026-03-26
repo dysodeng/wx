@@ -15,6 +15,11 @@ func (w *Work) AccessToken() (contracts.AccessToken, error) {
 }
 
 func (w *Work) accessToken(refresh bool) (contracts.AccessToken, error) {
+	// 外部AccessTokenProvider优先
+	if w.option.accessTokenProvider != nil {
+		return w.option.accessTokenProvider.GetAccessToken()
+	}
+
 cache:
 	if !refresh && w.option.cache.IsExist(w.AccessTokenCacheKey()) {
 		tokenString, err := w.option.cache.Get(w.AccessTokenCacheKey())

@@ -21,6 +21,11 @@ func (open *OpenPlatform) AccessToken() (contracts.AccessToken, error) {
 }
 
 func (open *OpenPlatform) accessToken(refresh bool) (contracts.AccessToken, error) {
+	// 外部AccessTokenProvider优先
+	if open.option.accessTokenProvider != nil {
+		return open.option.accessTokenProvider.GetAccessToken()
+	}
+
 cache:
 	if !refresh && open.option.cache.IsExist(open.AccessTokenCacheKey()) {
 		tokenString, err := open.option.cache.Get(open.AccessTokenCacheKey())

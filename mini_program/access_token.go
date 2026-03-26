@@ -16,6 +16,11 @@ func (mp *MiniProgram) AccessToken() (contracts.AccessToken, error) {
 
 // accessToken 获取/刷新token
 func (mp *MiniProgram) accessToken(refresh bool) (contracts.AccessToken, error) {
+	// 外部AccessTokenProvider优先
+	if mp.option.accessTokenProvider != nil {
+		return mp.option.accessTokenProvider.GetAccessToken()
+	}
+
 	if mp.config.isOpenPlatform {
 		return mp.config.authorizerAccount.AuthorizerAccessToken(
 			mp.config.appId,

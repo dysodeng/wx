@@ -20,3 +20,13 @@ func (k *Kf) Account() *Account {
 func (k *Kf) Servicer() *Servicer {
 	return NewServicer(k.account)
 }
+
+// Message 客服消息
+func (k *Kf) Message() *Message {
+	return NewMessage(k.account)
+}
+
+// ServiceState 会话管理
+func (k *Kf) ServiceState() *ServiceState {
+	return NewServiceState(k.account)
+}

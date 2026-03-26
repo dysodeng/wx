@@ -23,3 +23,11 @@ type AuthorizerAccessTokenInterface interface {
 	// AuthorizerAccessTokenCacheKey 公众账号access_token缓存key
 	AuthorizerAccessTokenCacheKey(appId string) string
 }
+
+// AccessTokenProvider 外部access_token提供者接口
+// 当使用外部服务统一管理access_token时，实现此接口
+// 实现方需自行处理token的缓存和刷新
+type AccessTokenProvider interface {
+	// GetAccessToken 获取access_token
+	GetAccessToken() (AccessToken, error)
+}

@@ -18,6 +18,11 @@ func (official *Official) AccessToken() (contracts.AccessToken, error) {
 
 // accessToken 获取/刷新token
 func (official *Official) accessToken(refresh bool) (contracts.AccessToken, error) {
+	// 外部AccessTokenProvider优先
+	if official.option.accessTokenProvider != nil {
+		return official.option.accessTokenProvider.GetAccessToken()
+	}
+
 	if official.config.isOpenPlatform {
 		return official.config.authorizerAccount.AuthorizerAccessToken(
 			official.config.appId,

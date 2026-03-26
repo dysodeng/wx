@@ -19,9 +19,10 @@ type config struct {
 
 // option 公众号选项
 type option struct {
-	cache          cache.Cache
-	cacheKeyPrefix string
-	locker         lock.Locker
+	cache               cache.Cache
+	cacheKeyPrefix      string
+	locker              lock.Locker
+	accessTokenProvider contracts.AccessTokenProvider
 }
 
 type Option func(*option)
@@ -44,5 +45,13 @@ func WithCacheKeyPrefix(cacheKeyPrefix string) Option {
 func WithLocker(locker lock.Locker) Option {
 	return func(o *option) {
 		o.locker = locker
+	}
+}
+
+// WithAccessTokenProvider 设置外部access_token提供者
+// 设置后将使用外部提供者获取access_token，不再使用内置的token获取逻辑
+func WithAccessTokenProvider(provider contracts.AccessTokenProvider) Option {
+	return func(o *option) {
+		o.accessTokenProvider = provider
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/dysodeng/wx/work/auth"
 	"github.com/dysodeng/wx/work/contact"
 	"github.com/dysodeng/wx/work/customer"
+	"github.com/dysodeng/wx/work/kf"
 	"github.com/dysodeng/wx/work/media"
 	"github.com/dysodeng/wx/work/message"
 	"github.com/dysodeng/wx/work/mini_program"
@@ -64,6 +65,11 @@ func (w *Work) Contact() *contact.Contact {
 // Customer 客户管理
 func (w *Work) Customer() *customer.Customer {
 	return customer.NewCustomer(w)
+}
+
+// Kf 微信客服
+func (w *Work) Kf() *kf.Kf {
+	return kf.NewKf(w)
 }
 
 // Media 素材管理

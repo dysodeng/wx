@@ -1,17 +1,17 @@
 package work
 
 import (
-	"github.com/dysodeng/wx/base/server"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
-	"github.com/dysodeng/wx/work/account_id"
-	"github.com/dysodeng/wx/work/auth"
-	"github.com/dysodeng/wx/work/contact"
-	"github.com/dysodeng/wx/work/customer"
-	"github.com/dysodeng/wx/work/kf"
-	"github.com/dysodeng/wx/work/media"
-	"github.com/dysodeng/wx/work/message"
-	"github.com/dysodeng/wx/work/mini_program"
+	"github.com/goairix/wx/base/server"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
+	"github.com/goairix/wx/work/account_id"
+	"github.com/goairix/wx/work/auth"
+	"github.com/goairix/wx/work/contact"
+	"github.com/goairix/wx/work/customer"
+	"github.com/goairix/wx/work/kf"
+	"github.com/goairix/wx/work/media"
+	"github.com/goairix/wx/work/message"
+	"github.com/goairix/wx/work/mini_program"
 )
 
 // Work 企业微信

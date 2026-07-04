@@ -335,9 +335,9 @@ In `open_platform/option.go`, add the field and the `contracts` import:
 
 ```go
 import (
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
 )
 ```
 

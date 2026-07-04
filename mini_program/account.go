@@ -1,6 +1,6 @@
 package mini_program
 
-import "github.com/dysodeng/wx/support/cache"
+import "github.com/goairix/wx/support/cache"
 
 func (mp *MiniProgram) IsOpenPlatform() bool {
 	return mp.config.isOpenPlatform

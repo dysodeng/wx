@@ -45,10 +45,10 @@ work/
 package base
 
 import (
-    "github.com/dysodeng/wx/kernel/contracts"
-    "github.com/dysodeng/wx/work/base/account_id"
-    "github.com/dysodeng/wx/work/base/contact"
-    "github.com/dysodeng/wx/work/base/oauth"
+    "github.com/goairix/wx/kernel/contracts"
+    "github.com/goairix/wx/work/base/account_id"
+    "github.com/goairix/wx/work/base/contact"
+    "github.com/goairix/wx/work/base/oauth"
 )
 
 type Base struct {
@@ -123,7 +123,7 @@ https://open.weixin.qq.com/connect/oauth2/authorize?appid=CORPID&redirect_uri=RE
 ### 5. 修改 `work/work.go` — 新增 Base() 入口
 
 ```go
-import "github.com/dysodeng/wx/work/base"
+import "github.com/goairix/wx/work/base"
 
 func (w *Work) Base() *base.Base {
     return base.New(w)

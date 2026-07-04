@@ -1,7 +1,7 @@
 package article
 
 import (
-	"github.com/dysodeng/wx/kernel/contracts"
+	"github.com/goairix/wx/kernel/contracts"
 )
 
 // Article 公众号文章管理

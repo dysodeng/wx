@@ -1,6 +1,6 @@
 package kf
 
-import "github.com/dysodeng/wx/kernel/contracts"
+import "github.com/goairix/wx/kernel/contracts"
 
 // Kf 微信客服
 type Kf struct {

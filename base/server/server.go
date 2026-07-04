@@ -8,11 +8,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/kernel/event"
-	"github.com/dysodeng/wx/kernel/message"
-	"github.com/dysodeng/wx/kernel/message/reply"
-	"github.com/dysodeng/wx/support/encryptor"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/kernel/event"
+	"github.com/goairix/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message/reply"
+	"github.com/goairix/wx/support/encryptor"
 )
 
 const (

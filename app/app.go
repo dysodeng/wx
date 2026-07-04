@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/dysodeng/wx/app/oauth"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
+	"github.com/goairix/wx/app/oauth"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
 )
 
 // App 移动应用

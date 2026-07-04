@@ -1,7 +1,7 @@
 package mini_program
 
 import (
-	"github.com/dysodeng/wx/support/cache"
+	"github.com/goairix/wx/support/cache"
 )
 
 func (w *MiniProgram) Token() string {

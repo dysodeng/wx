@@ -3,7 +3,7 @@ package mini_program
 import (
 	"fmt"
 
-	"github.com/dysodeng/wx/kernel/contracts"
+	"github.com/goairix/wx/kernel/contracts"
 )
 
 func (w *MiniProgram) AccessToken() (contracts.AccessToken, error) {

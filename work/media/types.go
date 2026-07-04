@@ -1,6 +1,6 @@
 package media
 
-import kernelError "github.com/dysodeng/wx/kernel/error"
+import kernelError "github.com/goairix/wx/kernel/error"
 
 // UploadResult 上传临时素材结果
 type UploadResult struct {

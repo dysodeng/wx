@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/support/aes"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/support/aes"
 	"github.com/pkg/errors"
 )
 

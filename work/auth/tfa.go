@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	kernelError "github.com/dysodeng/wx/kernel/error"
-	workHttp "github.com/dysodeng/wx/work/http"
+	"github.com/goairix/wx/kernel/contracts"
+	kernelError "github.com/goairix/wx/kernel/error"
+	workHttp "github.com/goairix/wx/work/http"
 )
 
 // Tfa 二次验证

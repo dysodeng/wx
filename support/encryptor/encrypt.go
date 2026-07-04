@@ -18,7 +18,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dysodeng/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message"
 )
 
 const (

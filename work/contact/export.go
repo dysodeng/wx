@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	kernelError "github.com/dysodeng/wx/kernel/error"
-	"github.com/dysodeng/wx/work/http"
+	"github.com/goairix/wx/kernel/contracts"
+	kernelError "github.com/goairix/wx/kernel/error"
+	"github.com/goairix/wx/work/http"
 )
 
 // Export 异步导出

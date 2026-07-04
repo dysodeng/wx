@@ -1,6 +1,6 @@
 package contracts
 
-import "github.com/dysodeng/wx/support/cache"
+import "github.com/goairix/wx/support/cache"
 
 // AccountInterface 公众账号接口
 type AccountInterface interface {

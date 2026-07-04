@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dysodeng/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message"
 )
 
 // News 图文消息

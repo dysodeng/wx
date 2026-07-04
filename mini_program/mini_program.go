@@ -1,18 +1,18 @@
 package mini_program
 
 import (
-	"github.com/dysodeng/wx/base/server"
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/mini_program/auth"
-	"github.com/dysodeng/wx/mini_program/authorizer"
-	"github.com/dysodeng/wx/mini_program/content"
-	"github.com/dysodeng/wx/mini_program/encryptor"
-	"github.com/dysodeng/wx/mini_program/message"
-	"github.com/dysodeng/wx/mini_program/qr_code"
-	"github.com/dysodeng/wx/mini_program/user"
-	"github.com/dysodeng/wx/mini_program/wxa_code"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
+	"github.com/goairix/wx/base/server"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/mini_program/auth"
+	"github.com/goairix/wx/mini_program/authorizer"
+	"github.com/goairix/wx/mini_program/content"
+	"github.com/goairix/wx/mini_program/encryptor"
+	"github.com/goairix/wx/mini_program/message"
+	"github.com/goairix/wx/mini_program/qr_code"
+	"github.com/goairix/wx/mini_program/user"
+	"github.com/goairix/wx/mini_program/wxa_code"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
 )
 
 // MiniProgram 小程序

@@ -1,6 +1,6 @@
 package customer
 
-import kernelError "github.com/dysodeng/wx/kernel/error"
+import kernelError "github.com/goairix/wx/kernel/error"
 
 // ExternalContactInfo 外部联系人信息
 type ExternalContactInfo struct {

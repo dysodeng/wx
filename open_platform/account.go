@@ -1,6 +1,6 @@
 package open_platform
 
-import "github.com/dysodeng/wx/support/cache"
+import "github.com/goairix/wx/support/cache"
 
 func (open *OpenPlatform) Token() string {
 	return open.config.token

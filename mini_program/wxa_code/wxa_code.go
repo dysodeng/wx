@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	kernelError "github.com/dysodeng/wx/kernel/error"
-	"github.com/dysodeng/wx/support/http"
+	"github.com/goairix/wx/kernel/contracts"
+	kernelError "github.com/goairix/wx/kernel/error"
+	"github.com/goairix/wx/support/http"
 	"github.com/pkg/errors"
 )
 

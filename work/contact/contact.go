@@ -1,6 +1,6 @@
 package contact
 
-import "github.com/dysodeng/wx/kernel/contracts"
+import "github.com/goairix/wx/kernel/contracts"
 
 // Contact 通讯录管理
 type Contact struct {

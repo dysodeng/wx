@@ -1,6 +1,6 @@
 package authorizer
 
-import "github.com/dysodeng/wx/kernel/contracts"
+import "github.com/goairix/wx/kernel/contracts"
 
 // Authorizer 企业微信公众账号授权
 type Authorizer struct {

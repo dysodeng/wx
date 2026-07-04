@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	kernelError "github.com/dysodeng/wx/kernel/error"
-	"github.com/dysodeng/wx/kernel/user"
+	"github.com/goairix/wx/kernel/contracts"
+	kernelError "github.com/goairix/wx/kernel/error"
+	"github.com/goairix/wx/kernel/user"
 
-	supportHttp "github.com/dysodeng/wx/support/http"
+	supportHttp "github.com/goairix/wx/support/http"
 
 	"github.com/pkg/errors"
 )

@@ -28,8 +28,8 @@ package contracts
 import (
 	"context"
 
-	"github.com/dysodeng/wx/kernel/message"
-	"github.com/dysodeng/wx/kernel/message/reply"
+	"github.com/goairix/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message/reply"
 )
 
 // EventHandler 事件处理函数
@@ -83,11 +83,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/kernel/event"
-	"github.com/dysodeng/wx/kernel/message"
-	"github.com/dysodeng/wx/kernel/message/reply"
-	"github.com/dysodeng/wx/support/encryptor"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/kernel/event"
+	"github.com/goairix/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message/reply"
+	"github.com/goairix/wx/support/encryptor"
 )
 
 const (
@@ -466,7 +466,7 @@ rmdir work/server
 Add import for `base/server` package and add the `Server()` method. Add to imports:
 
 ```go
-"github.com/dysodeng/wx/base/server"
+"github.com/goairix/wx/base/server"
 ```
 
 Add method after the existing methods:
@@ -549,9 +549,9 @@ Required new imports to add:
 "fmt"
 "time"
 
-"github.com/dysodeng/wx/kernel/contracts"
-"github.com/dysodeng/wx/kernel/message"
-"github.com/dysodeng/wx/kernel/message/reply"
+"github.com/goairix/wx/kernel/contracts"
+"github.com/goairix/wx/kernel/message"
+"github.com/goairix/wx/kernel/message/reply"
 ```
 
 - [ ] **Step 3: Verify open_platform package compiles**
@@ -608,7 +608,7 @@ git commit -m "refactor: update official and mini_program to use unified server 
 
 Delete the `guard` struct (lines 315-343) and the `Register` call (line 78). Replace with `On` calls using the new API.
 
-Update imports: add `"context"` if not present. Keep `"github.com/dysodeng/wx/kernel/contracts"` — it is still used by the handler closure.
+Update imports: add `"context"` if not present. Keep `"github.com/goairix/wx/kernel/contracts"` — it is still used by the handler closure.
 
 Replace line 78 (`appServer.Register(&guard{}, event.All)`) with:
 

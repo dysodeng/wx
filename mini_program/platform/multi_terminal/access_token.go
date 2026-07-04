@@ -3,7 +3,7 @@ package multi_terminal
 import (
 	"fmt"
 
-	"github.com/dysodeng/wx/kernel/contracts"
+	"github.com/goairix/wx/kernel/contracts"
 )
 
 func (m *MultiTerminal) AccessToken() (contracts.AccessToken, error) {

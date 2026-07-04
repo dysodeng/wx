@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	kernelError "github.com/dysodeng/wx/kernel/error"
-	"github.com/dysodeng/wx/work/http"
+	kernelError "github.com/goairix/wx/kernel/error"
+	"github.com/goairix/wx/work/http"
 )
 
 // OpenUseridItem userid转openuserid结果项

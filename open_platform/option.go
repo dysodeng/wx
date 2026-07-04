@@ -1,9 +1,9 @@
 package open_platform
 
 import (
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
 )
 
 // config 开放平台配置

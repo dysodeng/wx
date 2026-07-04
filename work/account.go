@@ -1,7 +1,7 @@
 package work
 
 import (
-	"github.com/dysodeng/wx/support/cache"
+	"github.com/goairix/wx/support/cache"
 )
 
 func (w *Work) Token() string {

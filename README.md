@@ -7,7 +7,7 @@ wx
 Installation
 ------------
 ```sh
-go get github.com/dysodeng/wx
+go get github.com/goairix/wx
 ```
 
 Usage
@@ -18,10 +18,10 @@ Usage
 package main
 
 import (
-	"github.com/dysodeng/wx/kernel/event"
-	"github.com/dysodeng/wx/kernel/message"
-	"github.com/dysodeng/wx/kernel/message/reply"
-	"github.com/dysodeng/wx/official"
+	"github.com/goairix/wx/kernel/event"
+	"github.com/goairix/wx/kernel/message"
+	"github.com/goairix/wx/kernel/message/reply"
+	"github.com/goairix/wx/official"
 	"log"
 	"net/http"
 )

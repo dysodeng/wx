@@ -1,18 +1,18 @@
 package official
 
 import (
-	"github.com/dysodeng/wx/base/jssdk"
-	"github.com/dysodeng/wx/base/server"
-	"github.com/dysodeng/wx/kernel/contracts"
-	"github.com/dysodeng/wx/official/article"
-	"github.com/dysodeng/wx/official/authorizer"
-	"github.com/dysodeng/wx/official/menu"
-	"github.com/dysodeng/wx/official/message"
-	"github.com/dysodeng/wx/official/oauth"
-	"github.com/dysodeng/wx/official/qr_code"
-	"github.com/dysodeng/wx/official/user"
-	"github.com/dysodeng/wx/support/cache"
-	"github.com/dysodeng/wx/support/lock"
+	"github.com/goairix/wx/base/jssdk"
+	"github.com/goairix/wx/base/server"
+	"github.com/goairix/wx/kernel/contracts"
+	"github.com/goairix/wx/official/article"
+	"github.com/goairix/wx/official/authorizer"
+	"github.com/goairix/wx/official/menu"
+	"github.com/goairix/wx/official/message"
+	"github.com/goairix/wx/official/oauth"
+	"github.com/goairix/wx/official/qr_code"
+	"github.com/goairix/wx/official/user"
+	"github.com/goairix/wx/support/cache"
+	"github.com/goairix/wx/support/lock"
 )
 
 // Official 公众号

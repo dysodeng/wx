@@ -1,4 +1,4 @@
-module github.com/dysodeng/wx
+module github.com/goairix/wx
 
 go 1.17
 

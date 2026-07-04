@@ -1,6 +1,6 @@
 package contracts
 
-import "github.com/dysodeng/wx/support/lock"
+import "github.com/goairix/wx/support/lock"
 
 // AccessToken access token
 type AccessToken struct {

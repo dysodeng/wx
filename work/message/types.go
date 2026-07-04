@@ -1,6 +1,6 @@
 package message
 
-import kernelError "github.com/dysodeng/wx/kernel/error"
+import kernelError "github.com/goairix/wx/kernel/error"
 
 // Messenger 消息接口
 type Messenger interface {

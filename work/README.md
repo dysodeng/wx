@@ -5,7 +5,7 @@
 ## 安装
 
 ```sh
-go get github.com/dysodeng/wx
+go get github.com/goairix/wx
 ```
 
 ## 快速开始
@@ -14,8 +14,8 @@ go get github.com/dysodeng/wx
 package main
 
 import (
-    "github.com/dysodeng/wx/work"
-    "github.com/dysodeng/wx/support/cache"
+    "github.com/goairix/wx/work"
+    "github.com/goairix/wx/support/cache"
 )
 
 func main() {
@@ -45,11 +45,11 @@ import (
     "log"
     "net/http"
 
-    "github.com/dysodeng/wx/kernel/contracts"
-    "github.com/dysodeng/wx/kernel/event"
-    "github.com/dysodeng/wx/kernel/message"
-    "github.com/dysodeng/wx/kernel/message/reply"
-    "github.com/dysodeng/wx/work"
+    "github.com/goairix/wx/kernel/contracts"
+    "github.com/goairix/wx/kernel/event"
+    "github.com/goairix/wx/kernel/message"
+    "github.com/goairix/wx/kernel/message/reply"
+    "github.com/goairix/wx/work"
 )
 
 func main() {

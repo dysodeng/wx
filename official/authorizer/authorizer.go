@@ -1,8 +1,8 @@
 package authorizer
 
 import (
-	"github.com/dysodeng/wx/base/open"
-	"github.com/dysodeng/wx/kernel/contracts"
+	"github.com/goairix/wx/base/open"
+	"github.com/goairix/wx/kernel/contracts"
 )
 
 // Authorizer 小程序授权开放平台后的相关接口
